@@ -76,16 +76,6 @@
 
   (helm-mode 1)
 #+END_SRC
-* ido
-#+BEGIN_SRC emacs-lisp
-  ;; (require 'ido)
-  ;; (setq ido-enable-flex-matching 1)
-  ;; (setq ido-everywhere t)
-  ;; (ido-mode t)
-  ;; (ido-vertical-mode t)
-  ;; (require 'ido-ubiquitous)
-  ;; (ido-ubiquitous-mode t)
-#+END_SRC
 * gui
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-splash-screen t)
@@ -249,15 +239,6 @@
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
   (global-set-key (kbd "C-ä") 'mc/mark-sgml-tag-pair)
-
-  ;; ;; smex
-  ;; (smex-initialize)
-  ;; (global-set-key (kbd "M-x") 'smex)
-  ;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-  ;; ;; This is your old M-x.
-  ;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-  ;; (global-set-key (kbd "C-c .") 'idomenu)
 #+END_SRC
 * auctex
 #+BEGIN_SRC emacs-lisp
@@ -276,9 +257,6 @@
 * haskell
 #+BEGIN_SRC emacs-lisp
   (setq haskell-process-type 'cabal-repl)
-  ;; haskell-mode
-  ;; (add-to-list 'load-path "/home/moritz/code/emacs/haskell-mode/")
-  ;; (require 'haskell-mode-autoloads)
   (setq haskell-mode-contextual-import-completion nil)
   (add-to-list 'Info-default-directory-list "/home/moritz/code/emacs/haskell-mode/")
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
@@ -297,7 +275,6 @@
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
   (require 'shm-case-split)
   (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
-  ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
   (add-to-list 'company-backends 'company-ghc)
 #+END_SRC
 * mu4e
