@@ -1,0 +1,434 @@
+* packages
+#+BEGIN_SRC emacs-lisp
+  (require 'cask "~/.cask/cask.el")
+  (cask-initialize)
+  (require 'pallet)
+
+#+END_SRC
+* initialization
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/notsynced")
+  (setq sml/no-confirm-load-theme t)
+  (semantic-mode 1)
+  (global-company-mode)
+  (setq company-idle-delay 0)
+  (add-hook 'sgml-mode-hook 'emmet-mode)
+  (add-hook 'css-mode-hook  'emmet-mode)
+  (setq ag-highlight-search t)
+  (add-to-list 'auto-mode-alist '("/PKGBUILD$" . pkgbuild-mode))
+  (setq-default dired-listing-switches "-alhv")
+  (global-undo-tree-mode)
+  (setq nlinum-format "%d\u2502")
+  (setq-default abbrev-mode t)
+  (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+  (setq show-paren-style 'expression)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
+  (projectile-global-mode)
+#+END_SRC
+* helm
+#+BEGIN_SRC emacs-lisp
+  (require 'helm)
+
+  ;; must set before helm-config,  otherwise helm use default
+  ;; prefix "C-x c", which is inconvenient because you can
+  ;; accidentially pressed "C-x C-c"
+  (setq helm-command-prefix-key "C-c h")
+
+  (require 'helm-config)
+  (require 'helm-eshell)
+  (require 'helm-files)
+  (require 'helm-grep)
+
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+  (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+  (define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
+  (define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
+  (define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
+
+  (setq
+   helm-google-suggest-use-curl-p t
+   helm-scroll-amount 4 ; scroll 4 lines other window using M-<next>/M-<prior>
+   helm-quick-update t ; do not display invisible candidates
+   helm-idle-delay 0.01 ; be idle for this many seconds, before updating in delayed sources.
+   helm-input-idle-delay 0.01 ; be idle for this many seconds, before updating candidate buffer
+   helm-ff-search-library-in-sexp t ; search for library in `require' and `declare-function' sexp.
+
+   helm-split-window-default-side 'other ;; open helm buffer in another window
+   helm-split-window-in-side-p t ;; open helm buffer inside current window, not occupy whole other window
+   helm-buffers-favorite-modes (append helm-buffers-favorite-modes
+                                       '(picture-mode artist-mode))
+   helm-candidate-number-limit 200 ; limit the number of displayed canidates
+   helm-M-x-requires-pattern 0     ; show all candidates when set to 0
+   helm-ff-file-name-history-use-recentf t
+   helm-move-to-line-cycle-in-source t ; move to end or beginning of source
+                                          ; when reaching top or bottom of source.
+   ido-use-virtual-buffers t      ; Needed in helm-buffers-list
+   helm-buffers-fuzzy-matching t          ; fuzzy matching buffer names when non--nil
+                                          ; useful in helm-mini that lists buffers
+   )
+
+  ;; Save current position to mark ring when jumping to a different place
+  (add-hook 'helm-goto-line-before-hook 'helm-save-current-pos-to-mark-ring)
+
+  (helm-mode 1)
+#+END_SRC
+* ido
+#+BEGIN_SRC emacs-lisp
+  ;; (require 'ido)
+  ;; (setq ido-enable-flex-matching 1)
+  ;; (setq ido-everywhere t)
+  ;; (ido-mode t)
+  ;; (ido-vertical-mode t)
+  ;; (require 'ido-ubiquitous)
+  ;; (ido-ubiquitous-mode t)
+#+END_SRC
+* gui
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-splash-screen t)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (column-number-mode t)
+  (require 'moe-theme)
+  (moe-dark)
+  (setq sml/theme 'dark)
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+          (lambda (frame)
+            (sml/setup)))
+      (sml/setup))
+  ;; show-paren-mode
+  (setq show-paren-delay 0)
+  (show-paren-mode t)
+#+END_SRC
+* org
+#+BEGIN_SRC emacs-lisp
+  (require 'org-drill)
+  (setq org-log-done t)
+  (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)$" . org-mode))
+
+  (setq org-directory "~/org")
+  (setq org-agenda-files '("~/org"))
+
+  (setq org-file-apps
+        '((auto-mode . emacs)
+          ("\\.mm\\'" . system)
+          ("\\.x?html?\\'" . "firefox-nightly %s")
+          ("\\.pdf::\\([0-9]+\\)\\'" . "zathura \"%s\" -P %1")
+          ("\\.pdf\\'" . "zathura \"%s\"")))
+
+  (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
+
+  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 2))))
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c c") 'org-capture)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c b") 'org-iswitchb)
+
+  (eval-after-load "org-mode"
+    '(progn
+       (plist-put org-format-latex-options :scale 2.0)))
+
+  (setq org-mobile-directory "~/org/mobile")
+
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
+
+  (setq org-clock-persist 'history)
+  (org-clock-persistence-insinuate)
+  ;; orgmode babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)))
+
+  (setq org-agenda-span 'month)
+  (setq org-agenda-custom-commands
+        '(("h" agenda "120 days"
+           ((org-agenda-show-all-dates nil)
+            (org-agenda-span 120))
+           )))
+
+  (setq org-src-fontify-natively t)
+  (setq org-timer-default-timer 25)
+
+  (add-hook 'org-clock-in-hook (lambda ()
+        (org-timer-set-timer 25)))
+
+  (add-hook 'org-clock-out-hook (lambda ()
+        (org-timer-set-timer 5)))
+
+  (defun ded/org-show-next-heading-tidily ()
+    "Show next entry, keeping other entries closed."
+    (if (save-excursion (end-of-line) (outline-invisible-p))
+        (progn (org-show-entry) (show-children))
+      (outline-next-heading)
+      (unless (and (bolp) (org-on-heading-p))
+        (org-up-heading-safe)
+        (hide-subtree)
+        (error "Boundary reached"))
+      (org-overview)
+      (org-reveal t)
+      (org-show-entry)
+      (show-children)))
+
+  (defun ded/org-show-previous-heading-tidily ()
+    "Show previous entry, keeping other entries closed."
+    (let ((pos (point)))
+      (outline-previous-heading)
+      (unless (and (< (point) pos) (bolp) (org-on-heading-p))
+        (goto-char pos)
+        (hide-subtree)
+        (error "Boundary reached"))
+      (org-overview)
+      (org-reveal t)
+      (org-show-entry)
+      (show-children)))
+
+  (setq org-use-speed-commands t)
+  (add-to-list 'org-speed-commands-user
+               '("n" ded/org-show-next-heading-tidily))
+  (add-to-list 'org-speed-commands-user
+               '("p" ded/org-show-previous-heading-tidily))
+#+END_SRC
+* functions
+#+BEGIN_SRC emacs-lisp
+  ;; comment out line if no region is selected
+  (defun comment-dwim-line (&optional arg)
+      "Replacement for the comment-dwim command.
+      If no region is selected and current line is not blank and we are not at the end of the line,
+      then comment current line.
+      Replaces default behaviour of comment-dwim, when it inserts comment at the end of the line."
+        (interactive "*P")
+        (comment-normalize-vars)
+        (if (and (not (region-active-p)) (not (looking-at "[ \t]*$")))
+            (comment-or-uncomment-region (line-beginning-position) (line-end-position))
+          (comment-dwim arg)))
+
+  ;; functions to paste to http://sprunge.us using web.el
+  (require 'web)
+  (defun sprunge-region (start end)
+    (interactive "r")
+    (let ((buffer-contents (buffer-substring-no-properties start end))
+               (query-data (make-hash-table :test 'equal)))
+            (puthash 'sprunge buffer-contents query-data)
+        (web-http-post
+         (lambda (con header data)
+           (kill-new (substring data 0 -1)))
+         :url "http://sprunge.us"
+         :data query-data)))
+  (defun sprunge-buffer ()
+    (interactive)
+    (sprunge-region (point-min) (point-max)))
+#+END_SRC
+* bindings
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-;") 'comment-dwim-line)
+
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+  (global-set-key (kbd "C-x b") 'helm-mini)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-c h o") 'helm-occur)
+  (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
+  (global-set-key (kbd "C-c h x") 'helm-register)
+
+  ;; expand-region
+  (pending-delete-mode t)
+  (global-set-key (kbd "C-=") 'er/expand-region)
+
+  ;; ace-jump-mode
+  (global-set-key (kbd "C-ß") 'ace-jump-mode)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+  ;; multiple-cursors
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  (global-set-key (kbd "C-ä") 'mc/mark-sgml-tag-pair)
+
+  ;; ;; smex
+  ;; (smex-initialize)
+  ;; (global-set-key (kbd "M-x") 'smex)
+  ;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+  ;; ;; This is your old M-x.
+  ;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+  ;; (global-set-key (kbd "C-c .") 'idomenu)
+#+END_SRC
+* auctex
+#+BEGIN_SRC emacs-lisp
+  ;; auxtex
+  (load "auctex.el" nil t t)
+  (load "preview-latex.el" nil t t)
+  (setq TeX-view-program-list '(("zathura" ("zathura -s -x \"emacsclient --eval '(progn (switch-to-buffer  (file-name-nondirectory \"'\"'\"%{input}\"'\"'\")) (goto-line %{line}))'\" %o"))))
+  (setq TeX-view-program-selection '((output-pdf "zathura")))
+  (setq TeX-source-correlate-method 'synctex)
+  (add-hook 'LaTeX-mode-hook 'TeX-global-PDF-mode)
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  (eval-after-load "latex" '(progn
+  (add-to-list 'LaTeX-verbatim-environments "comment")
+  ))
+#+END_SRC
+* haskell
+#+BEGIN_SRC emacs-lisp
+  (setq haskell-process-type 'cabal-repl)
+  ;; haskell-mode
+  ;; (add-to-list 'load-path "/home/moritz/code/emacs/haskell-mode/")
+  ;; (require 'haskell-mode-autoloads)
+  (setq haskell-mode-contextual-import-completion nil)
+  (add-to-list 'Info-default-directory-list "/home/moritz/code/emacs/haskell-mode/")
+  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
+  (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
+  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+  (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+  (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+  (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
+  (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)
+
+  (setq haskell-interactive-mode-eval-mode 'haskell-mode)
+
+  (add-to-list 'load-path "/home/moritz/code/emacs/structured-haskell-mode/elisp")
+  (require 'shm)
+  (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+  (require 'shm-case-split)
+  (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
+  ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+  (add-to-list 'company-backends 'company-ghc)
+#+END_SRC
+* mu4e
+#+BEGIN_SRC emacs-lisp
+  (require 'mu4e)
+  (require 'org-mu4e)
+
+  ;; default
+  (load "mail")
+  (setq mu4e-html2text-command
+   "html2text_py | grep -v '&nbsp_place_holder;'")
+  (setq mu4e-maildir "~/mail")
+  (setq mu4e-drafts-folder "/gmail/drafts")
+  (setq mu4e-sent-folder   "/gmail/sent")
+  (setq mu4e-trash-folder  "/gmail/trash")
+  (setq mu4e-get-mail-command "mbsync -a")
+  (setq mu4e-update-interval 300)
+  (setq mu4e-view-show-addresses t)
+  (setq mu4e-headers-include-related t)
+  (setq mu4e-headers-show-threads nil)
+  (setq mu4e-headers-skip-duplicates t)
+  (setq mu4e-split-view 'vertical)
+  (setq mu4e-compose-dont-reply-to-self t)
+  (setq mu4e-compose-keep-self-cc nil)
+  (setq
+   user-mail-address (cadr mu4e-user-mail-address-list)
+   user-full-name  "Moritz Kiefer"
+   mu4e-compose-signature ""
+   mu4e-compose-signature-auto-include nil)
+  (setq mu4e-attachment-dir "~/downloads")
+
+  (setq   mu4e-maildir-shortcuts
+          '(("/gmail/inbox"     . ?g)
+            ("/holarse/inbox"       . ?h)
+            ("/purelyfunctional/inbox" . ?p)))
+
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-stream-type 'starttls
+        smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587)
+
+  (defvar my-mu4e-account-alist
+    '(("gmail"
+       (mu4e-sent-folder "/gmail/sent")
+       (mu4e-drafts-folder "/gmail/drafts")
+       (mu4e-trash-folder "/gmail/trash")
+       (mu4e-sent-messages-behavior delete)
+       (user-mail-address (car mu4e-user-mail-address-list))
+       (smtpmail-default-smtp-server "smtp.gmail.com")
+       (smtpmail-smtp-server "smtp.gmail.com")
+       (smtpmail-stream-type starttls)
+       (smtpmail-smtp-service 587))
+      ("holarse"
+       (mu4e-sent-folder "/holarse/sent")
+       (mu4e-drafts-folder "/holarse/drafts")
+       (mu4e-sent-messages-behavior sent)
+       (user-mail-address (cddr mu4e-user-mail-address-list))
+       (smtpmail-default-smtp-server "asmtp.mail.hostpoint.ch")
+       (smtpmail-smtp-server "asmtp.mail.hostpoint.ch")
+       (smtpmail-stream-type starttls)
+       (smtpmail-smtp-service 587))
+      ("purelyfunctional"
+       (mu4e-sent-folder "/purelyfunctional/sent")
+       (mu4e-drafts-folder "/purelyfunctional/drafts")
+       (mu4e-sent-messages-behavior sent)
+       (user-mail-address (cadr mu4e-user-mail-address-list))
+       (smtpmail-default-smtp-server "cassiopeia.uberspace.de")
+       (smtpmail-smtp-server "cassiopeia.uberspace.de")
+       (smtpmail-stream-type starttls)
+       (smtpmail-smtp-service 587))))
+
+  (defun my-mu4e-set-account ()
+    "Set the account for composing a message."
+    (let* ((account
+            (if mu4e-compose-parent-message
+                (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+                  (string-match "/\\(.*?\\)/" maildir)
+                  (match-string 1 maildir))
+              (completing-read (format "Compose with account: (%s) "
+                                       (mapconcat #'(lambda (var) (car var)) my-mu4e-account-alist "/"))
+                               (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
+                               nil t nil nil (caar my-mu4e-account-alist))))
+           (account-vars (cdr (assoc account my-mu4e-account-alist))))
+      (if account-vars
+          (mapc #'(lambda (var)
+                    (set (car var) (cadr var)))
+                account-vars)
+        (error "No email account found"))))
+
+  (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+
+  (setq mu4e-bookmarks '(
+                         ("flag:unread AND NOT flag:trashed AND NOT maildir:/gmail/spam"
+                          "Unread messages"     ?u)
+                         ("date:today..now"                  "Today's messages"     ?t)
+                         ("date:7d..now"                     "Last 7 days"          ?w)
+                         ("mime:image/*"                     "Messages with images" ?p)))
+
+  (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign)
+  (add-hook 'mu4e-view-mode-hook '(lambda ()
+                                    (local-set-key (kbd "<end>") 'end-of-line)
+                                    (local-set-key (kbd "<home>") 'beginning-of-line)))
+
+  (setq mu4e-view-show-images t)
+  (when (fboundp 'imagemagick-register-types)
+    (imagemagick-register-types))
+  (add-to-list 'mu4e-view-actions
+               '("View in browser" . mu4e-action-view-in-browser) t)
+
+
+
+  ;; don't keep message buffers around
+  (setq message-kill-buffer-on-exit t)
+#+END_SRC
+* indentation
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+  (setq-default c-default-style "linux")
+  (setq-default c-basic-offset 4)
+  (setq-default tab-width 4)
+  (c-set-offset 'comment-intro 0)
+#+END_SRC
+* lisp
+#+BEGIN_SRC emacs-lisp
+  (setq scheme-program-name "guile")
+  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+  (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+  (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+#+END_SRC
