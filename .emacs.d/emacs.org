@@ -244,11 +244,10 @@
 * auctex
 #+BEGIN_SRC emacs-lisp
   ;; auxtex
-  (load "auctex.el" nil t t)
-  (load "preview-latex.el" nil t t)
   (setq TeX-view-program-list '(("zathura" ("zathura -s -x \"emacsclient --eval '(progn (switch-to-buffer  (file-name-nondirectory \"'\"'\"%{input}\"'\"'\")) (goto-line %{line}))'\" %o"))))
   (setq TeX-view-program-selection '((output-pdf "zathura")))
   (setq TeX-source-correlate-method 'synctex)
+  (set-default 'preview-scale-function 1.2)
   (add-hook 'LaTeX-mode-hook 'TeX-global-PDF-mode)
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   (eval-after-load "latex" '(progn

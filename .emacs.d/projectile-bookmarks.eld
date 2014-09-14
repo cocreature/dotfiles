@@ -1,0 +1,1 @@
+("~/code/dotfiles/" "~/.emacs.d/" "~/code/haskell/rss2diaspora/" "~/.password-store/" "~/code/python/trccbot/" "~/code/zsh/pure/")

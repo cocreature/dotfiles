@@ -1,4 +1,5 @@
-/.cask/
+/.emacs.d/.cask/
 *~
-/emacs.el
-/notsynced/
+#*#
+/.emacs.d/emacs.el
+/.emacs.d/notsynced/
