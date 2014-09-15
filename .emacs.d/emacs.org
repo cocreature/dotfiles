@@ -319,12 +319,12 @@
         smtpmail-smtp-service 587)
 
   (defvar my-mu4e-account-alist
-    '(("gmail"
+    `(("gmail"
        (mu4e-sent-folder "/gmail/sent")
        (mu4e-drafts-folder "/gmail/drafts")
        (mu4e-trash-folder "/gmail/trash")
        (mu4e-sent-messages-behavior delete)
-       (user-mail-address (car mu4e-user-mail-address-list))
+       (user-mail-address ,(car mu4e-user-mail-address-list))
        (smtpmail-default-smtp-server "smtp.gmail.com")
        (smtpmail-smtp-server "smtp.gmail.com")
        (smtpmail-stream-type starttls)
@@ -333,7 +333,7 @@
        (mu4e-sent-folder "/holarse/sent")
        (mu4e-drafts-folder "/holarse/drafts")
        (mu4e-sent-messages-behavior sent)
-       (user-mail-address (cddr mu4e-user-mail-address-list))
+       (user-mail-address ,(cddr mu4e-user-mail-address-list))
        (smtpmail-default-smtp-server "asmtp.mail.hostpoint.ch")
        (smtpmail-smtp-server "asmtp.mail.hostpoint.ch")
        (smtpmail-stream-type starttls)
@@ -342,7 +342,7 @@
        (mu4e-sent-folder "/purelyfunctional/sent")
        (mu4e-drafts-folder "/purelyfunctional/drafts")
        (mu4e-sent-messages-behavior sent)
-       (user-mail-address (cadr mu4e-user-mail-address-list))
+       (user-mail-address ,(cadr mu4e-user-mail-address-list))
        (smtpmail-default-smtp-server "cassiopeia.uberspace.de")
        (smtpmail-smtp-server "cassiopeia.uberspace.de")
        (smtpmail-stream-type starttls)
