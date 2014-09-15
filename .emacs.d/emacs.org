@@ -25,9 +25,15 @@
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   (setq ediff-split-window-function 'split-window-horizontally)
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
+#+END_SRC
+
+* projectile
+#+BEGIN_SRC emacs-lisp
   (projectile-global-mode)
+  (require 'helm-projectile)
   (setq projectile-completion-system 'helm)
 #+END_SRC
+
 * helm
 #+BEGIN_SRC emacs-lisp
   (require 'helm)
