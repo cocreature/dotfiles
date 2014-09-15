@@ -9,3 +9,4 @@
 /.xmonad/xmonad.o
 /.zsh/antigen-hs
 /.xmonad/history
+/.emacs.d/org-clock-save.el
