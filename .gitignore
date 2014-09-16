@@ -10,3 +10,8 @@
 /.zsh/antigen-hs
 /.xmonad/history
 /.emacs.d/org-clock-save.el
+/.emacs.d/eshell/
+/.emacs.d/recentf
+/.emacs.d/tramp
+/.emacs.d/recentf
+/.emacs.d/tramp
