@@ -27,13 +27,6 @@
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
 #+END_SRC
 
-* projectile
-#+BEGIN_SRC emacs-lisp
-  (projectile-global-mode)
-  (require 'helm-projectile)
-  (setq projectile-completion-system 'helm)
-#+END_SRC
-
 * helm
 #+BEGIN_SRC emacs-lisp
   (require 'helm)
@@ -42,7 +35,6 @@
   ;; prefix "C-x c", which is inconvenient because you can
   ;; accidentially pressed "C-x C-c"
   (setq helm-command-prefix-key "C-c h")
-
   (require 'helm-config)
   (require 'helm-eshell)
   (require 'helm-files)
@@ -84,6 +76,13 @@
 
   (helm-mode 1)
 #+END_SRC
+* projectile
+#+BEGIN_SRC emacs-lisp
+  (projectile-global-mode)
+  (require 'helm-projectile)
+  (setq projectile-completion-system 'helm)
+#+END_SRC
+
 * gui
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-splash-screen t)
