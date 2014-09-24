@@ -11,12 +11,13 @@
   (setq sml/no-confirm-load-theme t)
   (semantic-mode 1)
   (global-company-mode)
-  (setq company-idle-delay 0)
+  (setq company-global-modes
+        '(not
+          eshell-mode comint-mode org-mode))
   (add-hook 'sgml-mode-hook 'emmet-mode)
   (add-hook 'css-mode-hook  'emmet-mode)
   (setq ag-highlight-search t)
   (add-to-list 'auto-mode-alist '("/PKGBUILD$" . pkgbuild-mode))
-  (setq-default dired-listing-switches "-alhv")
   (global-undo-tree-mode)
   (setq nlinum-format "%d\u2502")
   (setq-default abbrev-mode t)
@@ -25,6 +26,18 @@
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   (setq ediff-split-window-function 'split-window-horizontally)
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
+  (when (fboundp 'windmove-default-keybindings)
+    (windmove-default-keybindings))
+#+END_SRC
+
+* dired
+#+BEGIN_SRC elisp
+  (setq dired-dwim-target t)
+  (require 'dired-details+)
+  (setq dired-details-hide-link-targets nil)
+  (setq-default dired-omit-mode t)
+  (define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
+  (setq-default dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.")
 #+END_SRC
 
 * helm
@@ -264,7 +277,6 @@
 #+BEGIN_SRC emacs-lisp
   (setq haskell-process-type 'cabal-repl)
   (setq haskell-mode-contextual-import-completion nil)
-  (add-to-list 'Info-default-directory-list "/home/moritz/code/emacs/haskell-mode/")
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
   (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
   (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
@@ -277,11 +289,19 @@
   (setq haskell-interactive-mode-eval-mode 'haskell-mode)
 
   (add-to-list 'load-path "/home/moritz/code/emacs/structured-haskell-mode/elisp")
+  (add-to-list 'load-path "/home/moritz/code/emacs/hindent/elisp")
+  (require 'hindent)
+  (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl)
+  (setq hindent-style "chris-done")
   (require 'shm)
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
   (require 'shm-case-split)
   (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
   (add-to-list 'company-backends 'company-ghc)
+  (autoload 'ghc-init "ghc" nil t)
+  (autoload 'ghc-debug "ghc" nil t)
+  (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+
 #+END_SRC
 * mu4e
 #+BEGIN_SRC emacs-lisp
@@ -414,4 +434,13 @@
   (add-hook 'lisp-mode-hook             'enable-paredit-mode)
   (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
   (add-hook 'scheme-mode-hook           'enable-paredit-mode)
+#+END_SRC
+* flycheck
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (eval-after-load 'flycheck
+    '(add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
+  (eval-after-load 'flycheck '(set-face-attribute 'flycheck-error-list-highlight-at-point nil
+                        :background "#660C37"))
+
 #+END_SRC

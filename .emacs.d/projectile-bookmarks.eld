@@ -1,1 +1,1 @@
-("~/code/dotfiles/" "~/code/haskell/rss2diaspora/" "~/.emacs.d/" "~/.password-store/" "~/code/python/trccbot/" "~/code/zsh/pure/")
+("~/code/dotfiles/" "~/.cask/" "~/code/haskell/Hgamelaunch/" "~/code/haskell/rss2diaspora/" "~/.emacs.d/" "~/.password-store/" "~/code/python/trccbot/" "~/code/zsh/pure/")
