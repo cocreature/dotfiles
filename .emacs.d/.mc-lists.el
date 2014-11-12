@@ -3,7 +3,11 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        nxml-electric-slash
         org-self-insert-command
+        shm/del
+        shm/delete
+        shm/hyphen
         ))
 
 (setq mc/cmds-to-run-once

@@ -1,4 +1,5 @@
 # ~/.zshrc
+stty sane
 setopt extended_glob
 setopt interactivecomments
 
@@ -33,12 +34,13 @@ export PATH=/home/moritz/code/haskell/pkg/cgrep/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/haskell/pkg/haskell-docs/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/emacs/structured-haskell-mode/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/emacs/ghc-mod/.cabal-sandbox/bin:$PATH
+export PATH=/home/moritz/code/emacs/hindent/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/bin:/home/moritz/.cabal/bin:$PATH
 export PATH=$PATH:/home/moritz/.gem/ruby/2.0.0/bin
 export PATH="$HOME/.cask/bin:$PATH"
 export EDITOR=emacsclient
 export MAILDIR=~/mail
-export BROWSER=/usr/bin/firefox-nightly
+export BROWSER=firefox
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
 export _JAVA_AWT_WM_NONREPARENTING=1
 export FM_SVNPATH=$HOME/freiesmagazin/fm

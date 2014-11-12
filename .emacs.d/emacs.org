@@ -7,7 +7,9 @@
 #+END_SRC
 * initialization
 #+BEGIN_SRC emacs-lisp
+  (add-hook 'magit-mode-hook 'magit-load-config-extensions)
   (add-to-list 'load-path "~/.emacs.d/notsynced")
+  (setq save-interprogram-paste-before-kill t)
   (setq sml/no-confirm-load-theme t)
   (semantic-mode 1)
   (global-company-mode)
@@ -17,6 +19,8 @@
   (add-hook 'sgml-mode-hook 'emmet-mode)
   (add-hook 'css-mode-hook  'emmet-mode)
   (setq ag-highlight-search t)
+  (add-to-list 'load-path "/home/moritz/code/emacs/pkgbuild-mode")
+  (autoload 'pkgbuild-mode "pkgbuild-mode.el" "PKGBUILD mode." t)
   (add-to-list 'auto-mode-alist '("/PKGBUILD$" . pkgbuild-mode))
   (global-undo-tree-mode)
   (setq nlinum-format "%d\u2502")
@@ -28,6 +32,7 @@
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
   (when (fboundp 'windmove-default-keybindings)
     (windmove-default-keybindings))
+  (winner-mode 1)
 #+END_SRC
 
 * dired
@@ -127,7 +132,7 @@
   (setq org-file-apps
         '((auto-mode . emacs)
           ("\\.mm\\'" . system)
-          ("\\.x?html?\\'" . "firefox-nightly %s")
+          ("\\.x?html?\\'" . "firefox %s")
           ("\\.pdf::\\([0-9]+\\)\\'" . "zathura \"%s\" -P %1")
           ("\\.pdf\\'" . "zathura \"%s\"")))
 
@@ -272,6 +277,8 @@
   (eval-after-load "latex" '(progn
   (add-to-list 'LaTeX-verbatim-environments "comment")
   ))
+  (setq-default TeX-master nil) ; Query for master file.
+
 #+END_SRC
 * haskell
 #+BEGIN_SRC emacs-lisp
@@ -440,7 +447,10 @@
   (add-hook 'after-init-hook #'global-flycheck-mode)
   (eval-after-load 'flycheck
     '(add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
-  (eval-after-load 'flycheck '(set-face-attribute 'flycheck-error-list-highlight-at-point nil
-                        :background "#660C37"))
-
+  ;; (eval-after-load 'flycheck '(progn (set-face-attribute 'flycheck-error-list-highlight-at-point nil
+  ;;                                                        :background "#660C37")))
+#+END_SRC
+* browser
+#+BEGIN_SRC emacs-lisp
+  (setq browse-url-browser-function 'browse-url-xdg-open)
 #+END_SRC
