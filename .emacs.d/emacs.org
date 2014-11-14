@@ -267,17 +267,19 @@
 #+END_SRC
 * auctex
 #+BEGIN_SRC emacs-lisp
-  ;; auxtex
-  (setq TeX-view-program-list '(("zathura" ("zathura -s -x \"emacsclient --eval '(progn (switch-to-buffer  (file-name-nondirectory \"'\"'\"%{input}\"'\"'\")) (goto-line %{line}))'\" %o"))))
+  (setq TeX-view-program-list
+        '(("zathura"
+           ("zathura" (mode-io-correlate "-sync.sh")
+            " "
+            (mode-io-correlate "%n:1:%b ")
+            "%o"))))
   (setq TeX-view-program-selection '((output-pdf "zathura")))
-  (setq TeX-source-correlate-method 'synctex)
   (set-default 'preview-scale-function 1.2)
   (add-hook 'LaTeX-mode-hook 'TeX-global-PDF-mode)
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   (eval-after-load "latex" '(progn
-  (add-to-list 'LaTeX-verbatim-environments "comment")
-  ))
-  (setq-default TeX-master nil) ; Query for master file.
+                              (add-to-list 'LaTeX-verbatim-environments "comment")
+                              ))
 
 #+END_SRC
 * haskell
@@ -453,4 +455,8 @@
 * browser
 #+BEGIN_SRC emacs-lisp
   (setq browse-url-browser-function 'browse-url-xdg-open)
+#+END_SRC
+* gdb
+#+BEGIN_SRC emacs-lisp
+  (setq gdb-many-windows t)
 #+END_SRC
