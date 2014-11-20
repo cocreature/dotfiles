@@ -32,6 +32,7 @@ export PATH=/home/moritz/code/haskell/pkg/xmonad/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/haskell/pkg/xmobar/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/haskell/pkg/cgrep/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/haskell/pkg/haskell-docs/.cabal-sandbox/bin:$PATH
+export PATH=/home/moritz/code/haskell/pkg/gtk2hs/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/emacs/structured-haskell-mode/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/emacs/ghc-mod/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/emacs/hindent/.cabal-sandbox/bin:$PATH
@@ -44,6 +45,7 @@ export BROWSER=firefox
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
 export _JAVA_AWT_WM_NONREPARENTING=1
 export FM_SVNPATH=$HOME/freiesmagazin/fm
+export BUP_DIR=/media/backup/bup
 
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
@@ -94,3 +96,12 @@ bindkey -M emacs '^N' history-substring-search-down
 zstyle ':filter-select:highlight' matched fg=green
 zstyle ':filter-select' extended-search yes
 zstyle ':filter-select' rotate-list yes
+
+envfile="$HOME/.gnupg/gpg-agent.env"
+if [[ -e "$envfile" ]] && kill -0 $(grep GPG_AGENT_INFO "$envfile" | cut -d: -f 2) 2>/dev/null; then
+    eval "$(cat "$envfile")"
+else
+    eval "$(gpg-agent --daemon --enable-ssh-support --write-env-file "$envfile")"
+fi
+export GPG_AGENT_INFO  # the env file does not contain the export statement
+export SSH_AUTH_SOCK   # enable gpg-agent for ssh

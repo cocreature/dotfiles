@@ -57,6 +57,7 @@
   (require 'helm-eshell)
   (require 'helm-files)
   (require 'helm-grep)
+  ;; key bindings
 
   (setq helm-man-or-woman-function 'woman)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
@@ -143,7 +144,6 @@
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c c") 'org-capture)
   (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c b") 'org-iswitchb)
 
   (eval-after-load "org-mode"
     '(progn
