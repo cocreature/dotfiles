@@ -325,111 +325,112 @@
 
   ;; default
   (load "mail")
-  (setq mu4e-html2text-command
-   "html2text_py | grep -v '&nbsp_place_holder;'")
-  (setq mu4e-maildir "~/mail")
-  (setq mu4e-drafts-folder "/gmail/drafts")
-  (setq mu4e-sent-folder   "/gmail/sent")
-  (setq mu4e-trash-folder  "/gmail/trash")
-  (setq mu4e-get-mail-command "mbsync -a")
-  (setq mu4e-update-interval 300)
-  (setq mu4e-view-show-addresses t)
-  (setq mu4e-headers-include-related t)
-  (setq mu4e-headers-show-threads nil)
-  (setq mu4e-headers-skip-duplicates t)
-  (setq mu4e-split-view 'vertical)
-  (setq mu4e-compose-dont-reply-to-self t)
-  (setq mu4e-compose-keep-self-cc nil)
-  (setq
-   user-mail-address (cadr mu4e-user-mail-address-list)
-   user-full-name  "Moritz Kiefer"
-   mu4e-compose-signature ""
-   mu4e-compose-signature-auto-include nil)
-  (setq mu4e-attachment-dir "~/downloads")
+  (if mail-on
+      (progn (setq mu4e-html2text-command
+                   "html2text_py | grep -v '&nbsp_place_holder;'")
+             (setq mu4e-maildir "~/mail")
+             (setq mu4e-drafts-folder "/gmail/drafts")
+             (setq mu4e-sent-folder   "/gmail/sent")
+             (setq mu4e-trash-folder  "/gmail/trash")
+             (setq mu4e-get-mail-command "mbsync -a")
+             (setq mu4e-update-interval 300)
+             (setq mu4e-view-show-addresses t)
+             (setq mu4e-headers-include-related t)
+             (setq mu4e-headers-show-threads nil)
+             (setq mu4e-headers-skip-duplicates t)
+             (setq mu4e-split-view 'vertical)
+             (setq mu4e-compose-dont-reply-to-self t)
+             (setq mu4e-compose-keep-self-cc nil)
+             (setq
+              user-mail-address (cadr mu4e-user-mail-address-list)
+              user-full-name  "Moritz Kiefer"
+              mu4e-compose-signature ""
+              mu4e-compose-signature-auto-include nil)
+             (setq mu4e-attachment-dir "~/downloads")
 
-  (setq   mu4e-maildir-shortcuts
-          '(("/gmail/inbox"     . ?g)
-            ("/holarse/inbox"       . ?h)
-            ("/purelyfunctional/inbox" . ?p)))
+             (setq   mu4e-maildir-shortcuts
+                     '(("/gmail/inbox"     . ?g)
+                       ("/holarse/inbox"       . ?h)
+                       ("/purelyfunctional/inbox" . ?p)))
 
-  (setq message-send-mail-function 'smtpmail-send-it
-        smtpmail-stream-type 'starttls
-        smtpmail-default-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-service 587)
+             (setq message-send-mail-function 'smtpmail-send-it
+                   smtpmail-stream-type 'starttls
+                   smtpmail-default-smtp-server "smtp.gmail.com"
+                   smtpmail-smtp-server "smtp.gmail.com"
+                   smtpmail-smtp-service 587)
 
-  (defvar my-mu4e-account-alist
-    `(("gmail"
-       (mu4e-sent-folder "/gmail/sent")
-       (mu4e-drafts-folder "/gmail/drafts")
-       (mu4e-trash-folder "/gmail/trash")
-       (mu4e-sent-messages-behavior delete)
-       (user-mail-address ,(car mu4e-user-mail-address-list))
-       (smtpmail-default-smtp-server "smtp.gmail.com")
-       (smtpmail-smtp-server "smtp.gmail.com")
-       (smtpmail-stream-type starttls)
-       (smtpmail-smtp-service 587))
-      ("holarse"
-       (mu4e-sent-folder "/holarse/sent")
-       (mu4e-drafts-folder "/holarse/drafts")
-       (mu4e-sent-messages-behavior sent)
-       (user-mail-address ,(cddr mu4e-user-mail-address-list))
-       (smtpmail-default-smtp-server "asmtp.mail.hostpoint.ch")
-       (smtpmail-smtp-server "asmtp.mail.hostpoint.ch")
-       (smtpmail-stream-type starttls)
-       (smtpmail-smtp-service 587))
-      ("purelyfunctional"
-       (mu4e-sent-folder "/purelyfunctional/sent")
-       (mu4e-drafts-folder "/purelyfunctional/drafts")
-       (mu4e-sent-messages-behavior sent)
-       (user-mail-address ,(cadr mu4e-user-mail-address-list))
-       (smtpmail-default-smtp-server "cassiopeia.uberspace.de")
-       (smtpmail-smtp-server "cassiopeia.uberspace.de")
-       (smtpmail-stream-type starttls)
-       (smtpmail-smtp-service 587))))
+             (defvar my-mu4e-account-alist
+               `(("gmail"
+                  (mu4e-sent-folder "/gmail/sent")
+                  (mu4e-drafts-folder "/gmail/drafts")
+                  (mu4e-trash-folder "/gmail/trash")
+                  (mu4e-sent-messages-behavior delete)
+                  (user-mail-address ,(car mu4e-user-mail-address-list))
+                  (smtpmail-default-smtp-server "smtp.gmail.com")
+                  (smtpmail-smtp-server "smtp.gmail.com")
+                  (smtpmail-stream-type starttls)
+                  (smtpmail-smtp-service 587))
+                 ("holarse"
+                  (mu4e-sent-folder "/holarse/sent")
+                  (mu4e-drafts-folder "/holarse/drafts")
+                  (mu4e-sent-messages-behavior sent)
+                  (user-mail-address ,(cddr mu4e-user-mail-address-list))
+                  (smtpmail-default-smtp-server "asmtp.mail.hostpoint.ch")
+                  (smtpmail-smtp-server "asmtp.mail.hostpoint.ch")
+                  (smtpmail-stream-type starttls)
+                  (smtpmail-smtp-service 587))
+                 ("purelyfunctional"
+                  (mu4e-sent-folder "/purelyfunctional/sent")
+                  (mu4e-drafts-folder "/purelyfunctional/drafts")
+                  (mu4e-sent-messages-behavior sent)
+                  (user-mail-address ,(cadr mu4e-user-mail-address-list))
+                  (smtpmail-default-smtp-server "cassiopeia.uberspace.de")
+                  (smtpmail-smtp-server "cassiopeia.uberspace.de")
+                  (smtpmail-stream-type starttls)
+                  (smtpmail-smtp-service 587))))
 
-  (defun my-mu4e-set-account ()
-    "Set the account for composing a message."
-    (let* ((account
-            (if mu4e-compose-parent-message
-                (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
-                  (string-match "/\\(.*?\\)/" maildir)
-                  (match-string 1 maildir))
-              (completing-read (format "Compose with account: (%s) "
-                                       (mapconcat #'(lambda (var) (car var)) my-mu4e-account-alist "/"))
-                               (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
-                               nil t nil nil (caar my-mu4e-account-alist))))
-           (account-vars (cdr (assoc account my-mu4e-account-alist))))
-      (if account-vars
-          (mapc #'(lambda (var)
-                    (set (car var) (cadr var)))
-                account-vars)
-        (error "No email account found"))))
+             (defun my-mu4e-set-account ()
+               "Set the account for composing a message."
+               (let* ((account
+                       (if mu4e-compose-parent-message
+                           (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+                             (string-match "/\\(.*?\\)/" maildir)
+                             (match-string 1 maildir))
+                         (completing-read (format "Compose with account: (%s) "
+                                                  (mapconcat #'(lambda (var) (car var)) my-mu4e-account-alist "/"))
+                                          (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
+                                          nil t nil nil (caar my-mu4e-account-alist))))
+                      (account-vars (cdr (assoc account my-mu4e-account-alist))))
+                 (if account-vars
+                     (mapc #'(lambda (var)
+                               (set (car var) (cadr var)))
+                           account-vars)
+                   (error "No email account found"))))
 
-  (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+             (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
 
-  (setq mu4e-bookmarks '(
-                         ("flag:unread AND NOT flag:trashed AND NOT maildir:/gmail/spam"
-                          "Unread messages"     ?u)
-                         ("date:today..now"                  "Today's messages"     ?t)
-                         ("date:7d..now"                     "Last 7 days"          ?w)
-                         ("mime:image/*"                     "Messages with images" ?p)))
+             (setq mu4e-bookmarks '(
+                                    ("flag:unread AND NOT flag:trashed AND NOT maildir:/gmail/spam"
+                                     "Unread messages"     ?u)
+                                    ("date:today..now"                  "Today's messages"     ?t)
+                                    ("date:7d..now"                     "Last 7 days"          ?w)
+                                    ("mime:image/*"                     "Messages with images" ?p)))
 
-  (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign)
-  (add-hook 'mu4e-view-mode-hook '(lambda ()
-                                    (local-set-key (kbd "<end>") 'end-of-line)
-                                    (local-set-key (kbd "<home>") 'beginning-of-line)))
+             (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign)
+             (add-hook 'mu4e-view-mode-hook '(lambda ()
+                                               (local-set-key (kbd "<end>") 'end-of-line)
+                                               (local-set-key (kbd "<home>") 'beginning-of-line)))
 
-  (setq mu4e-view-show-images t)
-  (when (fboundp 'imagemagick-register-types)
-    (imagemagick-register-types))
-  (add-to-list 'mu4e-view-actions
-               '("View in browser" . mu4e-action-view-in-browser) t)
+             (setq mu4e-view-show-images t)
+             (when (fboundp 'imagemagick-register-types)
+               (imagemagick-register-types))
+             (add-to-list 'mu4e-view-actions
+                          '("View in browser" . mu4e-action-view-in-browser) t)
 
 
 
-  ;; don't keep message buffers around
-  (setq message-kill-buffer-on-exit t)
+             ;; don't keep message buffers around
+             (setq message-kill-buffer-on-exit t)))
 #+END_SRC
 * indentation
 #+BEGIN_SRC emacs-lisp
