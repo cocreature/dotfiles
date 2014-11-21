@@ -277,11 +277,15 @@
             "%o"))))
   (setq TeX-view-program-selection '((output-pdf "zathura")))
   (set-default 'preview-scale-function 1.2)
-  (add-hook 'LaTeX-mode-hook 'TeX-global-PDF-mode)
+  (add-hook 'LaTeX-mode-hook (lambda () (TeX-global-PDF-mode t)))
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   (eval-after-load "latex" '(progn
                               (add-to-list 'LaTeX-verbatim-environments "comment")
                               ))
+  (eval-after-load "tex"
+    '(add-to-list 'TeX-command-list
+                  '("Glossary" "makeglossaries %s" TeX-run-command nil
+                    (latex-mode) :help "Create glossaries")))
 
 #+END_SRC
 * haskell
