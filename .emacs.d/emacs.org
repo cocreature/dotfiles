@@ -13,7 +13,7 @@
   (setq save-interprogram-paste-before-kill t)
   (setq sml/no-confirm-load-theme t)
   (semantic-mode 1)
-  (global-company-mode)
+  (global-company-mode t)
   (setq company-global-modes
         '(not
           eshell-mode comint-mode org-mode))
@@ -277,6 +277,7 @@
             "%o"))))
   (setq TeX-view-program-selection '((output-pdf "zathura")))
   (set-default 'preview-scale-function 1.2)
+  (require 'tex)
   (add-hook 'LaTeX-mode-hook (lambda () (TeX-global-PDF-mode t)))
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   (eval-after-load "latex" '(progn
@@ -290,7 +291,7 @@
 #+END_SRC
 * haskell
 #+BEGIN_SRC emacs-lisp
-  (setq haskell-process-type 'cabal-repl)
+  (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng"))
   (setq haskell-mode-contextual-import-completion nil)
   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
   (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
@@ -312,22 +313,35 @@
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
   (require 'shm-case-split)
   (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
-  (add-to-list 'company-backends 'company-ghc)
-  (autoload 'ghc-init "ghc" nil t)
-  (autoload 'ghc-debug "ghc" nil t)
-  (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
-
+  (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
+  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
 #+END_SRC
 * mu4e
 #+BEGIN_SRC emacs-lisp
   (require 'mu4e)
   (require 'org-mu4e)
-
+  (defun my-mu4e-shr2text ()
+    "Html to text using the shr engine; this can be used in
+  `mu4e-html2text-command' in a new enough emacs. Based on code by
+  Titus von der Malsburg."
+    (interactive)
+    (let ((dom (libxml-parse-html-region (point-min) (point-max)))
+          ;; When HTML emails contain references to remote images,
+          ;; retrieving these images leaks information. For example,
+          ;; the sender can see when I openend the email and from which
+          ;; computer (IP address). For this reason, it is preferrable
+          ;; to not retrieve images.
+          ;; See this discussion on mu-discuss:
+          ;; https://groups.google.com/forum/#!topic/mu-discuss/gr1cwNNZnXo
+          (shr-inhibit-images t))
+      (erase-buffer)
+      (shr-insert-document dom)
+      (goto-char (point-min))))
   ;; default
   (load "mail")
   (if mail-on
       (progn (setq mu4e-html2text-command
-                   "html2text_py | grep -v '&nbsp_place_holder;'")
+                   'my-mu4e-shr2text)
              (setq mu4e-maildir "~/mail")
              (setq mu4e-drafts-folder "/gmail/drafts")
              (setq mu4e-sent-folder   "/gmail/sent")
@@ -434,11 +448,7 @@
 #+END_SRC
 * indentation
 #+BEGIN_SRC emacs-lisp
-  (setq-default indent-tabs-mode nil)
-  (setq-default c-default-style "linux")
-  (setq-default c-basic-offset 4)
   (setq-default tab-width 4)
-  (c-set-offset 'comment-intro 0)
 #+END_SRC
 * lisp
 #+BEGIN_SRC emacs-lisp
@@ -466,4 +476,19 @@
 * gdb
 #+BEGIN_SRC emacs-lisp
   (setq gdb-many-windows t)
+#+END_SRC
+* emacs-eclim
+#+BEGIN_SRC emacs-lisp
+  (require 'eclim)
+  (global-eclim-mode 1)
+  (require 'eclimd)
+  (require 'company-emacs-eclim)
+  (company-emacs-eclim-setup)
+#+END_SRC
+* yasnippet
+#+BEGIN_SRC emacs-lisp
+  (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
+  (global-set-key (kbd "C-c y") 'helm-yas-complete)
+  (yas-global-mode t)
+
 #+END_SRC

@@ -27,6 +27,7 @@ alias nsm='non-session-manager -- --session-root ~/noise/nsm'
 alias devmon='devmon --no-gui'
 
 export PATH=/home/moritz/code/haskell/pkg/hlint/.cabal-sandbox/bin:$PATH
+export PATH=/home/moritz/code/haskell/ghci-ng/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/haskell/blog/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/haskell/pkg/xmonad/.cabal-sandbox/bin:$PATH
 export PATH=/home/moritz/code/haskell/pkg/xmobar/.cabal-sandbox/bin:$PATH
@@ -78,7 +79,7 @@ bindkey -e
 source /usr/share/doc/pkgfile/command-not-found.zsh
 
 # Base16 Shell
-BASE16_SCHEME="default"
+BASE16_SCHEME="monokai"
 BASE16_SHELL="$HOME/.config/base16-shell/base16-$BASE16_SCHEME.dark.sh"
 [[ -s $BASE16_SHELL ]] && . $BASE16_SHELL
 
@@ -96,12 +97,3 @@ bindkey -M emacs '^N' history-substring-search-down
 zstyle ':filter-select:highlight' matched fg=green
 zstyle ':filter-select' extended-search yes
 zstyle ':filter-select' rotate-list yes
-
-envfile="$HOME/.gnupg/gpg-agent.env"
-if [[ -e "$envfile" ]] && kill -0 $(grep GPG_AGENT_INFO "$envfile" | cut -d: -f 2) 2>/dev/null; then
-    eval "$(cat "$envfile")"
-else
-    eval "$(gpg-agent --daemon --enable-ssh-support --write-env-file "$envfile")"
-fi
-export GPG_AGENT_INFO  # the env file does not contain the export statement
-export SSH_AUTH_SOCK   # enable gpg-agent for ssh
