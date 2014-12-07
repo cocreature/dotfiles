@@ -217,6 +217,8 @@
 
   (eval-after-load "ox" '(setq org-export-default-language "de-de"))
   (eval-after-load "org" '(setq org-latex-packages-alist '(("ngerman" "babel" nil))))
+
+  (setq org-highlight-latex-and-related '(latex script entities))
 #+END_SRC
 * functions
 #+BEGIN_SRC emacs-lisp
@@ -484,18 +486,6 @@
 * gdb
 #+BEGIN_SRC emacs-lisp
   (setq gdb-many-windows t)
-#+END_SRC
-* emacs-eclim
-#+BEGIN_SRC emacs-lisp
-  (require 'eclim)
-  (setq help-at-pt-display-when-idle t)
-  (setq help-at-pt-timer-delay 0.1)
-  (help-at-pt-set-timer)
-  (global-eclim-mode 1)
-  (require 'eclimd)
-  (require 'company-emacs-eclim)
-  (company-emacs-eclim-setup)
-  (define-key eclim-mode-map (kbd "C-c C-e j d") 'eclim-java-show-documentation-for-current-element)
 #+END_SRC
 * yasnippet
 #+BEGIN_SRC emacs-lisp

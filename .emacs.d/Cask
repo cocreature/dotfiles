@@ -16,7 +16,6 @@
 (depends-on "company-cmake")
 (depends-on "discover-my-major")
 (depends-on "dockerfile-mode")
-(depends-on "emacs-eclim")
 (depends-on "expand-region")
 (depends-on "flycheck-haskell")
 (depends-on "haskell-mode")
