@@ -23,3 +23,4 @@
 /.emacs.d/.cask/
 /.emacs.d/projectile-bookmarks.eld
 /.emacs.d/workbench.xmi
+/.emacs.d/.mc-lists.el

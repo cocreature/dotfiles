@@ -6,6 +6,7 @@
 
 (depends-on "ace-jump-mode")
 (depends-on "ack-and-a-half")
+(depends-on "ag")
 (depends-on "auctex")
 (depends-on "cask")
 (depends-on "cdlatex")
@@ -20,6 +21,7 @@
 (depends-on "flycheck-haskell")
 (depends-on "haskell-mode")
 (depends-on "helm")
+(depends-on "helm-ag")
 (depends-on "helm-c-yasnippet")
 (depends-on "helm-projectile")
 (depends-on "lua-mode")

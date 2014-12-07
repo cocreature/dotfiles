@@ -14,9 +14,7 @@
   (setq sml/no-confirm-load-theme t)
   (semantic-mode 1)
   (global-company-mode t)
-  (setq company-global-modes
-        '(not
-          eshell-mode comint-mode org-mode))
+  (setq company-minimum-prefix-length 0)
   (add-hook 'sgml-mode-hook 'emmet-mode)
   (add-hook 'css-mode-hook  'emmet-mode)
   (setq ag-highlight-search t)
@@ -50,10 +48,8 @@
 #+BEGIN_SRC emacs-lisp
   (require 'helm)
 
-  ;; must set before helm-config,  otherwise helm use default
-  ;; prefix "C-x c", which is inconvenient because you can
-  ;; accidentially pressed "C-x C-c"
   (setq helm-command-prefix-key "C-c h")
+  (setq helm-M-x-fuzzy-match nil)
   (require 'helm-config)
   (require 'helm-eshell)
   (require 'helm-files)
@@ -209,6 +205,18 @@
                '("n" ded/org-show-next-heading-tidily))
   (add-to-list 'org-speed-commands-user
                '("p" ded/org-show-previous-heading-tidily))
+
+  (eval-after-load "ox-latex" '(add-to-list 'org-latex-classes
+            '("koma-article"
+               "\\documentclass{scrartcl}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
+  (eval-after-load "ox" '(setq org-export-default-language "de-de"))
+  (eval-after-load "org" '(setq org-latex-packages-alist '(("ngerman" "babel" nil))))
 #+END_SRC
 * functions
 #+BEGIN_SRC emacs-lisp
@@ -257,7 +265,7 @@
   (global-set-key (kbd "C-=") 'er/expand-region)
 
   ;; ace-jump-mode
-  (global-set-key (kbd "C-ß") 'ace-jump-mode)
+  (global-set-key (kbd "C-ß") 'ace-jump-char-mode)
   (global-set-key (kbd "C-x C-b") 'ibuffer)
 
   ;; multiple-cursors
@@ -480,15 +488,18 @@
 * emacs-eclim
 #+BEGIN_SRC emacs-lisp
   (require 'eclim)
+  (setq help-at-pt-display-when-idle t)
+  (setq help-at-pt-timer-delay 0.1)
+  (help-at-pt-set-timer)
   (global-eclim-mode 1)
   (require 'eclimd)
   (require 'company-emacs-eclim)
   (company-emacs-eclim-setup)
+  (define-key eclim-mode-map (kbd "C-c C-e j d") 'eclim-java-show-documentation-for-current-element)
 #+END_SRC
 * yasnippet
 #+BEGIN_SRC emacs-lisp
   (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
   (global-set-key (kbd "C-c y") 'helm-yas-complete)
   (yas-global-mode t)
-
 #+END_SRC
