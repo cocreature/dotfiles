@@ -47,6 +47,7 @@ export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswi
 export _JAVA_AWT_WM_NONREPARENTING=1
 export FM_SVNPATH=$HOME/freiesmagazin/fm
 export BUP_DIR=/media/backup/bup
+export SSH_AUTH_SOCK=~/.gnupg/S.gpg-agent.ssh
 
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo

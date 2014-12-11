@@ -14,7 +14,6 @@
   (setq sml/no-confirm-load-theme t)
   (semantic-mode 1)
   (global-company-mode t)
-  (setq company-minimum-prefix-length 0)
   (add-hook 'sgml-mode-hook 'emmet-mode)
   (add-hook 'css-mode-hook  'emmet-mode)
   (setq ag-highlight-search t)
@@ -121,7 +120,6 @@
 #+END_SRC
 * org
 #+BEGIN_SRC emacs-lisp
-  (require 'org-drill)
   (setq org-log-done t)
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)$" . org-mode))
 
@@ -492,4 +490,12 @@
   (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
   (global-set-key (kbd "C-c y") 'helm-yas-complete)
   (yas-global-mode t)
+#+END_SRC
+* symlinks
+#+BEGIN_SRC emacs-lisp
+  (setq vc-follow-link t)
+#+END_SRC
+* aggressive indent
+#+BEGIN_SRC emacs-lisp
+  (global-aggressive-indent-mode 1)
 #+END_SRC
