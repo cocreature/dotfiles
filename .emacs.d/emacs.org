@@ -6,33 +6,20 @@
   (pallet-mode t)
 
 #+END_SRC
-* initialization
+* misc
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'magit-mode-hook 'magit-load-config-extensions)
   (add-to-list 'load-path "~/.emacs.d/notsynced")
   (setq save-interprogram-paste-before-kill t)
   (setq sml/no-confirm-load-theme t)
-  (semantic-mode 1)
   (global-company-mode t)
-  (add-hook 'sgml-mode-hook 'emmet-mode)
-  (add-hook 'css-mode-hook  'emmet-mode)
   (setq ag-highlight-search t)
-  (add-to-list 'load-path "/home/moritz/code/emacs/pkgbuild-mode")
-  (autoload 'pkgbuild-mode "pkgbuild-mode.el" "PKGBUILD mode." t)
-  (add-to-list 'auto-mode-alist '("/PKGBUILD$" . pkgbuild-mode))
   (global-undo-tree-mode)
-  (setq nlinum-format "%d\u2502")
-  (setq-default abbrev-mode t)
-  (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
   (setq show-paren-style 'expression)
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-  (setq ediff-split-window-function 'split-window-horizontally)
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
   (when (fboundp 'windmove-default-keybindings)
     (windmove-default-keybindings))
   (winner-mode 1)
 #+END_SRC
-
 * dired
 #+BEGIN_SRC elisp
   (setq dired-dwim-target t)
@@ -321,8 +308,8 @@
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
   (require 'shm-case-split)
   (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
-  (define-key haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
-  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
+  (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
+  (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
 #+END_SRC
 * mu4e
 #+BEGIN_SRC emacs-lisp
@@ -498,4 +485,29 @@
 * aggressive indent
 #+BEGIN_SRC emacs-lisp
   (global-aggressive-indent-mode 1)
+#+END_SRC
+* magit
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'magit-mode-hook 'magit-load-config-extensions)
+#+END_SRC
+* emmet
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'sgml-mode-hook 'emmet-mode)
+  (add-hook 'css-mode-hook  'emmet-mode)
+#+END_SRC
+* pkgbuild
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/home/moritz/code/emacs/pkgbuild-mode")
+  (autoload 'pkgbuild-mode "pkgbuild-mode.el" "PKGBUILD mode." t)
+  (add-to-list 'auto-mode-alist '("/PKGBUILD$" . pkgbuild-mode))
+#+END_SRC
+* abbrev
+#+BEGIN_SRC emacs-lisp
+(setq-default abbrev-mode t)
+(setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+#+END_SRC
+* ediff
+#+BEGIN_SRC emacs-lisp
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq ediff-split-window-function 'split-window-horizontally)
 #+END_SRC
