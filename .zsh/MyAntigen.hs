@@ -8,7 +8,8 @@ import Shelly (shelly, verbosely)
 bundles = [ bundle "zsh-users/zsh-syntax-highlighting"
           , bundle "zsh-users/zsh-history-substring-search"
           , bundle "zsh-users/zaw"
-          , bundle "Javafant/pure"]
+          , bundle "sindresorhus/pure"
+          , bundle "cocreature/z"]
 
 config = AntigenConfiguration bundles
 

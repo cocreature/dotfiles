@@ -45,7 +45,7 @@ export MAILDIR=~/mail
 export BROWSER=firefox
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
 export _JAVA_AWT_WM_NONREPARENTING=1
-export FM_SVNPATH=$HOME/freiesmagazin/fm
+export FM_SVNPATH=$HOME/freiesmagazin/freiesMagazin
 export BUP_DIR=/media/backup/bup
 export SSH_AUTH_SOCK=~/.gnupg/S.gpg-agent.ssh
 

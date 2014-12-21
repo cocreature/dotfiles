@@ -80,10 +80,11 @@
 #+END_SRC
 * projectile
 #+BEGIN_SRC emacs-lisp
-  (projectile-global-mode)
+  (projectile-global-mode t)
   (require 'helm-projectile)
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
+  (setq projectile-require-project-root nil)
 #+END_SRC
 
 * gui
@@ -288,14 +289,7 @@
 #+BEGIN_SRC emacs-lisp
   (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng"))
   (setq haskell-mode-contextual-import-completion nil)
-  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
   (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
-  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
-  (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
-  (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-  (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
-  (define-key haskell-mode-map (kbd "C-c c") 'haskell-process-cabal)
-  (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)
 
   (setq haskell-interactive-mode-eval-mode 'haskell-mode)
 
@@ -305,11 +299,15 @@
   (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl)
   (setq hindent-style "chris-done")
   (require 'shm)
+  (require 'haskell)
   (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+  (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
   (require 'shm-case-split)
   (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
   (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
   (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
+  (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
 #+END_SRC
 * mu4e
 #+BEGIN_SRC emacs-lisp
@@ -444,6 +442,7 @@
 * indentation
 #+BEGIN_SRC emacs-lisp
   (setq-default tab-width 4)
+  (setq-default indent-tabs-mode nil)
 #+END_SRC
 * lisp
 #+BEGIN_SRC emacs-lisp
@@ -481,10 +480,6 @@
 * symlinks
 #+BEGIN_SRC emacs-lisp
   (setq vc-follow-link t)
-#+END_SRC
-* aggressive indent
-#+BEGIN_SRC emacs-lisp
-  (global-aggressive-indent-mode 1)
 #+END_SRC
 * magit
 #+BEGIN_SRC emacs-lisp
