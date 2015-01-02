@@ -205,6 +205,9 @@
   (eval-after-load "org" '(setq org-latex-packages-alist '(("ngerman" "babel" nil))))
 
   (setq org-highlight-latex-and-related '(latex script entities))
+
+  (require 'ox-bibtex)
+  (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
 #+END_SRC
 * functions
 #+BEGIN_SRC emacs-lisp
@@ -288,7 +291,6 @@
 * haskell
 #+BEGIN_SRC emacs-lisp
   (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng"))
-  (setq haskell-mode-contextual-import-completion nil)
   (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
 
   (setq haskell-interactive-mode-eval-mode 'haskell-mode)
@@ -505,4 +507,23 @@
 #+BEGIN_SRC emacs-lisp
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   (setq ediff-split-window-function 'split-window-horizontally)
+#+END_SRC
+* reveal
+#+BEGIN_SRC emacs-lisp
+  (setq org-reveal-root "file:///home/moritz/code/web/reveal.js/")
+  (setq org-reveal-title-slide-template
+        "<h1>%t</h1>
+         <h2>%a</h2>
+         <h2>%d</h2>")
+#+END_SRC
+* impress
+#+BEGIN_SRC emacs-lisp
+(setq org-impress-js-javascript "/home/moritz/code/web/impress.js/js/impress.js")
+(setq org-impress-js-stylesheet "/home/moritz/code/web/impress.js/css/impress-demo.css")
+#+END_SRC
+* idris
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/code/idris/idris-mode")
+  (require 'idris-mode)
+  (setq idris-metavariable-list-show-expanded t)
 #+END_SRC
