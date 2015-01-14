@@ -203,6 +203,23 @@
 
   (eval-after-load "ox" '(setq org-export-default-language "de-de"))
   (eval-after-load "org" '(setq org-latex-packages-alist '(("ngerman" "babel" nil))))
+  (eval-after-load "org" '(setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
+   ("T1" "fontenc" t)
+   ("" "fixltx2e" nil)
+   ("" "graphicx" t)
+   ("" "longtable" nil)
+   ("" "float" nil)
+   ("" "wrapfig" nil)
+   ("" "rotating" nil)
+   ("normalem" "ulem" t)
+   ("" "amsmath" t)
+   ("" "textcomp" t)
+   ("" "marvosym" t)
+   ("" "wasysym" t)
+   ("" "amssymb" t)
+   ("hyphens" "url" nil)
+   ("" "hyperref" nil)
+   "\\tolerance=1000")))
 
   (setq org-highlight-latex-and-related '(latex script entities))
 
@@ -265,6 +282,8 @@
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
   (global-set-key (kbd "C-ä") 'mc/mark-sgml-tag-pair)
+
+  (global-ace-isearch-mode nil)
 #+END_SRC
 * auctex
 #+BEGIN_SRC emacs-lisp
@@ -310,6 +329,7 @@
   (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
   (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
   (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
+  (add-hook 'haskell-mode-hook 'hindent-mode)
 #+END_SRC
 * mu4e
 #+BEGIN_SRC emacs-lisp
