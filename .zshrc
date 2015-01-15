@@ -100,3 +100,5 @@ bindkey -M emacs '^N' history-substring-search-down
 zstyle ':filter-select:highlight' matched fg=green
 zstyle ':filter-select' extended-search yes
 zstyle ':filter-select' rotate-list yes
+
+source /home/moritz/.nix-profile/etc/profile.d/nix.sh

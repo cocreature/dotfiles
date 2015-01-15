@@ -4,7 +4,13 @@
   (cask-initialize)
   (require 'pallet)
   (pallet-mode t)
-
+#+END_SRC
+* nix
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/.nix-profile/share/emacs/site-lisp")
+  ; add to load path recursively
+  (let ((default-directory "~/.nix-profile/share/emacs/site-lisp"))
+    (normal-top-level-add-subdirs-to-load-path))
 #+END_SRC
 * misc
 #+BEGIN_SRC emacs-lisp
@@ -80,6 +86,7 @@
 #+END_SRC
 * projectile
 #+BEGIN_SRC emacs-lisp
+  (require 'magit)
   (projectile-global-mode t)
   (require 'helm-projectile)
   (helm-projectile-on)
@@ -314,8 +321,6 @@
 
   (setq haskell-interactive-mode-eval-mode 'haskell-mode)
 
-  (add-to-list 'load-path "/home/moritz/code/emacs/structured-haskell-mode/elisp")
-  (add-to-list 'load-path "/home/moritz/code/emacs/hindent/elisp")
   (require 'hindent)
   (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl)
   (setq hindent-style "chris-done")
