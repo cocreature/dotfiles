@@ -101,4 +101,6 @@ zstyle ':filter-select:highlight' matched fg=green
 zstyle ':filter-select' extended-search yes
 zstyle ':filter-select' rotate-list yes
 
-source /home/moritz/.nix-profile/etc/profile.d/nix.sh
+export NIX_REMOTE=daemon
+
+source /etc/profile.d/nix.sh

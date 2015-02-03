@@ -11,6 +11,7 @@
   ; add to load path recursively
   (let ((default-directory "~/.nix-profile/share/emacs/site-lisp"))
     (normal-top-level-add-subdirs-to-load-path))
+  (require 'nix-mode)
 #+END_SRC
 * misc
 #+BEGIN_SRC emacs-lisp
@@ -91,7 +92,6 @@
   (require 'helm-projectile)
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
-  (setq projectile-require-project-root nil)
 #+END_SRC
 
 * gui
@@ -318,7 +318,7 @@
 #+BEGIN_SRC emacs-lisp
   (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng"))
   (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
-
+  (setq haskell-process-log t)
   (setq haskell-interactive-mode-eval-mode 'haskell-mode)
 
   (require 'hindent)
@@ -335,6 +335,15 @@
   (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
   (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
   (add-hook 'haskell-mode-hook 'hindent-mode)
+  (setq haskell-process-wrapper-function
+     (lambda
+       (argv)
+       (append
+        (list "nix-shell" "-I" "." "--command")
+        (list
+         (mapconcat
+          (quote identity)
+          argv " ")))))
 #+END_SRC
 * mu4e
 #+BEGIN_SRC emacs-lisp
