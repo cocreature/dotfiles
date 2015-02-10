@@ -161,3 +161,6 @@ bindsym $mod+Shift+minus move scratchpad
 
 # Show the first scratchpad window
 bindsym $mod+minus scratchpad show
+
+for_window [title="Welcome to Wolfram Mathematica 10"] floating enable
+for_window [title="Choose a custom style"] floating enable

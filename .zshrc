@@ -104,3 +104,4 @@ zstyle ':filter-select' rotate-list yes
 export NIX_REMOTE=daemon
 
 source /etc/profile.d/nix.sh
+export NIX_PATH=nixpkgs=/home/moritz/code/nix/nixpkgs:$NIX_PATH

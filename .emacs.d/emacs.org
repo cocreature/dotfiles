@@ -13,19 +13,26 @@
     (normal-top-level-add-subdirs-to-load-path))
   (require 'nix-mode)
 #+END_SRC
+* pos-tip
+#+BEGIN_SRC emacs-lisp
+  (setq pos-tip-background-color "#4e4e4e")
+  (setq pos-tip-foreground-color "#5fafd7")
+#+END_SRC
 * misc
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path "~/.emacs.d/notsynced")
   (setq save-interprogram-paste-before-kill t)
   (setq sml/no-confirm-load-theme t)
-  (global-company-mode t)
   (setq ag-highlight-search t)
   (global-undo-tree-mode)
-  (setq show-paren-style 'expression)
+  (setq show-paren-style 'paranthesis)
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
-  (when (fboundp 'windmove-default-keybindings)
-    (windmove-default-keybindings))
   (winner-mode 1)
+#+END_SRC
+* company
+#+BEGIN_SRC emacs-lisp
+  (global-company-mode t)
+  (company-quickhelp-mode 1)
 #+END_SRC
 * dired
 #+BEGIN_SRC elisp
@@ -232,6 +239,7 @@
 
   (require 'ox-bibtex)
   (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 #+END_SRC
 * functions
 #+BEGIN_SRC emacs-lisp
@@ -490,14 +498,19 @@
   (add-hook 'lisp-mode-hook             'enable-paredit-mode)
   (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
   (add-hook 'scheme-mode-hook           'enable-paredit-mode)
+  (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
+    (add-hook hook 'turn-on-elisp-slime-nav-mode))
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 #+END_SRC
 * flycheck
 #+BEGIN_SRC emacs-lisp
   (add-hook 'after-init-hook #'global-flycheck-mode)
   (eval-after-load 'flycheck
-    '(add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
-  ;; (eval-after-load 'flycheck '(progn (set-face-attribute 'flycheck-error-list-highlight-at-point nil
-  ;;                                                        :background "#660C37")))
+    '(add-to-list 'flycheck-checkers 'haskell-process))
+  (require 'haskell-flycheck)
+  (setq flycheck-emacs-lisp-load-path 'inherit)
 #+END_SRC
 * browser
 #+BEGIN_SRC emacs-lisp
@@ -510,12 +523,13 @@
 * yasnippet
 #+BEGIN_SRC emacs-lisp
   (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
+  (setq helm-yas-display-key-on-candidate t)
   (global-set-key (kbd "C-c y") 'helm-yas-complete)
   (yas-global-mode t)
 #+END_SRC
 * symlinks
 #+BEGIN_SRC emacs-lisp
-  (setq vc-follow-link t)
+  (setq vc-follow-symlinks t)
 #+END_SRC
 * magit
 #+BEGIN_SRC emacs-lisp
@@ -610,3 +624,40 @@
             (setq field (1+ field))))
         (nreverse keys))))
 #+END_SRC
+* hydra
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-p") 'ace-window)
+  (global-set-key
+   (kbd "M-C-p")
+   (defhydra hydra-window (:color amaranth)
+     "window"
+     ("n" windmove-left)
+     ("r" windmove-down)
+     ("t" windmove-up)
+     ("d" windmove-right)
+     ("v" (lambda ()
+            (interactive)
+            (split-window-right)
+            (windmove-right))
+          "vert")
+     ("x" (lambda ()
+            (interactive)
+            (split-window-below)
+            (windmove-down))
+          "horz")
+     ("t" transpose-frame "'")
+     ("o" delete-other-windows "one" :color blue)
+     ("a" ace-window "ace")
+     ("s" ace-swap-window "swap")
+     ("k" ace-delete-window "del")
+     ("i" ace-maximize-window "ace-one" :color blue)
+     ("b" helm-mini "buf")
+     ("m" headlong-bookmark-jump "bmk")
+     ("q" nil "cancel")))
+#+END_SRC
+* github
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/code/emacs/github")
+  (require 'github)
+#+END_SRC
+
