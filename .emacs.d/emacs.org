@@ -534,6 +534,7 @@
 * magit
 #+BEGIN_SRC emacs-lisp
   (add-hook 'magit-mode-hook 'magit-load-config-extensions)
+  (define-key magit-mode-map (kbd "M-p") nil)
 #+END_SRC
 * emmet
 #+BEGIN_SRC emacs-lisp
