@@ -26,21 +26,6 @@ alias mus='mosh -p 62308 us'
 alias nsm='non-session-manager -- --session-root ~/noise/nsm'
 alias devmon='devmon --no-gui'
 
-export PATH=/home/moritz/code/haskell/pkg/hlint/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/haskell/ghci-ng/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/haskell/blog/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/idris/idris/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/haskell/pkg/xmonad/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/haskell/pkg/xmobar/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/haskell/pkg/cgrep/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/haskell/pkg/haskell-docs/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/haskell/pkg/gtk2hs/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/haskell/pkg/pandoc/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/emacs/structured-haskell-mode/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/emacs/ghc-mod/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/code/emacs/hindent/.cabal-sandbox/bin:$PATH
-export PATH=/home/moritz/bin:/home/moritz/.cabal/bin:$PATH
-export PATH=$PATH:/home/moritz/.gem/ruby/2.0.0/bin
 export PATH="$HOME/.cask/bin:$PATH"
 export EDITOR=emacsclient
 export MAILDIR=~/mail
@@ -105,3 +90,4 @@ export NIX_REMOTE=daemon
 
 source /etc/profile.d/nix.sh
 export NIX_PATH=nixpkgs=/home/moritz/code/nix/nixpkgs:$NIX_PATH
+export PATH=$HOME/bin:$PATH
