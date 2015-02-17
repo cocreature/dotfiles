@@ -298,7 +298,7 @@
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
   (global-set-key (kbd "C-ä") 'mc/mark-sgml-tag-pair)
 
-  (global-ace-isearch-mode nil)
+  (global-ace-isearch-mode)
 #+END_SRC
 * auctex
 #+BEGIN_SRC emacs-lisp
@@ -355,6 +355,7 @@
 #+END_SRC
 * mu4e
 #+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/code/emacs/mu/mu4e")
   (require 'mu4e)
   (require 'org-mu4e)
   (defun my-mu4e-shr2text ()
@@ -534,7 +535,6 @@
 * magit
 #+BEGIN_SRC emacs-lisp
   (add-hook 'magit-mode-hook 'magit-load-config-extensions)
-  (define-key magit-mode-map (kbd "M-p") nil)
 #+END_SRC
 * emmet
 #+BEGIN_SRC emacs-lisp
@@ -627,9 +627,9 @@
 #+END_SRC
 * hydra
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-p") 'ace-window)
+  (global-set-key (kbd "M-ä") 'ace-window)
   (global-set-key
-   (kbd "M-C-p")
+   (kbd "M-ö")
    (defhydra hydra-window (:color amaranth)
      "window"
      ("n" windmove-left)
@@ -640,12 +640,12 @@
             (interactive)
             (split-window-right)
             (windmove-right))
-          "vert")
+      "vert")
      ("x" (lambda ()
             (interactive)
             (split-window-below)
             (windmove-down))
-          "horz")
+      "horz")
      ("t" transpose-frame "'")
      ("o" delete-other-windows "one" :color blue)
      ("a" ace-window "ace")
@@ -655,6 +655,60 @@
      ("b" helm-mini "buf")
      ("m" headlong-bookmark-jump "bmk")
      ("q" nil "cancel")))
+  (defhydra hydra-zoom (global-map "<f2>")
+    "zoom"
+    ("g" text-scale-increase "in")
+    ("l" text-scale-decrease "out"))
+  (defhydra hydra-error (global-map "M-g")
+    "goto-error"
+    ("h" first-error "first")
+    ("j" next-error "next")
+    ("k" previous-error "prev")
+    ("v" recenter-top-bottom "recenter")
+    ("q" nil "quit"))
+
+  (require 'windmove)
+  (defun hydra-move-splitter-left (arg)
+    "Move window splitter left."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'right))
+        (shrink-window-horizontally arg)
+      (enlarge-window-horizontally arg)))
+
+  (defun hydra-move-splitter-right (arg)
+    "Move window splitter right."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'right))
+        (enlarge-window-horizontally arg)
+      (shrink-window-horizontally arg)))
+
+  (defun hydra-move-splitter-up (arg)
+    "Move window splitter up."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'up))
+        (enlarge-window arg)
+      (shrink-window arg)))
+
+  (defun hydra-move-splitter-down (arg)
+    "Move window splitter down."
+    (interactive "p")
+    (if (let ((windmove-wrap-around))
+          (windmove-find-other-window 'up))
+        (shrink-window arg)
+      (enlarge-window arg)))
+
+  (global-set-key
+   (kbd "M-ü")
+   (defhydra hydra-splitter ()
+     "splitter"
+     ("n" hydra-move-splitter-left)
+     ("r" hydra-move-splitter-down)
+     ("t" hydra-move-splitter-up)
+     ("d" hydra-move-splitter-right)
+     ("q" nil "quit"))))
 #+END_SRC
 * github
 #+BEGIN_SRC emacs-lisp
@@ -662,3 +716,8 @@
   (require 'github)
 #+END_SRC
 
+* annoying errows
+#+begin_src emacs-lisp
+  (global-annoying-arrows-mode)
+  (setq annoying-arrows-too-far-count 5)
+#+end_src
