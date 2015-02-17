@@ -708,7 +708,7 @@
      ("r" hydra-move-splitter-down)
      ("t" hydra-move-splitter-up)
      ("d" hydra-move-splitter-right)
-     ("q" nil "quit"))))
+     ("q" nil "quit")))
 #+END_SRC
 * github
 #+BEGIN_SRC emacs-lisp
