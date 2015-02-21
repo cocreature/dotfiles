@@ -1,26 +1,74 @@
 * packages
-#+BEGIN_SRC emacs-lisp
-  (require 'cask "~/.cask/cask.el")
-  (cask-initialize)
-  (require 'pallet)
-  (pallet-mode t)
-#+END_SRC
+#+begin_src emacs-lisp :tangle yes
+  (require 'package)
+  (add-to-list 'package-archives
+               '("marmalade" . "http://marmalade-repo.org/packages/"))
+  (add-to-list 'package-archives
+               '("melpa" . "http://melpa.org/packages/"))
+  (add-to-list 'package-archives
+               '("melpa" . "http://melpa.org/packages/") t)
+  (add-to-list 'package-archives
+               '("melpa-stable" . "http://stable.melpa.org/packages/"))
+  (add-to-list 'package-archives
+               '("org" . "http://orgmode.org/elpa/"))
+  (package-initialize)
+  (paradox-require 'oauth2)
+  (paradox-require 'elnode)
+  (paradox-require 'undo-tree)
+  (paradox-require 'company)
+  (paradox-require 'company-quickhelp)
+  (paradox-require 'helm)
+  (paradox-require 'magit)
+  (paradox-require 'projectile)
+  (paradox-require 'helm-projectile)
+  (paradox-require 'moe-theme)
+  (paradox-require 'smart-mode-line)
+  (paradox-require 'org-plus-contrib)
+  (paradox-require 'web)
+  (paradox-require 'ace-isearch)
+  (paradox-require 'tex)
+  (paradox-require 'haskell-mode)
+  (paradox-require 'paredit)
+  (paradox-require 'sx)
+  (paradox-require 'magit-svn)
+  (paradox-require 'hydra)
+  (paradox-require 'helm-c-yasnippet)
+  (paradox-require 'helm-ag)
+  (paradox-require 'markdown-mode)
+  (paradox-require 'ace-window)
+  (paradox-require 'cdlatex)
+  (paradox-require 'company-cmake)
+  (paradox-require 'expand-region)
+  (paradox-require 'multiple-cursors)
+  (paradox-require 'flycheck)
+  (paradox-require 'elisp-slime-nav)
+  (paradox-require 'guide-key)
+  (paradox-require 'helm-descbinds)
+#+end_src
+* secrets
+#+begin_src emacs-lisp :tangle yes
+  (add-to-list 'load-path "~/.emacs.d/notsynced")
+  (require 'secret)
+#+end_src
+* paradox
+#+begin_src emacs-lisp :tangle yes
+  (setq paradox-execute-asynchronously t)
+#+end_src
 * nix
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-to-list 'load-path "~/.nix-profile/share/emacs/site-lisp")
   ; add to load path recursively
   (let ((default-directory "~/.nix-profile/share/emacs/site-lisp"))
     (normal-top-level-add-subdirs-to-load-path))
   (require 'nix-mode)
-#+END_SRC
+#+end_src
 * pos-tip
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq pos-tip-background-color "#4e4e4e")
   (setq pos-tip-foreground-color "#5fafd7")
-#+END_SRC
+#+end_src
 * misc
-#+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/notsynced")
+#+begin_src emacs-lisp :tangle yes
   (setq save-interprogram-paste-before-kill t)
   (setq sml/no-confirm-load-theme t)
   (setq ag-highlight-search t)
