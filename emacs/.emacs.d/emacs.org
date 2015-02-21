@@ -76,29 +76,26 @@
   (setq show-paren-style 'paranthesis)
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
   (winner-mode 1)
-#+END_SRC
+#+end_src
 * company
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (global-company-mode t)
   (company-quickhelp-mode 1)
-#+END_SRC
+#+end_src
 * dired
-#+BEGIN_SRC elisp
+#+begin_src emacs-lisp :tangle yes
   (setq dired-dwim-target t)
-  (require 'dired-details+)
-  (setq dired-details-hide-link-targets nil)
   (setq-default dired-omit-mode t)
   (define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
   (setq-default dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.")
-#+END_SRC
+#+end_src
 
 * helm
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (require 'helm)
-
-  (setq helm-command-prefix-key "C-c h")
-  (setq helm-M-x-fuzzy-match nil)
   (require 'helm-config)
+  (global-set-key (kbd "C-c h") 'helm-command-prefix)
+  (setq helm-M-x-fuzzy-match nil)
   (require 'helm-eshell)
   (require 'helm-files)
   (require 'helm-grep)
@@ -109,6 +106,7 @@
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
   (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
+  (define-key helm-command-map (kbd "d") 'helm-descbinds)
   (define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
   (define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
   (define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
@@ -139,18 +137,17 @@
   (add-hook 'helm-goto-line-before-hook 'helm-save-current-pos-to-mark-ring)
 
   (helm-mode 1)
-#+END_SRC
+#+end_src
 * projectile
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (require 'magit)
   (projectile-global-mode t)
   (require 'helm-projectile)
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
-#+END_SRC
-
+#+end_src
 * gui
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq inhibit-splash-screen t)
   (menu-bar-mode -1)
   (tool-bar-mode -1)
@@ -167,14 +164,20 @@
   ;; show-paren-mode
   (setq show-paren-delay 0)
   (show-paren-mode t)
-#+END_SRC
+#+end_src
 * org
-#+BEGIN_SRC emacs-lisp
+** dirs
+#+begin_src emacs-lisp :tangle yes
+
+#+end_src
+#+begin_src emacs-lisp :tangle yes
   (setq org-log-done t)
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)$" . org-mode))
 
   (setq org-directory "~/org")
   (setq org-agenda-files '("~/org"))
+  (setq org-mobile-directory "~/org/mobile")
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
 
   (setq org-file-apps
         '((auto-mode . emacs)
@@ -190,16 +193,11 @@
   (global-set-key (kbd "C-c c") 'org-capture)
   (global-set-key (kbd "C-c a") 'org-agenda)
 
-  (eval-after-load "org-mode"
-    '(progn
-       (plist-put org-format-latex-options :scale 2.0)))
 
-  (setq org-mobile-directory "~/org/mobile")
-
-  (setq org-default-notes-file (concat org-directory "/notes.org"))
 
   (setq org-clock-persist 'history)
   (org-clock-persistence-insinuate)
+
   ;; orgmode babel
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -221,38 +219,7 @@
   (add-hook 'org-clock-out-hook (lambda ()
         (org-timer-set-timer 5)))
 
-  (defun ded/org-show-next-heading-tidily ()
-    "Show next entry, keeping other entries closed."
-    (if (save-excursion (end-of-line) (outline-invisible-p))
-        (progn (org-show-entry) (show-children))
-      (outline-next-heading)
-      (unless (and (bolp) (org-on-heading-p))
-        (org-up-heading-safe)
-        (hide-subtree)
-        (error "Boundary reached"))
-      (org-overview)
-      (org-reveal t)
-      (org-show-entry)
-      (show-children)))
-
-  (defun ded/org-show-previous-heading-tidily ()
-    "Show previous entry, keeping other entries closed."
-    (let ((pos (point)))
-      (outline-previous-heading)
-      (unless (and (< (point) pos) (bolp) (org-on-heading-p))
-        (goto-char pos)
-        (hide-subtree)
-        (error "Boundary reached"))
-      (org-overview)
-      (org-reveal t)
-      (org-show-entry)
-      (show-children)))
-
   (setq org-use-speed-commands t)
-  (add-to-list 'org-speed-commands-user
-               '("n" ded/org-show-next-heading-tidily))
-  (add-to-list 'org-speed-commands-user
-               '("p" ded/org-show-previous-heading-tidily))
 
   (eval-after-load "ox-latex" '(add-to-list 'org-latex-classes
             '("koma-article"
@@ -288,9 +255,13 @@
   (require 'ox-bibtex)
   (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-#+END_SRC
+
+  (setq org-capture-templates
+        '(("t" "Task" entry (file+headline "" "Tasks")
+          "* TODO %?\n  %U\n  %a")))
+#+end_src
 * functions
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; comment out line if no region is selected
   (defun comment-dwim-line (&optional arg)
       "Replacement for the comment-dwim command.
@@ -318,9 +289,9 @@
   (defun sprunge-buffer ()
     (interactive)
     (sprunge-region (point-min) (point-max)))
-#+END_SRC
+#+end_src
 * bindings
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (global-set-key (kbd "M-;") 'comment-dwim-line)
 
   (global-set-key (kbd "M-x") 'helm-M-x)
@@ -346,10 +317,11 @@
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
   (global-set-key (kbd "C-ä") 'mc/mark-sgml-tag-pair)
 
+  (global-set-key (kbd "C-x C-r") 'revert-buffer)
   (global-ace-isearch-mode)
-#+END_SRC
+#+end_src
 * auctex
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq TeX-view-program-list
         '(("zathura"
            ("zathura" (mode-io-correlate "-sync.sh")
@@ -369,9 +341,9 @@
                   '("Glossary" "makeglossaries %s" TeX-run-command nil
                     (latex-mode) :help "Create glossaries")))
 
-#+END_SRC
+#+end_src
 * haskell
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng"))
   (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
   (setq haskell-process-log t)
@@ -400,9 +372,9 @@
          (mapconcat
           (quote identity)
           argv " ")))))
-#+END_SRC
+#+end_src
 * mu4e
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-to-list 'load-path "~/code/emacs/mu/mu4e")
   (require 'mu4e)
   (require 'org-mu4e)
@@ -423,8 +395,6 @@
       (erase-buffer)
       (shr-insert-document dom)
       (goto-char (point-min))))
-  ;; default
-  (load "mail")
   (if mail-on
       (progn (setq mu4e-html2text-command
                    'my-mu4e-shr2text)
@@ -531,14 +501,14 @@
 
              ;; don't keep message buffers around
              (setq message-kill-buffer-on-exit t)))
-#+END_SRC
+#+end_src
 * indentation
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil)
-#+END_SRC
+#+end_src
 * lisp
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq scheme-program-name "guile")
   (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
   (add-hook 'emacs-lisp-mode-hook       'enable-paredit-mode)
@@ -552,86 +522,86 @@
   (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
   (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
-#+END_SRC
+#+end_src
 * flycheck
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-hook 'after-init-hook #'global-flycheck-mode)
-  (eval-after-load 'flycheck
-    '(add-to-list 'flycheck-checkers 'haskell-process))
-  (require 'haskell-flycheck)
+  ;; (eval-after-load 'flycheck
+  ;;   '(add-to-list 'flycheck-checkers 'haskell-process))
+  ;; (require 'haskell-flycheck)
   (setq flycheck-emacs-lisp-load-path 'inherit)
-#+END_SRC
+#+end_src
 * browser
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq browse-url-browser-function 'browse-url-xdg-open)
-#+END_SRC
+#+end_src
 * gdb
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq gdb-many-windows t)
-#+END_SRC
+#+end_src
 * yasnippet
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
   (setq helm-yas-display-key-on-candidate t)
   (global-set-key (kbd "C-c y") 'helm-yas-complete)
   (yas-global-mode t)
-#+END_SRC
+#+end_src
 * symlinks
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq vc-follow-symlinks t)
-#+END_SRC
+#+end_src
 * magit
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-hook 'magit-mode-hook 'magit-load-config-extensions)
-#+END_SRC
+#+end_src
 * emmet
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-hook 'sgml-mode-hook 'emmet-mode)
   (add-hook 'css-mode-hook  'emmet-mode)
-#+END_SRC
+#+end_src
 * pkgbuild
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-to-list 'load-path "/home/moritz/code/emacs/pkgbuild-mode")
   (autoload 'pkgbuild-mode "pkgbuild-mode.el" "PKGBUILD mode." t)
   (add-to-list 'auto-mode-alist '("/PKGBUILD$" . pkgbuild-mode))
-#+END_SRC
+#+end_src
 * abbrev
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq-default abbrev-mode t)
 (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
-#+END_SRC
+#+end_src
 * ediff
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   (setq ediff-split-window-function 'split-window-horizontally)
-#+END_SRC
+#+end_src
 * reveal
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq org-reveal-root "file:///home/moritz/code/web/reveal.js/")
   (setq org-reveal-title-slide-template
         "<h1>%t</h1>
          <h2>%a</h2>
          <h2>%d</h2>")
-#+END_SRC
+#+end_src
 * impress
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq org-impress-js-javascript "/home/moritz/code/web/impress.js/js/impress.js")
 (setq org-impress-js-stylesheet "/home/moritz/code/web/impress.js/css/impress-demo.css")
-#+END_SRC
+#+end_src
 * idris
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-to-list 'load-path "~/code/idris/idris-mode")
   (require 'idris-mode)
   (setq idris-metavariable-list-show-expanded t)
-#+END_SRC
+#+end_src
 * skewer
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-hook 'js2-mode-hook 'skewer-mode)
   (add-hook 'css-mode-hook 'skewer-css-mode)
   (add-hook 'html-mode-hook 'skewer-html-mode)
-#+END_SRC
+#+end_src
 * gpgfix
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun epg--list-keys-1 (context name mode)
     (let ((args (append (if (epg-context-home-directory context)
                             (list "--homedir"
@@ -672,9 +642,9 @@
             (aset (car keys) field (match-string 1 string))
             (setq field (1+ field))))
         (nreverse keys))))
-#+END_SRC
+#+end_src
 * hydra
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (global-set-key (kbd "M-ä") 'ace-window)
   (global-set-key
    (kbd "M-ö")
@@ -757,15 +727,15 @@
      ("t" hydra-move-splitter-up)
      ("d" hydra-move-splitter-right)
      ("q" nil "quit")))
-#+END_SRC
+#+end_src
 * github
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-to-list 'load-path "~/code/emacs/github")
   (require 'github)
-#+END_SRC
+#+end_src
 
-* annoying errows
-#+begin_src emacs-lisp
-  (global-annoying-arrows-mode)
-  (setq annoying-arrows-too-far-count 5)
+* guide-key
+#+begin_src emacs-lisp :tangle yes
+  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c" "C-c h"))
+  (guide-key-mode 1)
 #+end_src
