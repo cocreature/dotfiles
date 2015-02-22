@@ -168,94 +168,96 @@
 * org
 ** dirs
 #+begin_src emacs-lisp :tangle yes
-
-#+end_src
-#+begin_src emacs-lisp :tangle yes
-  (setq org-log-done t)
-  (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)$" . org-mode))
-
   (setq org-directory "~/org")
   (setq org-agenda-files '("~/org"))
   (setq org-mobile-directory "~/org/mobile")
   (setq org-default-notes-file (concat org-directory "/notes.org"))
-
+#+end_src
+** bindings
+#+begin_src emacs-lisp :tangle yes
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c c") 'org-capture)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+#+end_src
+** general
+#+begin_src emacs-lisp :tangle yes
   (setq org-file-apps
         '((auto-mode . emacs)
           ("\\.mm\\'" . system)
           ("\\.x?html?\\'" . "firefox %s")
           ("\\.pdf::\\([0-9]+\\)\\'" . "zathura \"%s\" -P %1")
           ("\\.pdf\\'" . "zathura \"%s\"")))
-
   (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
-
   (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 2))))
-  (global-set-key (kbd "C-c l") 'org-store-link)
-  (global-set-key (kbd "C-c c") 'org-capture)
-  (global-set-key (kbd "C-c a") 'org-agenda)
-
-
-
-  (setq org-clock-persist 'history)
+  (setq org-clock-persist t)
   (org-clock-persistence-insinuate)
+  (setq org-src-fontify-natively t)
+  (setq org-use-speed-commands t)
+#+end_src
+** export
+#+begin_src emacs-lisp :tangle yes
+  (eval-after-load "ox-latex"
+    '(add-to-list 'org-latex-classes
+                  '("koma-article"
+                    "\\documentclass{scrartcl}"
+                    ("\\section{%s}" . "\\section*{%s}")
+                    ("\\subsection{%s}" . "\\subsection*{%s}")
+                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
-  ;; orgmode babel
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((R . t)))
+  (eval-after-load "ox" '(setq org-export-default-language "de-de"))
+  (eval-after-load "org" '(setq org-latex-packages-alist '(("ngerman" "babel" nil))))
+  (eval-after-load "org"
+    '(setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
+                                              ("T1" "fontenc" t)
+                                              ("" "fixltx2e" nil)
+                                              ("" "graphicx" t)
+                                              ("" "longtable" nil)
+                                              ("" "float" nil)
+                                              ("" "wrapfig" nil)
+                                              ("" "rotating" nil)
+                                              ("normalem" "ulem" t)
+                                              ("" "amsmath" t)
+                                              ("" "textcomp" t)
+                                              ("" "marvosym" t)
+                                              ("" "wasysym" t)
+                                              ("" "amssymb" t)
+                                              ("hyphens" "url" nil)
+                                              ("" "hyperref" nil)
+                                              "\\tolerance=1000")))
 
+  (setq org-highlight-latex-and-related '(latex script entities))
+  (require 'ox-bibtex)
+  (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+#+end_src
+** agenda
+#+begin_src emacs-lisp :tangle yes
   (setq org-agenda-span 'month)
   (setq org-agenda-custom-commands
         '(("h" agenda "120 days"
            ((org-agenda-show-all-dates nil)
             (org-agenda-span 120))
            )))
-
+#+end_src
+** babel
+#+begin_src emacs-lisp :tangle yes
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)))
+#+end_src
+** todo
+#+begin_src emacs-lisp :tangle yes
+  (setq org-log-done t)
+  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 2))))
+  (setq org-clock-persist t)
+  (org-clock-persistence-insinuate)
   (setq org-src-fontify-natively t)
-  (setq org-timer-default-timer 25)
-
-  (add-hook 'org-clock-in-hook (lambda ()
-        (org-timer-set-timer 25)))
-
-  (add-hook 'org-clock-out-hook (lambda ()
-        (org-timer-set-timer 5)))
-
   (setq org-use-speed-commands t)
-
-  (eval-after-load "ox-latex" '(add-to-list 'org-latex-classes
-            '("koma-article"
-               "\\documentclass{scrartcl}"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-               ("\\paragraph{%s}" . "\\paragraph*{%s}")
-               ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-
-  (eval-after-load "ox" '(setq org-export-default-language "de-de"))
-  (eval-after-load "org" '(setq org-latex-packages-alist '(("ngerman" "babel" nil))))
-  (eval-after-load "org" '(setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
-   ("T1" "fontenc" t)
-   ("" "fixltx2e" nil)
-   ("" "graphicx" t)
-   ("" "longtable" nil)
-   ("" "float" nil)
-   ("" "wrapfig" nil)
-   ("" "rotating" nil)
-   ("normalem" "ulem" t)
-   ("" "amsmath" t)
-   ("" "textcomp" t)
-   ("" "marvosym" t)
-   ("" "wasysym" t)
-   ("" "amssymb" t)
-   ("hyphens" "url" nil)
-   ("" "hyperref" nil)
-   "\\tolerance=1000")))
-
-  (setq org-highlight-latex-and-related '(latex script entities))
-
-  (require 'ox-bibtex)
-  (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-
+#+end_src
+** capture
+#+begin_src emacs-lisp :tangle yes
   (setq org-capture-templates
         '(("t" "Task" entry (file+headline "" "Tasks")
           "* TODO %?\n  %U\n  %a")))
@@ -319,6 +321,8 @@
 
   (global-set-key (kbd "C-x C-r") 'revert-buffer)
   (global-ace-isearch-mode)
+  (global-set-key (kbd "M-ä") 'ace-window)
+
 #+end_src
 * auctex
 #+begin_src emacs-lisp :tangle yes
@@ -378,26 +382,10 @@
   (add-to-list 'load-path "~/code/emacs/mu/mu4e")
   (require 'mu4e)
   (require 'org-mu4e)
-  (defun my-mu4e-shr2text ()
-    "Html to text using the shr engine; this can be used in
-  `mu4e-html2text-command' in a new enough emacs. Based on code by
-  Titus von der Malsburg."
-    (interactive)
-    (let ((dom (libxml-parse-html-region (point-min) (point-max)))
-          ;; When HTML emails contain references to remote images,
-          ;; retrieving these images leaks information. For example,
-          ;; the sender can see when I openend the email and from which
-          ;; computer (IP address). For this reason, it is preferrable
-          ;; to not retrieve images.
-          ;; See this discussion on mu-discuss:
-          ;; https://groups.google.com/forum/#!topic/mu-discuss/gr1cwNNZnXo
-          (shr-inhibit-images t))
-      (erase-buffer)
-      (shr-insert-document dom)
-      (goto-char (point-min))))
+  (require 'mu4e-contrib)
   (if mail-on
       (progn (setq mu4e-html2text-command
-                   'my-mu4e-shr2text)
+                   'mu4e-shr2text)
              (setq mu4e-maildir "~/mail")
              (setq mu4e-drafts-folder "/gmail/drafts")
              (setq mu4e-sent-folder   "/gmail/sent")
@@ -429,7 +417,7 @@
                    smtpmail-smtp-server "smtp.gmail.com"
                    smtpmail-smtp-service 587)
 
-             (defvar my-mu4e-account-alist
+             (defvar mu4e-account-alist
                `(("gmail"
                   (mu4e-sent-folder "/gmail/sent")
                   (mu4e-drafts-folder "/gmail/drafts")
@@ -459,7 +447,7 @@
                   (smtpmail-stream-type starttls)
                   (smtpmail-smtp-service 587))))
 
-             (defun my-mu4e-set-account ()
+             (defun mu4e-set-account ()
                "Set the account for composing a message."
                (let* ((account
                        (if mu4e-compose-parent-message
@@ -467,17 +455,17 @@
                              (string-match "/\\(.*?\\)/" maildir)
                              (match-string 1 maildir))
                          (completing-read (format "Compose with account: (%s) "
-                                                  (mapconcat #'(lambda (var) (car var)) my-mu4e-account-alist "/"))
-                                          (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
-                                          nil t nil nil (caar my-mu4e-account-alist))))
-                      (account-vars (cdr (assoc account my-mu4e-account-alist))))
+                                                  (mapconcat #'(lambda (var) (car var)) mu4e-account-alist "/"))
+                                          (mapcar #'(lambda (var) (car var)) mu4e-account-alist)
+                                          nil t nil nil (caar mu4e-account-alist))))
+                      (account-vars (cdr (assoc account mu4e-account-alist))))
                  (if account-vars
                      (mapc #'(lambda (var)
                                (set (car var) (cadr var)))
                            account-vars)
                    (error "No email account found"))))
 
-             (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+             (add-hook 'mu4e-compose-pre-hook 'mu4e-set-account)
 
              (setq mu4e-bookmarks '(
                                     ("flag:unread AND NOT flag:trashed AND NOT maildir:/gmail/spam"
@@ -645,7 +633,6 @@
 #+end_src
 * hydra
 #+begin_src emacs-lisp :tangle yes
-  (global-set-key (kbd "M-ä") 'ace-window)
   (global-set-key
    (kbd "M-ö")
    (defhydra hydra-window (:color amaranth)
@@ -684,7 +671,6 @@
     ("k" previous-error "prev")
     ("v" recenter-top-bottom "recenter")
     ("q" nil "quit"))
-
   (require 'windmove)
   (defun hydra-move-splitter-left (arg)
     "Move window splitter left."
@@ -693,7 +679,6 @@
           (windmove-find-other-window 'right))
         (shrink-window-horizontally arg)
       (enlarge-window-horizontally arg)))
-
   (defun hydra-move-splitter-right (arg)
     "Move window splitter right."
     (interactive "p")
@@ -701,7 +686,6 @@
           (windmove-find-other-window 'right))
         (enlarge-window-horizontally arg)
       (shrink-window-horizontally arg)))
-
   (defun hydra-move-splitter-up (arg)
     "Move window splitter up."
     (interactive "p")
@@ -709,7 +693,6 @@
           (windmove-find-other-window 'up))
         (enlarge-window arg)
       (shrink-window arg)))
-
   (defun hydra-move-splitter-down (arg)
     "Move window splitter down."
     (interactive "p")
@@ -717,7 +700,6 @@
           (windmove-find-other-window 'up))
         (shrink-window arg)
       (enlarge-window arg)))
-
   (global-set-key
    (kbd "M-ü")
    (defhydra hydra-splitter ()
@@ -733,7 +715,6 @@
   (add-to-list 'load-path "~/code/emacs/github")
   (require 'github)
 #+end_src
-
 * guide-key
 #+begin_src emacs-lisp :tangle yes
   (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c" "C-c h"))
