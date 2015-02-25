@@ -91,3 +91,4 @@ export NIX_REMOTE=daemon
 source /etc/profile.d/nix.sh
 export NIX_PATH=nixpkgs=/home/moritz/code/nix/nixpkgs:$NIX_PATH
 export PATH=$HOME/bin:$PATH
+export NIX_PROFILES=$HOME/.nix-profile
