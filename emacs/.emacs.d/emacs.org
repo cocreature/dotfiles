@@ -773,3 +773,8 @@
   (use-package markdown-mode
     :ensure t)
 #+end_src
+* unbound
+#+begin_src emacs-lisp :tangle yes
+  (use-package unbound
+    :ensure t)
+#+end_src
