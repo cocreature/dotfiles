@@ -734,6 +734,16 @@
      ("t" hydra-move-splitter-up)
      ("d" hydra-move-splitter-right)
      ("q" nil "quit")))
+  (use-package volume
+    :ensure t)
+  (global-set-key
+   (kbd "C-c v")
+   (defhydra hydra-volume (:color amaranth)
+     ("d" (volume-lower 5))
+     ("u" (volume-raise 5))
+     ("n" volume-raise)
+     ("p" volume-lower)
+     ("q" nil "quit")))
 #+end_src
 * github
 #+begin_src emacs-lisp :tangle yes
