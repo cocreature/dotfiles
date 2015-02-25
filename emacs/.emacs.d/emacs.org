@@ -1,49 +1,20 @@
 * packages
 #+begin_src emacs-lisp :tangle yes
-  (require 'package)
+  (package-initialize nil)
   (add-to-list 'package-archives
                '("marmalade" . "http://marmalade-repo.org/packages/"))
-  (add-to-list 'package-archives
-               '("melpa" . "http://melpa.org/packages/"))
-  (add-to-list 'package-archives
-               '("melpa" . "http://melpa.org/packages/") t)
   (add-to-list 'package-archives
                '("melpa-stable" . "http://stable.melpa.org/packages/"))
   (add-to-list 'package-archives
                '("org" . "http://orgmode.org/elpa/"))
-  (package-initialize)
-  (paradox-require 'oauth2)
-  (paradox-require 'elnode)
-  (paradox-require 'undo-tree)
-  (paradox-require 'company)
-  (paradox-require 'company-quickhelp)
-  (paradox-require 'helm)
-  (paradox-require 'magit)
-  (paradox-require 'projectile)
-  (paradox-require 'helm-projectile)
-  (paradox-require 'moe-theme)
-  (paradox-require 'smart-mode-line)
-  (paradox-require 'org-plus-contrib)
-  (paradox-require 'web)
-  (paradox-require 'ace-isearch)
-  (paradox-require 'tex)
-  (paradox-require 'haskell-mode)
-  (paradox-require 'paredit)
-  (paradox-require 'sx)
-  (paradox-require 'magit-svn)
-  (paradox-require 'hydra)
-  (paradox-require 'helm-c-yasnippet)
-  (paradox-require 'helm-ag)
-  (paradox-require 'markdown-mode)
-  (paradox-require 'ace-window)
-  (paradox-require 'cdlatex)
-  (paradox-require 'company-cmake)
-  (paradox-require 'expand-region)
-  (paradox-require 'multiple-cursors)
-  (paradox-require 'flycheck)
-  (paradox-require 'elisp-slime-nav)
-  (paradox-require 'guide-key)
-  (paradox-require 'helm-descbinds)
+  (add-to-list 'package-archives
+               '("melpa" . "http://melpa.org/packages/") t)
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+  (setq use-package-verbose t)
+  (require 'use-package)
+  (setq load-prefer-newer t)
 #+end_src
 * secrets
 #+begin_src emacs-lisp :tangle yes
@@ -52,26 +23,39 @@
 #+end_src
 * paradox
 #+begin_src emacs-lisp :tangle yes
-  (setq paradox-execute-asynchronously t)
+  (use-package paradox
+    :ensure t
+    :config
+    (progn
+      (setq paradox-execute-asynchronously t)
+      (setq paradox-automatically-star t)))
 #+end_src
 * nix
 #+begin_src emacs-lisp :tangle yes
-  (add-to-list 'load-path "~/.nix-profile/share/emacs/site-lisp")
-  ; add to load path recursively
-  (let ((default-directory "~/.nix-profile/share/emacs/site-lisp"))
-    (normal-top-level-add-subdirs-to-load-path))
-  (require 'nix-mode)
+  (use-package nix-mode)
+#+end_src
+* elnode
+#+begin_src emacs-lisp :tangle yes
+  (use-package elnode
+    :ensure t
+    :commands elnode-start)
 #+end_src
 * pos-tip
 #+begin_src emacs-lisp :tangle yes
-  (setq pos-tip-background-color "#4e4e4e")
-  (setq pos-tip-foreground-color "#5fafd7")
+  (use-package pos-tip
+    :ensure t
+    :config
+    (setq pos-tip-background-color "#4e4e4e")
+    (setq pos-tip-foreground-color "#5fafd7"))
 #+end_src
 * misc
 #+begin_src emacs-lisp :tangle yes
   (setq save-interprogram-paste-before-kill t)
-  (setq sml/no-confirm-load-theme t)
   (setq ag-highlight-search t)
+  (use-package undo-tree
+    :ensure t
+    :init (global-undo-tree-mode)
+    :diminish undo-tree-mode)
   (global-undo-tree-mode)
   (setq show-paren-style 'paranthesis)
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
@@ -79,72 +63,82 @@
 #+end_src
 * company
 #+begin_src emacs-lisp :tangle yes
-  (global-company-mode t)
-  (company-quickhelp-mode 1)
+  (use-package company
+    :ensure t
+    :diminish company-mode
+    :idle
+    (global-company-mode t)
+    :idle-priority 3)
+  (use-package company-quickhelp
+    :ensure t
+    :idle
+    (company-quickhelp-mode 1)
+    :idle-priority 5)
+  (use-package company-cmake
+    :ensure t)
 #+end_src
 * dired
 #+begin_src emacs-lisp :tangle yes
-  (setq dired-dwim-target t)
-  (setq-default dired-omit-mode t)
-  (define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
-  (setq-default dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.")
+  (use-package dired
+    :commands dired-mode
+    :config
+    (progn
+      (setq dired-dwim-target t)
+      (setq-default dired-omit-mode t)
+      (bind-key  "C-o" 'dired-omit-mode dired-mode-map)
+      (setq-default dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.")))
 #+end_src
 
 * helm
 #+begin_src emacs-lisp :tangle yes
-  (require 'helm)
-  (require 'helm-config)
-  (global-set-key (kbd "C-c h") 'helm-command-prefix)
-  (setq helm-M-x-fuzzy-match nil)
-  (require 'helm-eshell)
-  (require 'helm-files)
-  (require 'helm-grep)
-  ;; key bindings
-
-  (setq helm-man-or-woman-function 'woman)
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-  (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-  (define-key helm-command-map (kbd "d") 'helm-descbinds)
-  (define-key helm-grep-mode-map (kbd "<return>")  'helm-grep-mode-jump-other-window)
-  (define-key helm-grep-mode-map (kbd "n")  'helm-grep-mode-jump-other-window-forward)
-  (define-key helm-grep-mode-map (kbd "p")  'helm-grep-mode-jump-other-window-backward)
-
-  (setq
-   helm-google-suggest-use-curl-p t
-   helm-scroll-amount 4 ; scroll 4 lines other window using M-<next>/M-<prior>
-   helm-quick-update t ; do not display invisible candidates
-   helm-idle-delay 0.01 ; be idle for this many seconds, before updating in delayed sources.
-   helm-input-idle-delay 0.01 ; be idle for this many seconds, before updating candidate buffer
-   helm-ff-search-library-in-sexp t ; search for library in `require' and `declare-function' sexp.
-
-   helm-split-window-default-side 'other ;; open helm buffer in another window
-   helm-split-window-in-side-p t ;; open helm buffer inside current window, not occupy whole other window
-   helm-buffers-favorite-modes (append helm-buffers-favorite-modes
-                                       '(picture-mode artist-mode))
-   helm-candidate-number-limit 200 ; limit the number of displayed canidates
-   helm-M-x-requires-pattern 0     ; show all candidates when set to 0
-   helm-ff-file-name-history-use-recentf t
-   helm-move-to-line-cycle-in-source t ; move to end or beginning of source
-                                          ; when reaching top or bottom of source.
-   ido-use-virtual-buffers t      ; Needed in helm-buffers-list
-   helm-buffers-fuzzy-matching t          ; fuzzy matching buffer names when non--nil
-                                          ; useful in helm-mini that lists buffers
-   )
-
-  ;; Save current position to mark ring when jumping to a different place
-  (add-hook 'helm-goto-line-before-hook 'helm-save-current-pos-to-mark-ring)
-
-  (helm-mode 1)
+  (use-package helm-config
+    :diminish helm-mode
+    :demand t
+    :ensure helm
+    :bind (("C-c h" . helm-command-prefix)
+           ("M-x" . helm-M-x)
+           ("C-x b" . helm-mini)
+           ("C-x C-f" . helm-find-files)
+           ("C-h SPC" . helm-all-mark-rings))
+    :config
+    (progn
+      (use-package helm-eshell)
+      (use-package helm-files)
+      (use-package helm-grep)
+      (use-package helm-ls-git)
+      (use-package helm-descbinds
+        :ensure t
+        :config (bind-key "d" 'helm-descbinds helm-command-map))
+      (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
+      ;; make tab work in terminal
+      (bind-key "C-i" 'helm-execute-persistent-action helm-map)
+      (bind-key "C-z" 'helm-select-action helm-map)
+      (setq helm-man-or-woman-function 'woman
+            helm-google-suggest-use-curl-p t
+            helm-quick-update t
+            helm-idle-delay 0.01
+            helm-input-idle-delay 0.01
+            helm-scroll-amount 4)
+      (helm-mode)))
 #+end_src
 * projectile
 #+begin_src emacs-lisp :tangle yes
-  (require 'magit)
-  (projectile-global-mode t)
-  (require 'helm-projectile)
-  (helm-projectile-on)
-  (setq projectile-completion-system 'helm)
+  (use-package magit
+    :ensure t
+    :diminish magit-auto-revert-mode
+    :commands magit-status
+    :config   (use-package magit-svn
+                :ensure t))
+  (use-package projectile
+    :ensure t
+    :defer t
+    :init
+    (projectile-global-mode t)
+    (setq projectile-completion-system 'helm)
+    :config
+    (use-package helm-projectile
+      :ensure t
+      :config (helm-projectile-on)))
 #+end_src
 * gui
 #+begin_src emacs-lisp :tangle yes
@@ -153,114 +147,112 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (column-number-mode t)
-  (require 'moe-theme)
-  (moe-dark)
-  (setq sml/theme 'dark)
-  (if (daemonp)
-      (add-hook 'after-make-frame-functions
-          (lambda (frame)
-            (sml/setup)))
-      (sml/setup))
+  (use-package moe-theme
+    :ensure t
+    :config
+    (progn
+      (moe-dark)
+      (use-package smart-mode-line
+        :ensure t
+        :config
+        (progn
+          (setq sml/no-confirm-load-theme t)
+          (setq sml/theme 'dark)
+          (if (daemonp)
+              (add-hook 'after-make-frame-functions
+                        (lambda (frame)
+                          (sml/setup)))
+            (sml/setup))))))
+
   ;; show-paren-mode
   (setq show-paren-delay 0)
   (show-paren-mode t)
 #+end_src
 * org
-** dirs
 #+begin_src emacs-lisp :tangle yes
-  (setq org-directory "~/org")
-  (setq org-agenda-files '("~/org"))
-  (setq org-mobile-directory "~/org/mobile")
-  (setq org-default-notes-file (concat org-directory "/notes.org"))
-#+end_src
-** bindings
-#+begin_src emacs-lisp :tangle yes
-  (global-set-key (kbd "C-c l") 'org-store-link)
-  (global-set-key (kbd "C-c c") 'org-capture)
-  (global-set-key (kbd "C-c a") 'org-agenda)
-#+end_src
-** general
-#+begin_src emacs-lisp :tangle yes
-  (setq org-file-apps
-        '((auto-mode . emacs)
-          ("\\.mm\\'" . system)
-          ("\\.x?html?\\'" . "firefox %s")
-          ("\\.pdf::\\([0-9]+\\)\\'" . "zathura \"%s\" -P %1")
-          ("\\.pdf\\'" . "zathura \"%s\"")))
-  (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
-  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 2))))
-  (setq org-clock-persist t)
-  (org-clock-persistence-insinuate)
-  (setq org-src-fontify-natively t)
-  (setq org-use-speed-commands t)
-#+end_src
-** export
-#+begin_src emacs-lisp :tangle yes
-  (eval-after-load "ox-latex"
-    '(add-to-list 'org-latex-classes
-                  '("koma-article"
-                    "\\documentclass{scrartcl}"
-                    ("\\section{%s}" . "\\section*{%s}")
-                    ("\\subsection{%s}" . "\\subsection*{%s}")
-                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+  (use-package org
+    :ensure org-plus-contrib
+    :commands org-mode
+    :bind (("C-c l" . org-store-link)
+           ("C-c c" . org-capture)
+           ("C-c a" . org-agenda))
+    :init
+    (progn
+      (setq org-directory "~/org")
+      (setq org-agenda-files '("~/org"))
+      (setq org-mobile-directory "~/org/mobile")
+      (setq org-default-notes-file (concat org-directory "/notes.org"))
+      (setq org-log-done t)
+      (setq org-clock-persist t)
+          (setq org-file-apps
+            '((auto-mode . emacs)
+              ("\\.mm\\'" . system)
+              ("\\.x?html?\\'" . "firefox %s")
+              ("\\.pdf::\\([0-9]+\\)\\'" . "zathura \"%s\" -P %1")
+              ("\\.pdf\\'" . "zathura \"%s\"")))
+      (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 4))))
+      (setq org-agenda-span 'month)
+      (setq org-agenda-custom-commands
+            '(("h" agenda "120 days"
+               ((org-agenda-show-all-dates nil)
+                (org-agenda-span 120))
+               )))
+      (setq org-capture-templates
+            '(("t" "Task" entry (file+headline "" "Tasks")
+               "* TODO %?\n  %U\n  %a")))
+      (setq org-refile-allow-creating-parent-nodes 'confirm)
+      (setq org-src-fontify-natively t)
+      (setq org-use-speed-commands t)
+      (setq org-clock-mode-line-total 'current))
+    :config
+    (progn
+      (org-clock-persistence-insinuate)
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((R . t)))
+          (setq org-use-speed-commands t)
+      (add-to-list 'org-modules "org-habit")
+      (use-package cdlatex
+        :ensure t
+        :commands turn-on-org-cdlatex)
+      (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
+      (use-package ox-latex
+        :defer t
+        :config
+        (add-to-list 'org-latex-classes
+                     '("koma-article"
+                       "\\documentclass{scrartcl}"
+                       ("\\section{%s}" . "\\section*{%s}")
+                       ("\\subsection{%s}" . "\\subsection*{%s}")
+                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+        (use-package ox-bibtex)
+        (use-package ox :config
+          :defer t
+          (setq org-export-default-language "de-de"))
+        (setq org-latex-packages-alist '(("ngerman" "babel" nil)))
+        (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
+                                                 ("T1" "fontenc" t)
+                                                 ("" "fixltx2e" nil)
+                                                 ("" "graphicx" t)
+                                                 ("" "longtable" nil)
+                                                 ("" "float" nil)
+                                                 ("" "wrapfig" nil)
+                                                 ("" "rotating" nil)
+                                                 ("normalem" "ulem" t)
+                                                 ("" "amsmath" t)
+                                                 ("" "textcomp" t)
+                                                 ("" "marvosym" t)
+                                                 ("" "wasysym" t)
+                                                 ("" "amssymb" t)
+                                                 ("hyphens" "url" nil)
+                                                 ("" "hyperref" nil)
+                                                 "\\tolerance=1000"))
 
-  (eval-after-load "ox" '(setq org-export-default-language "de-de"))
-  (eval-after-load "org" '(setq org-latex-packages-alist '(("ngerman" "babel" nil))))
-  (eval-after-load "org"
-    '(setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
-                                              ("T1" "fontenc" t)
-                                              ("" "fixltx2e" nil)
-                                              ("" "graphicx" t)
-                                              ("" "longtable" nil)
-                                              ("" "float" nil)
-                                              ("" "wrapfig" nil)
-                                              ("" "rotating" nil)
-                                              ("normalem" "ulem" t)
-                                              ("" "amsmath" t)
-                                              ("" "textcomp" t)
-                                              ("" "marvosym" t)
-                                              ("" "wasysym" t)
-                                              ("" "amssymb" t)
-                                              ("hyphens" "url" nil)
-                                              ("" "hyperref" nil)
-                                              "\\tolerance=1000")))
-
-  (setq org-highlight-latex-and-related '(latex script entities))
-  (require 'ox-bibtex)
-  (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-#+end_src
-** agenda
-#+begin_src emacs-lisp :tangle yes
-  (setq org-agenda-span 'month)
-  (setq org-agenda-custom-commands
-        '(("h" agenda "120 days"
-           ((org-agenda-show-all-dates nil)
-            (org-agenda-span 120))
-           )))
-#+end_src
-** babel
-#+begin_src emacs-lisp :tangle yes
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((R . t)))
-#+end_src
-** todo
-#+begin_src emacs-lisp :tangle yes
-  (setq org-log-done t)
-  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 2))))
-  (setq org-clock-persist t)
-  (org-clock-persistence-insinuate)
-  (setq org-src-fontify-natively t)
-  (setq org-use-speed-commands t)
-#+end_src
-** capture
-#+begin_src emacs-lisp :tangle yes
-  (setq org-capture-templates
-        '(("t" "Task" entry (file+headline "" "Tasks")
-          "* TODO %?\n  %U\n  %a")))
+        (setq org-highlight-latex-and-related '(latex script entities))
+        (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
+        (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0)))))
 #+end_src
 * functions
 #+begin_src emacs-lisp :tangle yes
@@ -277,7 +269,8 @@
           (comment-dwim arg)))
 
   ;; functions to paste to http://sprunge.us using web.el
-  (require 'web)
+  (use-package web
+    :ensure t)
   (defun sprunge-region (start end)
     (interactive "r")
     (let ((buffer-contents (buffer-substring-no-properties start end))
@@ -295,87 +288,91 @@
 * bindings
 #+begin_src emacs-lisp :tangle yes
   (global-set-key (kbd "M-;") 'comment-dwim-line)
-
-  (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-  (global-set-key (kbd "C-x b") 'helm-mini)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  (global-set-key (kbd "C-c h o") 'helm-occur)
-  (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
-  (global-set-key (kbd "C-c h x") 'helm-register)
-
   ;; expand-region
   (pending-delete-mode t)
-  (global-set-key (kbd "C-=") 'er/expand-region)
-
-  ;; ace-jump-mode
-  (global-set-key (kbd "C-ß") 'ace-jump-char-mode)
+  (use-package expand-region
+    :ensure t
+    :bind (("C-=" . er/expand-region)))
   (global-set-key (kbd "C-x C-b") 'ibuffer)
-
-  ;; multiple-cursors
-  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-  (global-set-key (kbd "C-ä") 'mc/mark-sgml-tag-pair)
-
   (global-set-key (kbd "C-x C-r") 'revert-buffer)
-  (global-ace-isearch-mode)
-  (global-set-key (kbd "M-ä") 'ace-window)
 
+#+end_src
+* ace
+#+begin_src emacs-lisp :tangle yes
+  (use-package ace-window
+    :ensure t
+    :bind ("M-ä" . ace-window))
+  (use-package ace-jump-mode
+    :ensure t
+    :bind ("C-ß" . ace-jump-mode)
+    :config
+    (setq ace-jump-mode-submode-list
+          '(ace-jump-char-mode
+            ace-jump-word-mode
+            ace-jump-line-mode)))
+  (use-package ace-isearch
+    :ensure t
+    :config
+    (global-ace-isearch-mode))
 #+end_src
 * auctex
 #+begin_src emacs-lisp :tangle yes
-  (setq TeX-view-program-list
-        '(("zathura"
-           ("zathura" (mode-io-correlate "-sync.sh")
-            " "
-            (mode-io-correlate "%n:1:%b ")
-            "%o"))))
-  (setq TeX-view-program-selection '((output-pdf "zathura")))
-  (set-default 'preview-scale-function 1.2)
-  (require 'tex)
-  (add-hook 'LaTeX-mode-hook (lambda () (TeX-global-PDF-mode t)))
-  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-  (eval-after-load "latex" '(progn
-                              (add-to-list 'LaTeX-verbatim-environments "comment")
-                              ))
-  (eval-after-load "tex"
-    '(add-to-list 'TeX-command-list
-                  '("Glossary" "makeglossaries %s" TeX-run-command nil
-                    (latex-mode) :help "Create glossaries")))
+  (use-package tex
+    :ensure auctex
+    :commands latex-mode
+    :config
+    (use-package latex
+      :config
+      (progn
+        (setq TeX-view-program-list
+              '(("zathura"
+                 ("zathura" (mode-io-correlate "-sync.sh")
+                  " "
+                  (mode-io-correlate "%n:1:%b ")
+                  "%o"))))
+        (setq TeX-view-program-selection '((output-pdf "zathura")))
+        (set-default 'preview-scale-function 1.2)
+        (add-hook 'LaTeX-mode-hook (lambda () (TeX-global-PDF-mode t)))
+        (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+        (add-to-list 'LaTeX-verbatim-environments "comment")
+        (add-to-list 'TeX-command-list
+                     '("Glossary" "makeglossaries %s" TeX-run-command nil
+                       (latex-mode) :help "Create glossaries")))))
 
 #+end_src
 * haskell
 #+begin_src emacs-lisp :tangle yes
-  (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng"))
-  (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
-  (setq haskell-process-log t)
-  (setq haskell-interactive-mode-eval-mode 'haskell-mode)
-
-  (require 'hindent)
-  (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl)
-  (setq hindent-style "chris-done")
-  (require 'shm)
-  (require 'haskell)
-  (add-hook 'haskell-mode-hook 'structured-haskell-mode)
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-  (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
-  (require 'shm-case-split)
-  (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
-  (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
-  (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
-  (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
-  (add-hook 'haskell-mode-hook 'hindent-mode)
-  (setq haskell-process-wrapper-function
-     (lambda
-       (argv)
-       (append
-        (list "nix-shell" "-I" "." "--command")
-        (list
-         (mapconcat
-          (quote identity)
-          argv " ")))))
+  (use-package haskell-mode
+    :ensure t
+    :mode "\\.l?hs\\'"
+    :config
+    (progn
+      (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng"))
+      (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
+      (setq haskell-process-log t)
+      (setq haskell-interactive-mode-eval-mode 'haskell-mode)
+      (use-package shm)
+      (use-package hindent
+        :config (setq hindent-style "chris-done"))
+      (use-package shm-case-split)
+      (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+      (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+      (add-hook 'haskell-mode-hook 'hindent-mode)
+      (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
+      (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl)
+      (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
+      (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
+      (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
+      (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
+      (setq haskell-process-wrapper-function
+            (lambda
+              (argv)
+              (append
+               (list "nix-shell" "-I" "." "--command")
+               (list
+                (mapconcat
+                 (quote identity)
+                 argv " ")))))))
 #+end_src
 * mu4e
 #+begin_src emacs-lisp :tangle yes
@@ -384,111 +381,113 @@
   (require 'org-mu4e)
   (require 'mu4e-contrib)
   (if mail-on
-      (progn (setq mu4e-html2text-command
-                   'mu4e-shr2text)
-             (setq mu4e-maildir "~/mail")
-             (setq mu4e-drafts-folder "/gmail/drafts")
-             (setq mu4e-sent-folder   "/gmail/sent")
-             (setq mu4e-trash-folder  "/gmail/trash")
-             (setq mu4e-get-mail-command "mbsync -a")
-             (setq mu4e-update-interval 300)
-             (setq mu4e-view-show-addresses t)
-             (setq mu4e-headers-include-related t)
-             (setq mu4e-headers-show-threads nil)
-             (setq mu4e-headers-skip-duplicates t)
-             (setq mu4e-split-view 'vertical)
-             (setq mu4e-compose-dont-reply-to-self t)
-             (setq mu4e-compose-keep-self-cc nil)
-             (setq
-              user-mail-address (cadr mu4e-user-mail-address-list)
-              user-full-name  "Moritz Kiefer"
-              mu4e-compose-signature ""
-              mu4e-compose-signature-auto-include nil)
-             (setq mu4e-attachment-dir "~/downloads")
+      (progn
+        (setq mu4e-mu-binary "~/code/emacs/mu/mu/mu")
+        (setq mu4e-html2text-command
+              'mu4e-shr2text)
+        (setq mu4e-maildir "~/mail")
+        (setq mu4e-drafts-folder "/gmail/drafts")
+        (setq mu4e-sent-folder   "/gmail/sent")
+        (setq mu4e-trash-folder  "/gmail/trash")
+        (setq mu4e-get-mail-command "mbsync -a")
+        (setq mu4e-update-interval 300)
+        (setq mu4e-view-show-addresses t)
+        (setq mu4e-headers-include-related t)
+        (setq mu4e-headers-show-threads nil)
+        (setq mu4e-headers-skip-duplicates t)
+        (setq mu4e-split-view 'vertical)
+        (setq mu4e-compose-dont-reply-to-self t)
+        (setq mu4e-compose-keep-self-cc nil)
+        (setq
+         user-mail-address (cadr mu4e-user-mail-address-list)
+         user-full-name  "Moritz Kiefer"
+         mu4e-compose-signature ""
+         mu4e-compose-signature-auto-include nil)
+        (setq mu4e-attachment-dir "~/downloads")
 
-             (setq   mu4e-maildir-shortcuts
-                     '(("/gmail/inbox"     . ?g)
-                       ("/holarse/inbox"       . ?h)
-                       ("/purelyfunctional/inbox" . ?p)))
+        (setq   mu4e-maildir-shortcuts
+                '(("/gmail/inbox"     . ?g)
+                  ("/holarse/inbox"       . ?h)
+                  ("/purelyfunctional/inbox" . ?p)))
 
-             (setq message-send-mail-function 'smtpmail-send-it
-                   smtpmail-stream-type 'starttls
-                   smtpmail-default-smtp-server "smtp.gmail.com"
-                   smtpmail-smtp-server "smtp.gmail.com"
-                   smtpmail-smtp-service 587)
+        (setq message-send-mail-function 'smtpmail-send-it
+              smtpmail-stream-type 'starttls
+              smtpmail-default-smtp-server "smtp.gmail.com"
+              smtpmail-smtp-server "smtp.gmail.com"
+              smtpmail-smtp-service 587)
 
-             (defvar mu4e-account-alist
-               `(("gmail"
-                  (mu4e-sent-folder "/gmail/sent")
-                  (mu4e-drafts-folder "/gmail/drafts")
-                  (mu4e-trash-folder "/gmail/trash")
-                  (mu4e-sent-messages-behavior delete)
-                  (user-mail-address ,(car mu4e-user-mail-address-list))
-                  (smtpmail-default-smtp-server "smtp.gmail.com")
-                  (smtpmail-smtp-server "smtp.gmail.com")
-                  (smtpmail-stream-type starttls)
-                  (smtpmail-smtp-service 587))
-                 ("holarse"
-                  (mu4e-sent-folder "/holarse/sent")
-                  (mu4e-drafts-folder "/holarse/drafts")
-                  (mu4e-sent-messages-behavior sent)
-                  (user-mail-address ,(cddr mu4e-user-mail-address-list))
-                  (smtpmail-default-smtp-server "asmtp.mail.hostpoint.ch")
-                  (smtpmail-smtp-server "asmtp.mail.hostpoint.ch")
-                  (smtpmail-stream-type starttls)
-                  (smtpmail-smtp-service 587))
-                 ("purelyfunctional"
-                  (mu4e-sent-folder "/purelyfunctional/sent")
-                  (mu4e-drafts-folder "/purelyfunctional/drafts")
-                  (mu4e-sent-messages-behavior sent)
-                  (user-mail-address ,(cadr mu4e-user-mail-address-list))
-                  (smtpmail-default-smtp-server "cassiopeia.uberspace.de")
-                  (smtpmail-smtp-server "cassiopeia.uberspace.de")
-                  (smtpmail-stream-type starttls)
-                  (smtpmail-smtp-service 587))))
+        (defvar mu4e-account-alist
+          `(("gmail"
+             (mu4e-sent-folder "/gmail/sent")
+             (mu4e-drafts-folder "/gmail/drafts")
+             (mu4e-trash-folder "/gmail/trash")
+             (mu4e-sent-messages-behavior delete)
+             (user-mail-address ,(car mu4e-user-mail-address-list))
+             (smtpmail-default-smtp-server "smtp.gmail.com")
+             (smtpmail-smtp-server "smtp.gmail.com")
+             (smtpmail-stream-type starttls)
+             (smtpmail-smtp-service 587))
+            ("holarse"
+             (mu4e-sent-folder "/holarse/sent")
+             (mu4e-drafts-folder "/holarse/drafts")
+             (mu4e-sent-messages-behavior sent)
+             (user-mail-address ,(cddr mu4e-user-mail-address-list))
+             (smtpmail-default-smtp-server "asmtp.mail.hostpoint.ch")
+             (smtpmail-smtp-server "asmtp.mail.hostpoint.ch")
+             (smtpmail-stream-type starttls)
+             (smtpmail-smtp-service 587))
+            ("purelyfunctional"
+             (mu4e-sent-folder "/purelyfunctional/sent")
+             (mu4e-drafts-folder "/purelyfunctional/drafts")
+             (mu4e-sent-messages-behavior sent)
+             (user-mail-address ,(cadr mu4e-user-mail-address-list))
+             (smtpmail-default-smtp-server "cassiopeia.uberspace.de")
+             (smtpmail-smtp-server "cassiopeia.uberspace.de")
+             (smtpmail-stream-type starttls)
+             (smtpmail-smtp-service 587))))
 
-             (defun mu4e-set-account ()
-               "Set the account for composing a message."
-               (let* ((account
-                       (if mu4e-compose-parent-message
-                           (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
-                             (string-match "/\\(.*?\\)/" maildir)
-                             (match-string 1 maildir))
-                         (completing-read (format "Compose with account: (%s) "
-                                                  (mapconcat #'(lambda (var) (car var)) mu4e-account-alist "/"))
-                                          (mapcar #'(lambda (var) (car var)) mu4e-account-alist)
-                                          nil t nil nil (caar mu4e-account-alist))))
-                      (account-vars (cdr (assoc account mu4e-account-alist))))
-                 (if account-vars
-                     (mapc #'(lambda (var)
-                               (set (car var) (cadr var)))
-                           account-vars)
-                   (error "No email account found"))))
+        (defun mu4e-set-account ()
+          "Set the account for composing a message."
+          (let* ((account
+                  (if mu4e-compose-parent-message
+                      (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+                        (string-match "/\\(.*?\\)/" maildir)
+                        (match-string 1 maildir))
+                    (completing-read (format "Compose with account: (%s) "
+                                             (mapconcat #'(lambda (var) (car var)) mu4e-account-alist "/"))
+                                     (mapcar #'(lambda (var) (car var)) mu4e-account-alist)
+                                     nil t nil nil (caar mu4e-account-alist))))
+                 (account-vars (cdr (assoc account mu4e-account-alist))))
+            (if account-vars
+                (mapc #'(lambda (var)
+                          (set (car var) (cadr var)))
+                      account-vars)
+              (error "No email account found"))))
 
-             (add-hook 'mu4e-compose-pre-hook 'mu4e-set-account)
+        (add-hook 'mu4e-compose-pre-hook 'mu4e-set-account)
 
-             (setq mu4e-bookmarks '(
-                                    ("flag:unread AND NOT flag:trashed AND NOT maildir:/gmail/spam"
-                                     "Unread messages"     ?u)
-                                    ("date:today..now"                  "Today's messages"     ?t)
-                                    ("date:7d..now"                     "Last 7 days"          ?w)
-                                    ("mime:image/*"                     "Messages with images" ?p)))
+        (setq mu4e-bookmarks '(
+                               ("flag:unread AND NOT flag:trashed AND NOT maildir:/gmail/spam"
+                                "Unread messages"     ?u)
+                               ("date:today..now"                  "Today's messages"     ?t)
+                               ("date:7d..now"                     "Last 7 days"          ?w)
+                               ("mime:image/*"                     "Messages with images" ?p)))
 
-             (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign)
-             (add-hook 'mu4e-view-mode-hook '(lambda ()
-                                               (local-set-key (kbd "<end>") 'end-of-line)
-                                               (local-set-key (kbd "<home>") 'beginning-of-line)))
+        (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign)
+        (add-hook 'mu4e-view-mode-hook '(lambda ()
+                                          (local-set-key (kbd "<end>") 'end-of-line)
+                                          (local-set-key (kbd "<home>") 'beginning-of-line)))
 
-             (setq mu4e-view-show-images t)
-             (when (fboundp 'imagemagick-register-types)
-               (imagemagick-register-types))
-             (add-to-list 'mu4e-view-actions
-                          '("View in browser" . mu4e-action-view-in-browser) t)
+        (setq mu4e-view-show-images t)
+        (when (fboundp 'imagemagick-register-types)
+          (imagemagick-register-types))
+        (add-to-list 'mu4e-view-actions
+                     '("View in browser" . mu4e-action-view-in-browser) t)
 
 
 
-             ;; don't keep message buffers around
-             (setq message-kill-buffer-on-exit t)))
+        ;; don't keep message buffers around
+        (setq message-kill-buffer-on-exit t)))
 #+end_src
 * indentation
 #+begin_src emacs-lisp :tangle yes
@@ -497,27 +496,40 @@
 #+end_src
 * lisp
 #+begin_src emacs-lisp :tangle yes
-  (setq scheme-program-name "guile")
-  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-  (add-hook 'emacs-lisp-mode-hook       'enable-paredit-mode)
-  (add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
-  (add-hook 'ielm-mode-hook             'enable-paredit-mode)
-  (add-hook 'lisp-mode-hook             'enable-paredit-mode)
-  (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
-  (add-hook 'scheme-mode-hook           'enable-paredit-mode)
-  (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
-    (add-hook hook 'turn-on-elisp-slime-nav-mode))
-  (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-  (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-  (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+  (use-package lisp-mode
+    :init
+    (progn
+      (use-package paredit
+        :diminish paredit-mode
+        :ensure t
+        :commands enable-paredit-mode)
+      (use-package elisp-slime-nav
+        :diminish elisp-slime-nav-mode
+        :ensure t
+        :commands turn-on-elisp-slime-nav-mode)
+      (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
+        (add-hook hook 'turn-on-elisp-slime-nav-mode)
+        (add-hook hook 'enable-paredit-mode))
+      (use-package eldoc
+        :diminish eldoc-mode
+        :defer t
+        :init
+        (progn
+          (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+          (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+          (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))))
 #+end_src
 * flycheck
 #+begin_src emacs-lisp :tangle yes
-  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (use-package flycheck
+    :ensure t
+    :diminish flycheck-mode
+    :defer t
+    :config (progn (add-hook 'after-init-hook #'global-flycheck-mode)
+                   (setq flycheck-emacs-lisp-load-path 'inherit)))
   ;; (eval-after-load 'flycheck
   ;;   '(add-to-list 'flycheck-checkers 'haskell-process))
   ;; (require 'haskell-flycheck)
-  (setq flycheck-emacs-lisp-load-path 'inherit)
 #+end_src
 * browser
 #+begin_src emacs-lisp :tangle yes
@@ -529,10 +541,18 @@
 #+end_src
 * yasnippet
 #+begin_src emacs-lisp :tangle yes
-  (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
-  (setq helm-yas-display-key-on-candidate t)
-  (global-set-key (kbd "C-c y") 'helm-yas-complete)
-  (yas-global-mode t)
+  (use-package yasnippet
+    :diminish yas-minor-mode
+    :ensure t
+    :commands yas-global-mode
+    :idle
+    (progn
+      (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
+      (yas-global-mode t)))
+  (use-package helm-c-yasnippet
+    :ensure t
+    :bind (("C-c y" . helm-yas-complete))
+    :config (setq helm-yas-display-key-on-candidate t))
 #+end_src
 * symlinks
 #+begin_src emacs-lisp :tangle yes
@@ -555,8 +575,11 @@
 #+end_src
 * abbrev
 #+begin_src emacs-lisp :tangle yes
-(setq-default abbrev-mode t)
-(setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+  (use-package abbrev
+    :diminish abbrev-mode
+    :config
+    (progn (abbrev-mode)
+           (setq abbrev-file-name "~/.emacs.d/abbrev_defs")))
 #+end_src
 * ediff
 #+begin_src emacs-lisp :tangle yes
@@ -573,8 +596,8 @@
 #+end_src
 * impress
 #+begin_src emacs-lisp :tangle yes
-(setq org-impress-js-javascript "/home/moritz/code/web/impress.js/js/impress.js")
-(setq org-impress-js-stylesheet "/home/moritz/code/web/impress.js/css/impress-demo.css")
+  (setq org-impress-js-javascript "/home/moritz/code/web/impress.js/js/impress.js")
+  (setq org-impress-js-stylesheet "/home/moritz/code/web/impress.js/css/impress-demo.css")
 #+end_src
 * idris
 #+begin_src emacs-lisp :tangle yes
@@ -633,6 +656,8 @@
 #+end_src
 * hydra
 #+begin_src emacs-lisp :tangle yes
+  (use-package hydra
+    :ensure t)
   (global-set-key
    (kbd "M-ö")
    (defhydra hydra-window (:color amaranth)
@@ -671,7 +696,7 @@
     ("k" previous-error "prev")
     ("v" recenter-top-bottom "recenter")
     ("q" nil "quit"))
-  (require 'windmove)
+  (use-package windmove)
   (defun hydra-move-splitter-left (arg)
     "Move window splitter left."
     (interactive "p")
@@ -712,11 +737,39 @@
 #+end_src
 * github
 #+begin_src emacs-lisp :tangle yes
-  (add-to-list 'load-path "~/code/emacs/github")
-  (require 'github)
+  (use-package oauth2
+    :ensure t)
+  (use-package github
+    :load-path "~/code/emacs/github")
 #+end_src
 * guide-key
 #+begin_src emacs-lisp :tangle yes
-  (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c" "C-c h"))
-  (guide-key-mode 1)
+  (use-package guide-key
+    :ensure t
+    :defer t
+    :diminish guide-key-mode
+    :idle
+    (progn
+      (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c" "C-c h"))
+      (guide-key-mode 1)))
+#+end_src
+* multiple cursors
+#+begin_src emacs-lisp :tangle yes
+  (use-package multiple-cursors
+    :ensure t
+    :bind
+    (("C-S-c C-S-c" . mc/edit-lines)
+     ("C->" . mc/mark-next-like-this)
+     ("C-<"  . mc/mark-previous-like-this)
+     ("C-c C-<" . mc/mark-all-like-this)))
+#+end_src
+* sx
+#+begin_src emacs-lisp :tangle yes
+  (use-package sx
+    :ensure t)
+#+end_src
+* markdown
+#+begin_src emacs-lisp :tangle yes
+  (use-package markdown-mode
+    :ensure t)
 #+end_src
