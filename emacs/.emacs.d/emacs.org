@@ -99,7 +99,8 @@
            ("M-x" . helm-M-x)
            ("C-x b" . helm-mini)
            ("C-x C-f" . helm-find-files)
-           ("C-h SPC" . helm-all-mark-rings))
+           ("C-h SPC" . helm-all-mark-rings)
+           ("M-y" . helm-show-kill-ring))
     :config
     (progn
       (use-package helm-eshell)
@@ -118,8 +119,11 @@
             helm-quick-update t
             helm-idle-delay 0.01
             helm-input-idle-delay 0.01
+            helm-split-window-in-side-p t
             helm-scroll-amount 4)
       (helm-mode)))
+  (use-package helm-ag
+    :ensure t)
 #+end_src
 * projectile
 #+begin_src emacs-lisp :tangle yes
