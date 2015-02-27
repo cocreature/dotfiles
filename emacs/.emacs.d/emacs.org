@@ -843,3 +843,46 @@
   (use-package unbound
     :ensure t)
 #+end_src
+* holidays
+#+begin_src emacs-lisp :tangle yes
+  (setq holiday-general-holidays
+        '((holiday-fixed 1 1 "Neujahr")
+          (holiday-fixed 5 1 "Tag der Arbeit")
+          (holiday-fixed 10 3 "Tag der deutschen Einheit")))
+  (setq holiday-christian-holidays
+        '((holiday-fixed 12 25 "1. Weihnachtstag")
+          (holiday-fixed 12 26 "2. Weihnachtstag")
+          (holiday-fixed 1 6 "Heilige 3 Könige")
+          (holiday-fixed 11 1 "Allerheiligen")
+          ;; Date of Easter calculation taken from holidays.el.
+          (let* ((century (1+ (/ displayed-year 100)))
+                 (shifted-epact (% (+ 14 (* 11 (% displayed-year 19))
+                                      (- (/ (* 3 century) 4))
+                                      (/ (+ 5 (* 8 century)) 25)
+                                      (* 30 century))
+                                   30))
+                 (adjusted-epact (if (or (= shifted-epact 0)
+                                         (and (= shifted-epact 1)
+                                              (< 10 (% displayed-year 19))))
+                                     (1+ shifted-epact)
+                                   shifted-epact))
+                 (paschal-moon (- (calendar-absolute-from-gregorian
+                                   (list 4 19 displayed-year))
+                                  adjusted-epact))
+                 (easter (calendar-dayname-on-or-before 0 (+ paschal-moon 7))))
+            (filter-visible-calendar-holidays
+             (mapcar
+              (lambda (l)
+                (list (calendar-gregorian-from-absolute (+ easter (car l)))
+                      (nth 1 l)))
+              '(
+                ( -2 "Karfreitag")
+                (  0 "Ostersonntag")
+                ( +1 "Ostermontag")
+                (+39 "Christi Himmelfahrt")
+                (+49 "Pfingstsonntag")
+                (+50 "Pfingstmontag")
+                (+60 "Fronleichnam")
+                ))))))
+  (setq calendar-holidays (append holiday-general-holidays holiday-christian-holidays))
+#+end_src
