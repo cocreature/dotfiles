@@ -60,6 +60,7 @@
   (setq show-paren-style 'paranthesis)
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
   (winner-mode 1)
+  (defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 * company
 #+begin_src emacs-lisp :tangle yes
@@ -267,6 +268,7 @@
        '((R . t)))
           (setq org-use-speed-commands t)
       (add-to-list 'org-modules "org-habit")
+      (org-load-modules-maybe t)
       (use-package cdlatex
         :ensure t
         :commands turn-on-org-cdlatex)
@@ -400,6 +402,11 @@
   (use-package haskell-mode
     :ensure t
     :mode "\\.l?hs\\'"
+    :init (progn
+      (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+      (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+      (add-hook 'haskell-mode-hook 'hindent-mode)
+      (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode))
     :config
     (progn
       (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng"))
@@ -410,15 +417,13 @@
       (use-package hindent
         :config (setq hindent-style "chris-done"))
       (use-package shm-case-split)
-      (add-hook 'haskell-mode-hook 'structured-haskell-mode)
-      (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-      (add-hook 'haskell-mode-hook 'hindent-mode)
-      (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
       (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl)
       (define-key shm-map (kbd "C-c C-s") 'shm/case-split)
-      (define-key interactive-haskell-mode-map (kbd "M-.") 'haskell-mode-goto-loc)
-      (define-key interactive-haskell-mode-map (kbd "C-c C-t") 'haskell-mode-show-type-at)
-      (define-key interactive-haskell-mode-map (kbd "C-?") 'haskell-mode-find-uses)
+      (use-package haskell
+        :config (progn
+                  (bind-key  "M-." 'haskell-mode-goto-loc interactive-haskell-mode-map)
+                  (bind-key "C-c C-t" 'haskell-mode-show-type-at interactive-haskell-mode-map)
+                  (bind-key "C-?" 'haskell-mode-find-uses interactive-haskell-mode-map)))
       (setq haskell-process-wrapper-function
             (lambda
               (argv)
@@ -738,6 +743,7 @@
      ("k" ace-delete-window "del")
      ("i" ace-maximize-window "ace-one" :color blue)
      ("b" helm-mini "buf")
+     ("f" helm-find-files "file")
      ("m" headlong-bookmark-jump "bmk")
      ("q" nil "cancel")))
   (defhydra hydra-zoom (global-map "<f2>")
