@@ -629,9 +629,9 @@
 #+end_src
 * pkgbuild
 #+begin_src emacs-lisp :tangle yes
-  (add-to-list 'load-path "/home/moritz/code/emacs/pkgbuild-mode")
-  (autoload 'pkgbuild-mode "pkgbuild-mode.el" "PKGBUILD mode." t)
-  (add-to-list 'auto-mode-alist '("/PKGBUILD$" . pkgbuild-mode))
+  (use-package pkgbuild-mode
+    :ensure t
+    :mode "/PKGBULD$")
 #+end_src
 * abbrev
 #+begin_src emacs-lisp :tangle yes
