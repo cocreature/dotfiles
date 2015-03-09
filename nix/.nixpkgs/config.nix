@@ -5,7 +5,7 @@
     maven = pkgs.maven.override {
       jdk = pkgs.openjdk8;
     };
-    haskellngPackages = pkgs.haskellngPackages.override {
+    haskellngPackages = pkgs.haskell-ng.packages.ghc7101.override {
       overrides = self: super: {
         hindent = pkgs.stdenv.lib.overrideDerivation pkgs.haskellngPackages.hindent (attrs : {
           postInstall = ''
@@ -33,11 +33,12 @@
           description = "Next generation ghci";
           license = pkgs.stdenv.lib.licenses.bsd3;
         };
-
       };
     };
+    haskellng784 = pkgs.haskell-ng.packages.ghc784.override {
+      overrides = self: super: {};};
     libsigsegv = pkgs.stdenv.lib.overrideDerivation pkgs.libsigsegv ( oldAttr : {doCheck = false;} );
     hsEnv = haskellngPackages.ghcWithPackages (p:
-      [p.cabal2nix p.cabal-install p.ghci-ng p.structured-haskell-mode p.hindent p.hasktags]);
+      [ p.cabal-install p.structured-haskell-mode p.hindent p.hasktags ]);
   };
 }
