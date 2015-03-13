@@ -405,9 +405,18 @@
     :init (progn
       (add-hook 'haskell-mode-hook 'structured-haskell-mode)
       (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+      (setq ghc-debug t)
+      (setq ghc-process-wrapper-function
+            (lambda (command opts)
+              (message (format "command was %s\n" command))
+              (message (format "opts were %s\n" opts))
+              `("nix-shell" "-I" "." "--command"
+                ,(mapconcat 'identity (cons command opts) " "))))
       (use-package ghc
-        :commands (ghc-init ghc-debug))
-      (add-hook 'haskell-mode-hook 'ghc-init)
+        :commands (ghc-init ghc-debug)
+        :load-path "/home/moritz/code/haskell/ghc-mod/elisp")
+      ;; (add-hook 'haskell-mode-hook 'ghc-init)
+      ;; (add-to-list 'company-backends 'company-ghc)
       (add-hook 'haskell-mode-hook 'hindent-mode)
       (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode))
     :config
