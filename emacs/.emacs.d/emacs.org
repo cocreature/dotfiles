@@ -435,12 +435,8 @@
       (setq haskell-process-wrapper-function
             (lambda
               (argv)
-              (append
-               (list "nix-shell" "-I" "." "--command")
-               (list
-                (mapconcat
-                 (quote identity)
-                 argv " ")))))))
+              `("nix-shell" "-I" "." "--command"
+                ,(mapconcat 'identity argv " "))))))
 #+end_src
 * mu4e
 #+begin_src emacs-lisp :tangle yes
