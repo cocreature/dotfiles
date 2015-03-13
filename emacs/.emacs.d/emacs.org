@@ -896,3 +896,9 @@
                 ))))))
   (setq calendar-holidays (append holiday-general-holidays holiday-christian-holidays))
 #+end_src
+* ledger
+#+begin_src emacs-lisp :tangle yes
+  (use-package ledger-mode
+    :commands ledger-mode
+    :mode "\\.ledger\\'")
+#+end_src
