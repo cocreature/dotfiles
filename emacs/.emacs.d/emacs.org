@@ -412,9 +412,9 @@
               (message (format "opts were %s\n" opts))
               `("nix-shell" "-I" "." "--command"
                 ,(mapconcat 'identity (cons command opts) " "))))
-      (use-package ghc
-        :commands (ghc-init ghc-debug)
-        :load-path "/home/moritz/code/haskell/ghc-mod/elisp")
+      ;; (use-package ghc
+      ;;   :commands (ghc-init ghc-debug)
+      ;;   :load-path "/home/moritz/code/haskell/ghc-mod/elisp")
       ;; (add-hook 'haskell-mode-hook 'ghc-init)
       ;; (add-to-list 'company-backends 'company-ghc)
       (add-hook 'haskell-mode-hook 'hindent-mode)
