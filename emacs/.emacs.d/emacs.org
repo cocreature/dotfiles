@@ -900,5 +900,22 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package ledger-mode
     :commands ledger-mode
-    :mode "\\.ledger\\'")
+    :mode "\\.ledger\\'"
+    :config
+    (progn
+      (setq ledger-reconcile-default-commodity "€")
+      (defadvice ledger-report-cmd (around ledger-report-gpg)
+        (let ((ledger-reports
+               (if (string= (file-name-extension (or (buffer-file-name ledger-buf) "")) "gpg")
+                   (mapcar
+                    (lambda (report)
+                      (list (car report)
+                            (concat
+                             "gpg2 --no-tty --quiet -d %(ledger-file) | ledger -f - "
+                             (mapconcat 'identity (cdddr (split-string (cadr report))) " "))))
+                    ledger-reports)
+                 ledger-reports)))
+          ad-do-it))
+
+      (ad-activate 'ledger-report-cmd)))
 #+end_src
