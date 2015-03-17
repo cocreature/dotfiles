@@ -13,7 +13,9 @@
     (package-refresh-contents)
     (package-install 'use-package))
   (setq use-package-verbose t)
-  (require 'use-package)
+  (eval-when-compile
+    (require 'use-package))
+  (require 'diminish)
   (setq load-prefer-newer t)
 #+end_src
 * secrets
@@ -67,14 +69,12 @@
   (use-package company
     :ensure t
     :diminish company-mode
-    :idle
-    (global-company-mode t)
-    :idle-priority 3)
+    :init
+    (global-company-mode t))
   (use-package company-quickhelp
     :ensure t
-    :idle
-    (company-quickhelp-mode 1)
-    :idle-priority 5)
+    :init
+    (company-quickhelp-mode 1))
   (use-package company-cmake
     :ensure t)
 #+end_src
@@ -107,7 +107,6 @@
       (use-package helm-eshell)
       (use-package helm-files)
       (use-package helm-grep)
-      (use-package helm-ls-git)
       (use-package helm-descbinds
         :ensure t
         :config (bind-key "d" 'helm-descbinds helm-command-map))
@@ -136,7 +135,6 @@
                 :ensure t))
   (use-package projectile
     :ensure t
-    :defer t
     :init
     (projectile-global-mode t)
     (setq projectile-completion-system 'helm)
@@ -274,7 +272,6 @@
         :commands turn-on-org-cdlatex)
       (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
       (use-package ox-latex
-        :defer t
         :config
         (add-to-list 'org-latex-classes
                      '("koma-article"
@@ -286,7 +283,6 @@
                        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
         (use-package ox-bibtex)
         (use-package ox :config
-          :defer t
           (setq org-export-default-language "de-de"))
         (setq org-latex-packages-alist '(("ngerman" "babel" nil)))
         (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
@@ -576,7 +572,6 @@
         (add-hook hook 'enable-paredit-mode))
       (use-package eldoc
         :diminish eldoc-mode
-        :defer t
         :init
         (progn
           (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
@@ -609,7 +604,7 @@
     :diminish yas-minor-mode
     :ensure t
     :commands yas-global-mode
-    :idle
+    :init
     (progn
       (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
       (yas-global-mode t)))
@@ -823,7 +818,7 @@
     :ensure t
     :defer t
     :diminish guide-key-mode
-    :idle
+    :init
     (progn
       (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c" "C-c h"))
       (guide-key-mode 1)))
