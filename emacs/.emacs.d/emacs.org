@@ -263,7 +263,8 @@
       (org-clock-persistence-insinuate)
       (org-babel-do-load-languages
        'org-babel-load-languages
-       '((R . t)))
+       '((R . t)
+         (ledger . t)))
           (setq org-use-speed-commands t)
       (add-to-list 'org-modules 'org-habit)
       (org-load-modules-maybe t)
