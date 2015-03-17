@@ -805,6 +805,18 @@
      ("n" volume-raise)
      ("p" volume-lower)
      ("q" nil "quit")))
+
+  (global-set-key
+   (kbd "C-c h")
+   (defhydra hydra-apropos
+     (:color blue)
+     ("a" apropos)
+     ("d" apropos-documentation)
+     ("v" apropos-variable)
+     ("c" apropos-command)
+     ("l" apropos-library)
+     ("u" apropos-user-option)
+     ("e" apropos-value)))
 #+end_src
 * github
 #+begin_src emacs-lisp :tangle yes
