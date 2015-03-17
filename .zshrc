@@ -75,7 +75,6 @@ BASE16_SHELL="$HOME/.config/base16-shell/base16-$BASE16_SCHEME.dark.sh"
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ '
 
 source ~/.zsh/antigen-hs/init.zsh
-export PURE_GIT_PULL=0
 setopt prompt_subst
 bindkey '^R' zaw-history
 bindkey '^X^F' zaw-open-file
