@@ -26,7 +26,6 @@ alias mus='mosh -p 62308 us'
 alias nsm='non-session-manager -- --session-root ~/noise/nsm'
 alias devmon='devmon --no-gui'
 
-export PATH="$HOME/.cask/bin:$PATH"
 export EDITOR=emacsclient
 export MAILDIR=~/mail
 export BROWSER=firefox
@@ -89,5 +88,7 @@ export NIX_REMOTE=daemon
 
 source /etc/profile.d/nix.sh
 export NIX_PATH=nixpkgs=/home/moritz/.nix-defexpr/channels/nixos
+export PATH=$HOME/.cabal/bin:$PATH
 export PATH=$HOME/bin:$PATH
+export PATH=$HOME/code/arcanist/bin:$PATH
 export NIX_PROFILES=$HOME/.nix-profile
