@@ -303,7 +303,8 @@
                                                  ("hyphens" "url" nil)
                                                  ("" "hyperref" nil)
                                                  "\\tolerance=1000"))
-
+        (use-package org-bullets
+          :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
         (setq org-highlight-latex-and-related '(latex script entities))
         (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
         (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0)))))
