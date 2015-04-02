@@ -399,42 +399,39 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package haskell-mode
     :ensure t
-    :mode "\\.l?hs\\'"
+    :mode "\\.\\(l\\|c\\)?hs\\'"
     :init (progn
-      (add-hook 'haskell-mode-hook 'structured-haskell-mode)
-      (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-      (setq ghc-debug t)
-      (setq ghc-process-wrapper-function
-            (lambda (command opts)
-              (message (format "command was %s\n" command))
-              (message (format "opts were %s\n" opts))
-              `("nix-shell" "-I" "." "--command"
-                ,(mapconcat 'identity (cons command opts) " "))))
-      ;; (use-package ghc
-      ;;   :commands (ghc-init ghc-debug)
-      ;;   :load-path "/home/moritz/code/haskell/ghc-mod/elisp")
-      ;; (add-hook 'haskell-mode-hook 'ghc-init)
-      ;; (add-to-list 'company-backends 'company-ghc)
-      (add-hook 'haskell-mode-hook 'hindent-mode)
-      (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode))
+            (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+            (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+            (setq ghc-debug t)
+            (use-package ghc
+              :commands (ghc-init ghc-debug)
+              :load-path "/home/moritz/code/haskell/ghc-mod/elisp")
+            (use-package ide-backend-mode
+              :load-path "~/code/emacs/ide-backend-mode")
+            ;; (add-hook 'haskell-mode-hook 'ghc-init)
+            ;; (add-to-list 'company-backends 'company-ghc)
+            ;; (use-package company-ghc
+            ;;   :ensure t)
+            (add-hook 'haskell-mode-hook 'hindent-mode)
+            (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode))
     :config
     (progn
       (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans"))
       (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
       (setq haskell-process-log t)
       (setq haskell-interactive-mode-eval-mode 'haskell-mode)
-      (use-package shm)
+      (use-package shm
+        :load-path "~/code/haskell/structured-haskell-mode/elisp")
       (use-package hindent
+        :load-path "~/code/haskell/hindent/elisp"
         :config (setq hindent-style "chris-done"))
       (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl)
-      (use-package haskell
-        :config (progn
-                  ))
-      (setq haskell-process-wrapper-function
-            (lambda
-              (argv)
-              `("nix-shell" "-I" "." "--command"
-                ,(mapconcat 'identity argv " "))))))
+      (use-package haskell)
+      (defun haskell-generate-wrapper (wrappername typesignature)
+        (interactive "sname of the wrapper: \nstype signature: ")
+        (insert (format "foreign import ccall safe \"wrapper\"\n  %s ::\n    (%s) ->\n    IO (FunPtr (%s))\n"
+                        wrappername typesignature typesignature)))))
 #+end_src
 * mu4e
 #+begin_src emacs-lisp :tangle yes
