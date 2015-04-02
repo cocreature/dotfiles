@@ -913,3 +913,12 @@
 
       (ad-activate 'ledger-report-cmd)))
 #+end_src
+* proofgeneral
+#+begin_src emacs-lisp :tangle yes
+  (use-package proof-site)
+  (add-hook 'coq-mode-hook
+            (lambda ()
+              (make-local-variable 'face-remapping-alist)
+              (setq face-remapping-alist
+                    '((font-lock-comment-face . font-lock-doc-face)))))
+#+end_src
