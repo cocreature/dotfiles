@@ -720,7 +720,7 @@
             (split-window-below)
             (windmove-down))
       "horz")
-     ("t" transpose-frame "'")
+     ;; ("t" transpose-frame "'")
      ("o" delete-other-windows "one" :color blue)
      ("a" ace-window "ace")
      ("s" ace-swap-window "swap")
