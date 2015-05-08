@@ -908,3 +908,13 @@
               (setq face-remapping-alist
                     '((font-lock-comment-face . font-lock-doc-face)))))
 #+end_src
+* aggressive indent
+#+begin_src emacs-lisp :tangle yes
+  (use-package aggressive-indent
+    :ensure t)
+#+end_src
+* json
+#+begin_src emacs-lisp :tangle yes
+  (use-package json-mode
+    :ensure t)
+#+end_src
