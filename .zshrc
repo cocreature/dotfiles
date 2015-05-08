@@ -85,11 +85,7 @@ zstyle ':filter-select:highlight' matched fg=green
 zstyle ':filter-select' extended-search yes
 zstyle ':filter-select' rotate-list yes
 
-export NIX_REMOTE=daemon
-
-source /etc/profile.d/nix.sh
-export NIX_PATH=nixpkgs=/home/moritz/.nix-defexpr/channels/nixos
 export PATH=$HOME/.cabal/bin:$PATH
 export PATH=$HOME/bin:$PATH
 export PATH=$HOME/code/arcanist/bin:$PATH
-export NIX_PROFILES=$HOME/.nix-profile
+export PATH=$HOME/.stackage/sandboxes/ghc-7.10.1/nightly-2015-05-06/bin:$PATH
