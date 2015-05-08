@@ -591,7 +591,7 @@
     :commands yas-global-mode
     :init
     (progn
-      (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
+      (setq yas-snippet-dirs '("~/code/emacs/snippets/custom" "~/code/emacs/snippets/yasnippet-snippets"))
       (yas-global-mode t)))
   (use-package helm-c-yasnippet
     :ensure t
