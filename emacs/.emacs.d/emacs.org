@@ -396,17 +396,10 @@
     :init (progn
             (add-hook 'haskell-mode-hook 'structured-haskell-mode)
             (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-            (setq ghc-debug t)
-            (use-package ghc
-              :commands (ghc-init ghc-debug)
-              :load-path "/home/moritz/code/haskell/ghc-mod/elisp")
             (use-package ide-backend-mode
               :load-path "~/code/emacs/ide-backend-mode")
-            ;; (add-hook 'haskell-mode-hook 'ghc-init)
-            ;; (add-to-list 'company-backends 'company-ghc)
-            ;; (use-package company-ghc
-            ;;   :ensure t)
             (add-hook 'haskell-mode-hook 'hindent-mode)
+            (add-hook 'haskell-mode-hook 'ide-backend-mode)
             (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode))
     :config
     (progn
