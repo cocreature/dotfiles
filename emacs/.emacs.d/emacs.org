@@ -355,14 +355,9 @@
   (use-package ace-window
     :ensure t
     :bind ("M-ä" . ace-window))
-  (use-package ace-jump-mode
-    :ensure t
-    :bind ("C-ß" . ace-jump-mode)
-    :config
-    (setq ace-jump-mode-submode-list
-          '(ace-jump-char-mode
-            ace-jump-word-mode
-            ace-jump-line-mode)))
+  (use-package avy
+    :ensure avy
+    :bind ("C-ß" . avy-goto-char))
   (use-package ace-isearch
     :ensure t
     :config
