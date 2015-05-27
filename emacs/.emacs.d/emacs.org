@@ -129,8 +129,11 @@
     :ensure t
     :diminish magit-auto-revert-mode
     :commands magit-status
-    :config   (use-package magit-svn
-                :ensure t))
+    :config
+    (progn
+      (use-package magit-svn
+        :ensure t)
+      (setq magit-last-seen-setup-instructions "1.4.0")))
   (use-package projectile
     :ensure t
     :init
@@ -139,7 +142,8 @@
     :config
     (use-package helm-projectile
       :ensure t
-      :config (helm-projectile-on)))
+      :config (helm-projectile-on)
+              (setq projectile-enable-caching nil)))
 #+end_src
 * gui
 #+begin_src emacs-lisp :tangle yes
@@ -352,16 +356,18 @@
 #+end_src
 * ace
 #+begin_src emacs-lisp :tangle yes
-  (use-package ace-window
-    :ensure t
-    :bind ("M-ä" . ace-window))
-  (use-package avy
-    :ensure avy
-    :bind ("C-ß" . avy-goto-char))
-  (use-package ace-isearch
-    :ensure t
-    :config
-    (global-ace-isearch-mode))
+    (use-package ace-window
+      :ensure t
+      :bind ("M-ä" . ace-window))
+    (use-package avy
+      :ensure avy
+      :bind (("C-ß" . avy-goto-char)
+             ("C-ö" . avy-goto-word-1)
+             ("C-ä" . avy-goto-char-2)))
+    (use-package ace-isearch
+      :ensure t
+      :config
+      (global-ace-isearch-mode))
 #+end_src
 * auctex
 #+begin_src emacs-lisp :tangle yes
@@ -645,9 +651,9 @@
 #+end_src
 * idris
 #+begin_src emacs-lisp :tangle yes
-  (add-to-list 'load-path "~/code/idris/idris-mode")
-  (require 'idris-mode)
-  (setq idris-metavariable-list-show-expanded t)
+  (use-package idris-mode
+    :ensure t
+    :pin melpa-stable)
 #+end_src
 * skewer
 #+begin_src emacs-lisp :tangle yes
@@ -917,4 +923,10 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package json-mode
     :ensure t)
+#+end_src
+* web
+#+begin_src emacs-lisp :tangle yes
+  (use-package web-mode
+    :ensure t
+    :mode "\\.html\\'")
 #+end_src
