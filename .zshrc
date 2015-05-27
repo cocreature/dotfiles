@@ -75,6 +75,7 @@ BASE16_SHELL="$HOME/.config/base16-shell/base16-$BASE16_SCHEME.dark.sh"
 
 source ~/.zsh/antigen-hs/init.zsh
 export PURE_GIT_PULL=0
+
 setopt prompt_subst
 bindkey '^R' zaw-history
 bindkey '^X^F' zaw-open-file
@@ -88,4 +89,5 @@ zstyle ':filter-select' rotate-list yes
 export PATH=$HOME/.cabal/bin:$PATH
 export PATH=$HOME/bin:$PATH
 export PATH=$HOME/code/arcanist/bin:$PATH
-export PATH=$HOME/.stackage/sandboxes/ghc-7.10.1/nightly-2015-05-06/bin:$PATH
+export PATH=$HOME/.stackage/sandboxes/ghc-7.10.1/nightly/bin:$PATH
+export PATH=$HOME/.gem/ruby/2.2.0/bin:$PATH
