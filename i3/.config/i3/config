@@ -164,3 +164,4 @@ bindsym $mod+minus scratchpad show
 
 for_window [title="Welcome to Wolfram Mathematica 10"] floating enable
 for_window [title="Choose a custom style"] floating enable
+for_window [title="Wolfram Mathematica 10.0 Student Edition - Personal Use Only"] floating enable
