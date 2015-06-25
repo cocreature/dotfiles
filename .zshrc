@@ -86,8 +86,12 @@ zstyle ':filter-select:highlight' matched fg=green
 zstyle ':filter-select' extended-search yes
 zstyle ':filter-select' rotate-list yes
 
-export PATH=$HOME/.cabal/bin:$PATH
 export PATH=$HOME/bin:$PATH
 export PATH=$HOME/code/arcanist/bin:$PATH
-export PATH=$HOME/.stackage/sandboxes/ghc-7.10.1/nightly/bin:$PATH
 export PATH=$HOME/.gem/ruby/2.2.0/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
+
+source /home/moritz/.nix-profile/etc/profile.d/nix.sh
+
+autoload -U bashcompinit && bashcompinit
+eval "$(stack --bash-completion-script "$(which stack)")"

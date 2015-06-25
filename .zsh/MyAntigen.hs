@@ -11,7 +11,7 @@ bundles =
   ,bundle "zsh-users/zaw"
   ,(bundle "sindresorhus/pure") {sourcingStrategy =
                                    filePathsSourcingStrategy
-                                     ["async.plugin.zsh","pure.plugin.zsh"]}
+                                     ["async.zsh","pure.plugin.zsh"]}
   ,(bundle "rupa/z") {sourcingStrategy = antigenSourcingStrategy}]
 
 config = AntigenConfiguration bundles
