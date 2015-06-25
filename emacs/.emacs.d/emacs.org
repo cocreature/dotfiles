@@ -960,3 +960,8 @@
   (use-package nginx-mode
     :ensure t)
 #+end_src
+* nyan
+#+begin_src emacs-lisp :tangle yes
+  (use-package nyan-mode
+    :ensure t)
+#+end_src
