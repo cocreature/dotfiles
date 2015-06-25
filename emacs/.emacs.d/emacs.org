@@ -939,3 +939,13 @@
     :ensure t
     :mode "\\.html\\'")
 #+end_src
+* yaml
+#+begin_src emacs-lisp :tangle yes
+  (use-package yaml-mode
+    :ensure t)
+#+end_src
+* nginx
+#+begin_src emacs-lisp :tangle yes
+  (use-package nginx-mode
+    :ensure t)
+#+end_src
