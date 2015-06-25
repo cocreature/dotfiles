@@ -413,6 +413,10 @@
       (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
       (setq haskell-process-log t)
       (setq haskell-interactive-mode-eval-mode 'haskell-mode)
+      (setq haskell-process-type 'ghci)
+      (setq haskell-process-path-ghci "stack")
+      (setq haskell-process-args-ghci '("ghci"))
+
       (use-package shm
         :load-path "~/code/haskell/structured-haskell-mode/elisp")
       (use-package hindent
