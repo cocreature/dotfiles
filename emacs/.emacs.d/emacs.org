@@ -386,6 +386,11 @@
                   "%o"))))
         (setq TeX-view-program-selection '((output-pdf "zathura")))
         (set-default 'preview-scale-function 1.2)
+        (use-package preview
+          :config
+          (set-face-attribute 'preview-reference-face nil
+                              :background "white"
+                              :foreground "black"))
         (add-hook 'LaTeX-mode-hook (lambda () (TeX-global-PDF-mode t)))
         (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
         (add-to-list 'LaTeX-verbatim-environments "comment")
