@@ -435,6 +435,20 @@
         (interactive "sname of the wrapper: \nstype signature: ")
         (insert (format "foreign import ccall safe \"wrapper\"\n  %s ::\n    (%s) ->\n    IO (FunPtr (%s))\n"
                         wrappername typesignature typesignature)))))
+  (defun haskell-stack-pvp (pkgname)
+    (interactive "sPackage name: ")
+    (let* ((pkgver (with-temp-buffer
+                     (call-process "stack" nil t nil "list-dependencies")
+                     (beginning-of-buffer)
+                     (search-forward-regexp (concat pkgname " \\(\\([[:digit:]]+\.\\)+[[:digit:]]+\\)"))
+                     (match-string 1))))
+      (insert (haskell-pvpify pkgver))))
+
+  (defun haskell-pvpify (pkgver)
+    (let* ((splitted (split-string pkgver "\\."))
+          (ver0 (nth 0 splitted))
+          (ver1 (string-to-number (nth 1 splitted))))
+      (message (format ">= %s.%d && < %s.%d" ver0 ver1 ver0 (+ ver1 1)))))
 #+end_src
 * mu4e
 #+begin_src emacs-lisp :tangle yes
