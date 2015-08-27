@@ -939,7 +939,10 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package web-mode
     :ensure t
-    :mode "\\.html\\'")
+    :mode ("\\.html\\'"
+           "\\.js\\'"
+           "\\.css\\'"
+           "\\.jsx\\'"))
 #+end_src
 * yaml
 #+begin_src emacs-lisp :tangle yes
