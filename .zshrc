@@ -25,6 +25,8 @@ alias ec='emacsclient'
 alias mus='mosh -p 62308 us'
 alias nsm='non-session-manager -- --session-root ~/noise/nsm'
 alias devmon='devmon --no-gui'
+alias si="stack exec ghci"
+alias s="stack"
 
 export EDITOR=emacsclient
 export MAILDIR=~/mail
@@ -90,8 +92,19 @@ export PATH=$HOME/bin:$PATH
 export PATH=$HOME/code/arcanist/bin:$PATH
 export PATH=$HOME/.gem/ruby/2.2.0/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.node/bin:$PATH
 
 source /home/moritz/.nix-profile/etc/profile.d/nix.sh
 
 autoload -U bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script "$(which stack)")"
+
+# OPAM configuration
+. /home/moritz/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+export PATH=$HOME/code/sml/smlnj/bin:$PATH
+
+export SCALA_HOME=/usr/share/scala
+export ELDARICA_HOME=~/code/eldarica
+export Z3=$(which z3)
+export PATH=$HOME/code/sml/JonPRL/bin:$PATH
