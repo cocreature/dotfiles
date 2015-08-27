@@ -959,3 +959,38 @@
   (use-package nyan-mode
     :ensure t)
 #+end_src
+* c
+#+begin_src emacs-lisp :tangle yes
+  (setq c-basic-offset 4)
+#+end_src
+* rust
+#+begin_src emacs-lisp :tangle yes
+  (use-package rust-mode
+    :ensure t)
+#+end_src
+* toml
+#+begin_src emacs-lisp :tangle yes
+  (use-package toml-mode
+    :ensure t)
+#+end_src
+* sml
+#+begin_src emacs-lisp :tangle yes
+    (use-package sml-mode
+      :ensure t
+      :mode ("\\.fun\\'" "\\.sig\\'" "\\.sml\\'"))
+#+end_src
+* ocaml
+#+begin_src emacs-lisp :tangle yes
+  (use-package tuareg
+    :ensure t)
+#+end_src
+* llvm
+#+begin_src emacs-lisp :tangle yes
+  (use-package llvm-mode
+    :ensure t)
+#+end_src
+* jonprl
+#+begin_src emacs-lisp :tangle yes
+  (use-package jonprl-mode
+    :ensure t)
+#+end_src
