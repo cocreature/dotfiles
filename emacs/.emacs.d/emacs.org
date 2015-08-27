@@ -127,13 +127,13 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package magit
     :ensure t
-    :diminish magit-auto-revert-mode
     :commands magit-status
     :config
     (progn
       (use-package magit-svn
         :ensure t)
-      (setq magit-last-seen-setup-instructions "1.4.0")))
+      (setq magit-last-seen-setup-instructions "1.4.0")
+      (setq magit-revert-buffers t)))
   (use-package projectile
     :ensure t
     :init
@@ -175,152 +175,147 @@
 #+end_src
 * org
 #+begin_src emacs-lisp :tangle yes
-    (use-package libmpdee
-      :ensure t)
-    (defun get-current-song ()
-      (let* ((mpd-conn (mpd-conn-new "localhost" 6600))
-             (mpd-status (mpd-get-status mpd-conn)))
-        (if (and mpd-status (eq 'play (plist-get mpd-status 'state)))
-            (let* ((song (car (mpd-get-songs mpd-conn "currentsong")))
-                   (title (plist-get song 'Title))
-                   (album (plist-get song 'Album))
-                   (artist (plist-get song 'Artist)))
-              `(title ,title artist ,artist album ,album))
-          (get-spotify-song))))
-    (defun format-current-song (song)
-      (let ((title (plist-get song 'title))
-            (artist (plist-get song 'artist))
-            (album (plist-get song 'album)))
-        (format "%s|%s|%s" title artist album)))
-    (defun get-spotify-song ()
-      (with-temp-buffer
-        (call-process "dbus-send"
-                      nil
-                      t
-                      t
-                      "--print-reply"
-                      "--session"
-                      "--dest=org.mpris.MediaPlayer2.spotify"
-                      "/org/mpris/MediaPlayer2"
-                      "org.freedesktop.DBus.Properties.Get"
-                      "string:org.mpris.MediaPlayer2.Player"
-                      "string:Metadata")
-        (beginning-of-buffer)
-        (let ((album
-               (progn
-                 (search-forward-regexp "album\"\n.*string \"\\\(.*\\\)\"")
-                 (match-string 1)))
-              (artist
-               (progn
-                 (search-forward-regexp "artist\"\n.*\n.*string \"\\\(.*\\\)\"")
-                 (match-string 1)))
-              (title
-               (progn
-                 (search-forward-regexp "title\"\n.*string \"\\\(.*\\\)\"")
-                 (match-string 1))))
-          `(title ,title artist ,artist album ,album))))
-    (use-package org
-      :ensure org-plus-contrib
-      :commands org-mode
-      :bind (("C-c l" . org-store-link)
-             ("C-c c" . org-capture)
-             ("C-c a" . org-agenda)
-             ("C-c b" . org-iswitchb)
-             ("C-c C-w" . org-refile)
-             ("C-c j" . org-clock-goto)
-             ("C-c C-x C-o" . org-clock-out))
-      :init
-      (progn
-        (setq org-directory "~/org")
-        (setq org-agenda-files '("~/org"))
-        (setq org-mobile-directory "~/org/mobile")
-        (setq org-default-notes-file (concat org-directory "/notes.org"))
-        (setq org-log-done t)
-        (setq org-clock-persist t)
-            (setq org-file-apps
-              '((auto-mode . emacs)
-                ("\\.mm\\'" . system)
-                ("\\.x?html?\\'" . "firefox %s")
-                ("\\.pdf::\\([0-9]+\\)\\'" . "zathura \"%s\" -P %1")
-                ("\\.pdf\\'" . "zathura \"%s\"")))
-        (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 4))))
-        (setq org-agenda-span 'month)
-        (setq org-agenda-custom-commands
-              '(("h" agenda "120 days"
-                 ((org-agenda-show-all-dates nil)
-                  (org-agenda-span 120))
-                 )))
-        (setq org-capture-templates
-              '(("t" "Task" entry (file+headline "" "Tasks")
-                 "* TODO %?\n  %U\n  %a")
-                ("s" "Song" table-line (file+headline "~/org/org.org" "Songs")
-                 "|%(format-current-song (get-current-song))|%U|%a|"
-                 :immediate-finish t)))
-        (setq org-refile-allow-creating-parent-nodes 'confirm)
-        (setq org-src-fontify-natively t)
-        (setq org-use-speed-commands t)
-        (setq org-clock-mode-line-total 'current))
-      :config
-      (progn
-        (org-clock-persistence-insinuate)
-        (org-babel-do-load-languages
-         'org-babel-load-languages
-         '((R . t)
-           (ledger . t)))
-            (setq org-use-speed-commands t)
-        (add-to-list 'org-modules 'org-habit)
-        (org-load-modules-maybe t)
-        (use-package cdlatex
-          :ensure t
-          :commands turn-on-org-cdlatex)
-        (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
-        (use-package ox-latex
-          :config
-          (add-to-list 'org-latex-classes
-                       '("koma-article"
-                         "\\documentclass{scrartcl}"
-                         ("\\section{%s}" . "\\section*{%s}")
-                         ("\\subsection{%s}" . "\\subsection*{%s}")
-                         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                         ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                         ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-          (add-to-list 'org-latex-classes
-                       '("semproc"
-                         "\\documentclass[a4paper,10pt,openright,parskip=half-]{semproc}\n[NO-DEFAULT-PACKAGES]\n[NO-PACKAGES]"
-                         ("\\section{%s}" . "\\section*{%s}")
-                         ("\\subsection{%s}" . "\\subsection*{%s}")
-                         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                         ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                         ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-          (use-package ox-bibtex)
-          (use-package ox :config
-            (setq org-export-default-language "de-de"))
-          (setq org-latex-packages-alist '(("ngerman" "babel" nil)))
-          (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
-                                                   ("T1" "fontenc" t)
-                                                   ("" "fixltx2e" nil)
-                                                   ("" "graphicx" t)
-                                                   ("" "longtable" nil)
-                                                   ("" "float" nil)
-                                                   ("" "wrapfig" nil)
-                                                   ("" "rotating" nil)
-                                                   ("normalem" "ulem" t)
-                                                   ("" "amsmath" t)
-                                                   ("" "textcomp" t)
-                                                   ("" "marvosym" t)
-                                                   ("" "wasysym" t)
-                                                   ("" "amssymb" t)
-                                                   ("hyphens" "url" nil)
-                                                   ("" "hyperref" nil)
-                                                   "\\tolerance=1000"))
-          (use-package org-bullets
-            :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-          (setq org-highlight-latex-and-related '(latex script entities))
-          (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
-          (mapc (lambda (x) (setq org-format-latex-options (plist-put org-format-latex-options (car x) (cadr x))))
-                '((:scale 2.0)
-                  (:foreground "Black")
-                  (:background "White"))))))
+  (use-package libmpdee
+    :ensure t)
+  (defun get-current-song ()
+    (let* ((mpd-conn (mpd-conn-new "localhost" 6600))
+           (mpd-status (mpd-get-status mpd-conn)))
+      (if (and mpd-status (eq 'play (plist-get mpd-status 'state)))
+          (let* ((song (car (mpd-get-songs mpd-conn "currentsong")))
+                 (title (plist-get song 'Title))
+                 (album (plist-get song 'Album))
+                 (artist (plist-get song 'Artist)))
+            `(title ,title artist ,artist album ,album))
+        (get-spotify-song))))
+  (defun format-current-song (song)
+    (let ((title (plist-get song 'title))
+          (artist (plist-get song 'artist))
+          (album (plist-get song 'album)))
+      (format "%s|%s|%s" title artist album)))
+  (defun get-spotify-song ()
+    (with-temp-buffer
+      (call-process "dbus-send"
+                    nil
+                    t
+                    t
+                    "--print-reply"
+                    "--session"
+                    "--dest=org.mpris.MediaPlayer2.spotify"
+                    "/org/mpris/MediaPlayer2"
+                    "org.freedesktop.DBus.Properties.Get"
+                    "string:org.mpris.MediaPlayer2.Player"
+                    "string:Metadata")
+      (beginning-of-buffer)
+      (let ((album
+             (progn
+               (search-forward-regexp "album\"\n.*string \"\\\(.*\\\)\"")
+               (match-string 1)))
+            (artist
+             (progn
+               (search-forward-regexp "artist\"\n.*\n.*string \"\\\(.*\\\)\"")
+               (match-string 1)))
+            (title
+             (progn
+               (search-forward-regexp "title\"\n.*string \"\\\(.*\\\)\"")
+               (match-string 1))))
+        `(title ,title artist ,artist album ,album))))
+  (use-package org
+    :load-path ("~/code/org-mode/lisp/" "~/code/org-mode/contrib/lisp/")
+    :pin manual
+    :commands org-mode
+    :bind (("C-c l" . org-store-link)
+           ("C-c c" . org-capture)
+           ("C-c a" . org-agenda)
+           ("C-c b" . org-iswitchb)
+           ("C-c C-w" . org-refile)
+           ("C-c j" . org-clock-goto)
+           ("C-c C-x C-o" . org-clock-out))
+    :config
+    (progn
+      (setq org-directory "~/org")
+      (setq org-agenda-files '("~/org"))
+      (setq org-mobile-directory "~/org/mobile")
+      (setq org-default-notes-file (concat org-directory "/notes.org"))
+      (setq org-log-done t)
+      (setq org-clock-persist t)
+          (setq org-file-apps
+            '((auto-mode . emacs)
+              ("\\.mm\\'" . system)
+              ("\\.x?html?\\'" . "firefox %s")
+              ("\\.pdf::\\([0-9]+\\)\\'" . "zathura \"%s\" -P %1")
+              ("\\.pdf\\'" . "zathura \"%s\"")))
+      (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 4))))
+      (setq org-agenda-span 'month)
+      (setq org-agenda-custom-commands
+            '(("h" agenda "120 days"
+               ((org-agenda-show-all-dates nil)
+                (org-agenda-span 120))
+               )))
+      (setq org-capture-templates
+            '(("t" "Task" entry (file+headline "" "Tasks")
+               "* TODO %?\n  %U\n  %a")
+              ("s" "Song" table-line (file+headline "~/org/org.org" "Songs")
+               "|%(format-current-song (get-current-song))|%U|%a|"
+               :immediate-finish t)))
+      (setq org-refile-allow-creating-parent-nodes 'confirm)
+      (setq org-src-fontify-natively t)
+      (setq org-use-speed-commands t)
+      (setq org-clock-mode-line-total 'current)
+      (org-clock-persistence-insinuate)
+      (setq org-use-speed-commands t)
+      (use-package org-habit)
+      (org-load-modules-maybe t)
+      (use-package cdlatex
+        :ensure t
+        :commands turn-on-org-cdlatex)
+      (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
+      (use-package ox-latex
+        :config
+        (add-to-list 'org-latex-classes
+                     '("koma-article"
+                       "\\documentclass{scrartcl}"
+                       ("\\section{%s}" . "\\section*{%s}")
+                       ("\\subsection{%s}" . "\\subsection*{%s}")
+                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+        (add-to-list 'org-latex-classes
+                     '("semproc"
+                       "\\documentclass[a4paper,10pt,openright,parskip=half-]{semproc}\n[NO-DEFAULT-PACKAGES]\n[NO-PACKAGES]"
+                       ("\\section{%s}" . "\\section*{%s}")
+                       ("\\subsection{%s}" . "\\subsection*{%s}")
+                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+        (use-package ox-bibtex)
+        (use-package ox :config
+          (setq org-export-default-language "de-de"))
+        (setq org-latex-packages-alist '(("ngerman" "babel" nil)))
+        (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
+                                                 ("T1" "fontenc" t)
+                                                 ("" "fixltx2e" nil)
+                                                 ("" "graphicx" t)
+                                                 ("" "longtable" nil)
+                                                 ("" "float" nil)
+                                                 ("" "wrapfig" nil)
+                                                 ("" "rotating" nil)
+                                                 ("normalem" "ulem" t)
+                                                 ("" "amsmath" t)
+                                                 ("" "textcomp" t)
+                                                 ("" "marvosym" t)
+                                                 ("" "wasysym" t)
+                                                 ("" "amssymb" t)
+                                                 ("hyphens" "url" nil)
+                                                 ("" "hyperref" nil)
+                                                 "\\tolerance=1000"))
+        (use-package org-bullets
+          :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+        (setq org-highlight-latex-and-related '(latex script entities))
+        (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
+        (mapc (lambda (x) (setq org-format-latex-options (plist-put org-format-latex-options (car x) (cadr x))))
+              '((:scale 2.0)
+                (:foreground "Black")
+                (:background "White"))))))
 #+end_src
 * functions
 #+begin_src emacs-lisp :tangle yes
