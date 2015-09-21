@@ -27,14 +27,11 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package paradox
     :ensure t
+    :commands paradox-list-packages
     :config
     (progn
       (setq paradox-execute-asynchronously t)
       (setq paradox-automatically-star t)))
-#+end_src
-* nix
-#+begin_src emacs-lisp :tangle yes
-  (use-package nix-mode)
 #+end_src
 * elnode
 #+begin_src emacs-lisp :tangle yes
@@ -69,12 +66,13 @@
   (use-package company
     :ensure t
     :diminish company-mode
-    :init
-    (global-company-mode t))
-  (use-package company-quickhelp
-    :ensure t)
-  (use-package company-cmake
-    :ensure t)
+    :defer 10
+    :config
+    (global-company-mode t)
+    (use-package company-quickhelp
+      :ensure t)
+    (use-package company-cmake
+      :ensure t))
 #+end_src
 * dired
 #+begin_src emacs-lisp :tangle yes
@@ -102,9 +100,6 @@
            ("M-y" . helm-show-kill-ring))
     :config
     (progn
-      (use-package helm-eshell)
-      (use-package helm-files)
-      (use-package helm-grep)
       (use-package helm-descbinds
         :ensure t
         :config (bind-key "d" 'helm-descbinds helm-command-map))
@@ -176,7 +171,8 @@
 * org
 #+begin_src emacs-lisp :tangle yes
   (use-package libmpdee
-    :ensure t)
+    :ensure t
+    :defer t)
   (defun get-current-song ()
     (let* ((mpd-conn (mpd-conn-new "localhost" 6600))
            (mpd-status (mpd-get-status mpd-conn)))
@@ -222,7 +218,7 @@
   (use-package org
     :load-path ("~/code/org-mode/lisp/" "~/code/org-mode/contrib/lisp/")
     :pin manual
-    :commands org-mode
+    :mode ("\\.org\\'" . org-mode)
     :bind (("C-c l" . org-store-link)
            ("C-c c" . org-capture)
            ("C-c a" . org-agenda)
@@ -315,7 +311,11 @@
         (mapc (lambda (x) (setq org-format-latex-options (plist-put org-format-latex-options (car x) (cadr x))))
               '((:scale 2.0)
                 (:foreground "Black")
-                (:background "White"))))))
+                (:background "White")))
+        (org-babel-do-load-languages
+         'org-babel-load-languages
+         '((emacs-lisp . t)
+           (R . t))))))
 #+end_src
 * functions
 #+begin_src emacs-lisp :tangle yes
@@ -333,6 +333,7 @@
 
   ;; functions to paste to http://sprunge.us using web.el
   (use-package web
+    :commands (sprunge-region sprunge-buffer)
     :ensure t)
   (defun sprunge-region (start end)
     (interactive "r")
@@ -362,18 +363,14 @@
 #+end_src
 * ace
 #+begin_src emacs-lisp :tangle yes
-    (use-package ace-window
-      :ensure t
-      :bind ("M-ä" . ace-window))
-    (use-package avy
-      :ensure avy
-      :bind (("C-ß" . avy-goto-char)
-             ("C-ö" . avy-goto-word-1)
-             ("C-ä" . avy-goto-char-2)))
-    (use-package ace-isearch
-      :ensure t
-      :config
-      (global-ace-isearch-mode))
+  (use-package ace-window
+    :ensure t
+    :bind ("M-ä" . ace-window))
+  (use-package avy
+    :ensure avy
+    :bind (("C-ß" . avy-goto-char)
+           ("C-ö" . avy-goto-word-1)
+           ("C-ä" . avy-goto-char-2)))
 #+end_src
 * auctex
 #+begin_src emacs-lisp :tangle yes
@@ -413,12 +410,13 @@
     :init (progn
             (add-hook 'haskell-mode-hook 'structured-haskell-mode)
             (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-            (use-package stack-mode
-              :load-path "~/code/haskell/stack-ide/stack-mode")
             (add-hook 'haskell-mode-hook 'hindent-mode)
-            (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode))
+            (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
+            (add-hook 'haskell-mode-hook 'hlint-refactor-mode))
     :config
     (progn
+      (use-package stack-mode
+        :load-path "~/code/haskell/stack-ide/stack-mode")
       (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans"))
       (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
       (setq haskell-process-log t)
@@ -434,7 +432,9 @@
       (defun haskell-generate-wrapper (wrappername typesignature)
         (interactive "sname of the wrapper: \nstype signature: ")
         (insert (format "foreign import ccall safe \"wrapper\"\n  %s ::\n    (%s) ->\n    IO (FunPtr (%s))\n"
-                        wrappername typesignature typesignature)))))
+                        wrappername typesignature typesignature)))
+      (use-package hlint-refactor-mode
+        :load-path "~/code/haskell/hlint-refactor-mode")))
   (defun haskell-stack-pvp (pkgname)
     (interactive "sPackage name: ")
     (let* ((pkgver (with-temp-buffer
@@ -449,121 +449,123 @@
           (ver0 (nth 0 splitted))
           (ver1 (string-to-number (nth 1 splitted))))
       (message (format ">= %s.%d && < %s.%d" ver0 ver1 ver0 (+ ver1 1)))))
+  (setq flycheck-hlint-ignore-rules '("Eta reduce" "Use String"))
 #+end_src
 * mu4e
 #+begin_src emacs-lisp :tangle yes
-  (add-to-list 'load-path "~/code/emacs/mu/mu4e")
-  (require 'mu4e)
-  (require 'org-mu4e)
-  (require 'mu4e-contrib)
-  (if mail-on
-      (progn
-        (setq mu4e-mu-binary "~/code/emacs/mu/mu/mu")
-        (setq mu4e-html2text-command
-              'mu4e-shr2text)
-        (setq mu4e-maildir "~/mail")
-        (setq mu4e-drafts-folder "/gmail/drafts")
-        (setq mu4e-sent-folder   "/gmail/sent")
-        (setq mu4e-trash-folder  "/gmail/trash")
-        (setq mu4e-get-mail-command "mbsync -a")
-        (setq mu4e-update-interval 300)
-        (setq mu4e-view-show-addresses t)
-        (setq mu4e-headers-include-related t)
-        (setq mu4e-headers-show-threads nil)
-        (setq mu4e-headers-skip-duplicates t)
-        (setq mu4e-split-view 'vertical)
-        (setq mu4e-compose-dont-reply-to-self t)
-        (setq mu4e-compose-keep-self-cc nil)
-        (setq
-         user-mail-address (cadr mu4e-user-mail-address-list)
-         user-full-name  "Moritz Kiefer"
-         mu4e-compose-signature ""
-         mu4e-compose-signature-auto-include nil)
-        (setq mu4e-attachment-dir "~/downloads")
+  (use-package mu4e
+    :load-path "~/code/emacs/mu/mu4e"
+    :commands mu4e
+    :config
+    (use-package mu4e-contrib)
+    (if mail-on
+        (progn
+          (setq mu4e-mu-binary "~/code/emacs/mu/mu/mu")
+          (setq mu4e-html2text-command
+                'mu4e-shr2text)
+          (setq mu4e-maildir "~/mail")
+          (setq mu4e-drafts-folder "/gmail/drafts")
+          (setq mu4e-sent-folder   "/gmail/sent")
+          (setq mu4e-trash-folder  "/gmail/trash")
+          (setq mu4e-get-mail-command "mbsync -a")
+          (setq mu4e-update-interval 300)
+          (setq mu4e-view-show-addresses t)
+          (setq mu4e-headers-include-related t)
+          (setq mu4e-headers-show-threads nil)
+          (setq mu4e-headers-skip-duplicates t)
+          (setq mu4e-split-view 'vertical)
+          (setq mu4e-compose-dont-reply-to-self t)
+          (setq mu4e-compose-keep-self-cc nil)
+          (setq
+           user-mail-address (cadr mu4e-user-mail-address-list)
+           user-full-name  "Moritz Kiefer"
+           mu4e-compose-signature ""
+           mu4e-compose-signature-auto-include nil)
+          (setq mu4e-attachment-dir "~/downloads")
 
-        (setq   mu4e-maildir-shortcuts
-                '(("/gmail/inbox"     . ?g)
-                  ("/holarse/inbox"       . ?h)
-                  ("/purelyfunctional/inbox" . ?p)))
+          (setq   mu4e-maildir-shortcuts
+                  '(("/gmail/inbox"     . ?g)
+                    ("/holarse/inbox"       . ?h)
+                    ("/purelyfunctional/inbox" . ?p)))
 
-        (setq message-send-mail-function 'smtpmail-send-it
-              smtpmail-stream-type 'starttls
-              smtpmail-default-smtp-server "smtp.gmail.com"
-              smtpmail-smtp-server "smtp.gmail.com"
-              smtpmail-smtp-service 587)
+          (setq message-send-mail-function 'smtpmail-send-it
+                smtpmail-stream-type 'starttls
+                smtpmail-default-smtp-server "smtp.gmail.com"
+                smtpmail-smtp-server "smtp.gmail.com"
+                smtpmail-smtp-service 587)
 
-        (defvar mu4e-account-alist
-          `(("gmail"
-             (mu4e-sent-folder "/gmail/sent")
-             (mu4e-drafts-folder "/gmail/drafts")
-             (mu4e-trash-folder "/gmail/trash")
-             (mu4e-sent-messages-behavior delete)
-             (user-mail-address ,(car mu4e-user-mail-address-list))
-             (smtpmail-default-smtp-server "smtp.gmail.com")
-             (smtpmail-smtp-server "smtp.gmail.com")
-             (smtpmail-stream-type starttls)
-             (smtpmail-smtp-service 587))
-            ("holarse"
-             (mu4e-sent-folder "/holarse/sent")
-             (mu4e-drafts-folder "/holarse/drafts")
-             (mu4e-sent-messages-behavior sent)
-             (user-mail-address ,(cddr mu4e-user-mail-address-list))
-             (smtpmail-default-smtp-server "asmtp.mail.hostpoint.ch")
-             (smtpmail-smtp-server "asmtp.mail.hostpoint.ch")
-             (smtpmail-stream-type starttls)
-             (smtpmail-smtp-service 587))
-            ("purelyfunctional"
-             (mu4e-sent-folder "/purelyfunctional/sent")
-             (mu4e-drafts-folder "/purelyfunctional/drafts")
-             (mu4e-sent-messages-behavior sent)
-             (user-mail-address ,(cadr mu4e-user-mail-address-list))
-             (smtpmail-default-smtp-server "cassiopeia.uberspace.de")
-             (smtpmail-smtp-server "cassiopeia.uberspace.de")
-             (smtpmail-stream-type starttls)
-             (smtpmail-smtp-service 587))))
+          (defvar mu4e-account-alist
+            `(("gmail"
+               (mu4e-sent-folder "/gmail/sent")
+               (mu4e-drafts-folder "/gmail/drafts")
+               (mu4e-trash-folder "/gmail/trash")
+               (mu4e-sent-messages-behavior delete)
+               (user-mail-address ,(car mu4e-user-mail-address-list))
+               (smtpmail-default-smtp-server "smtp.gmail.com")
+               (smtpmail-smtp-server "smtp.gmail.com")
+               (smtpmail-stream-type starttls)
+               (smtpmail-smtp-service 587))
+              ("holarse"
+               (mu4e-sent-folder "/holarse/sent")
+               (mu4e-drafts-folder "/holarse/drafts")
+               (mu4e-sent-messages-behavior sent)
+               (user-mail-address ,(cddr mu4e-user-mail-address-list))
+               (smtpmail-default-smtp-server "asmtp.mail.hostpoint.ch")
+               (smtpmail-smtp-server "asmtp.mail.hostpoint.ch")
+               (smtpmail-stream-type starttls)
+               (smtpmail-smtp-service 587))
+              ("purelyfunctional"
+               (mu4e-sent-folder "/purelyfunctional/sent")
+               (mu4e-drafts-folder "/purelyfunctional/drafts")
+               (mu4e-sent-messages-behavior sent)
+               (user-mail-address ,(cadr mu4e-user-mail-address-list))
+               (smtpmail-default-smtp-server "cassiopeia.uberspace.de")
+               (smtpmail-smtp-server "cassiopeia.uberspace.de")
+               (smtpmail-stream-type starttls)
+               (smtpmail-smtp-service 587))))
 
-        (defun mu4e-set-account ()
-          "Set the account for composing a message."
-          (let* ((account
-                  (if mu4e-compose-parent-message
-                      (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
-                        (string-match "/\\(.*?\\)/" maildir)
-                        (match-string 1 maildir))
-                    (completing-read (format "Compose with account: (%s) "
-                                             (mapconcat #'(lambda (var) (car var)) mu4e-account-alist "/"))
-                                     (mapcar #'(lambda (var) (car var)) mu4e-account-alist)
-                                     nil t nil nil (caar mu4e-account-alist))))
-                 (account-vars (cdr (assoc account mu4e-account-alist))))
-            (if account-vars
-                (mapc #'(lambda (var)
-                          (set (car var) (cadr var)))
-                      account-vars)
-              (error "No email account found"))))
+          (defun mu4e-set-account ()
+            "Set the account for composing a message."
+            (let* ((account
+                    (if mu4e-compose-parent-message
+                        (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+                          (string-match "/\\(.*?\\)/" maildir)
+                          (match-string 1 maildir))
+                      (completing-read (format "Compose with account: (%s) "
+                                               (mapconcat #'(lambda (var) (car var)) mu4e-account-alist "/"))
+                                       (mapcar #'(lambda (var) (car var)) mu4e-account-alist)
+                                       nil t nil nil (caar mu4e-account-alist))))
+                   (account-vars (cdr (assoc account mu4e-account-alist))))
+              (if account-vars
+                  (mapc #'(lambda (var)
+                            (set (car var) (cadr var)))
+                        account-vars)
+                (error "No email account found"))))
 
-        (add-hook 'mu4e-compose-pre-hook 'mu4e-set-account)
+          (add-hook 'mu4e-compose-pre-hook 'mu4e-set-account)
 
-        (setq mu4e-bookmarks '(
-                               ("flag:unread AND NOT flag:trashed AND NOT maildir:/gmail/spam"
-                                "Unread messages"     ?u)
-                               ("date:today..now"                  "Today's messages"     ?t)
-                               ("date:7d..now"                     "Last 7 days"          ?w)
-                               ("mime:image/*"                     "Messages with images" ?p)))
+          (setq mu4e-bookmarks '(
+                                 ("flag:unread AND NOT flag:trashed AND NOT maildir:/gmail/spam"
+                                  "Unread messages"     ?u)
+                                 ("date:today..now"                  "Today's messages"     ?t)
+                                 ("date:7d..now"                     "Last 7 days"          ?w)
+                                 ("mime:image/*"                     "Messages with images" ?p)))
 
-        (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign)
-        (add-hook 'mu4e-view-mode-hook '(lambda ()
-                                          (local-set-key (kbd "<end>") 'end-of-line)
-                                          (local-set-key (kbd "<home>") 'beginning-of-line)))
+          (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign)
+          (add-hook 'mu4e-view-mode-hook '(lambda ()
+                                            (local-set-key (kbd "<end>") 'end-of-line)
+                                            (local-set-key (kbd "<home>") 'beginning-of-line)))
 
-        (setq mu4e-view-show-images t)
-        (when (fboundp 'imagemagick-register-types)
-          (imagemagick-register-types))
-        (add-to-list 'mu4e-view-actions
-                     '("View in browser" . mu4e-action-view-in-browser) t)
+          (setq mu4e-view-show-images t)
+          (when (fboundp 'imagemagick-register-types)
+            (imagemagick-register-types))
+          (add-to-list 'mu4e-view-actions
+                       '("View in browser" . mu4e-action-view-in-browser) t)
 
 
 
-        ;; don't keep message buffers around
-        (setq message-kill-buffer-on-exit t)))
+          ;; don't keep message buffers around
+          (setq message-kill-buffer-on-exit t))))
 #+end_src
 * indentation
 #+begin_src emacs-lisp :tangle yes
@@ -677,8 +679,10 @@
 * idris
 #+begin_src emacs-lisp :tangle yes
   (use-package idris-mode
-    :ensure t
-    :pin melpa-stable)
+    :load-path "~/code/idris/idris-mode"
+    :mode "\\.idr\\'"
+    :init (use-package prop-menu
+            :ensure t))
 #+end_src
 * skewer
 #+begin_src emacs-lisp :tangle yes
@@ -823,9 +827,8 @@
 #+end_src
 * github
 #+begin_src emacs-lisp :tangle yes
-  (use-package oauth2
-    :ensure t)
   (use-package github
+    :commands github-issues-mode
     :load-path "~/code/emacs/github")
 #+end_src
 * guide-key
@@ -852,16 +855,19 @@
 * sx
 #+begin_src emacs-lisp :tangle yes
   (use-package sx
+    :commands sx-search
     :ensure t)
 #+end_src
 * markdown
 #+begin_src emacs-lisp :tangle yes
   (use-package markdown-mode
+    :mode "\\.md\\'"
     :ensure t)
 #+end_src
 * unbound
 #+begin_src emacs-lisp :tangle yes
   (use-package unbound
+    :commands describe-unbound-keys
     :ensure t)
 #+end_src
 * holidays
@@ -932,7 +938,8 @@
 #+end_src
 * proofgeneral
 #+begin_src emacs-lisp :tangle yes
-  (use-package proof-site)
+  (use-package proof-site
+    :mode "\\.v\\'")
   (add-hook 'coq-mode-hook
             (lambda ()
               (make-local-variable 'face-remapping-alist)
@@ -942,11 +949,13 @@
 * aggressive indent
 #+begin_src emacs-lisp :tangle yes
   (use-package aggressive-indent
+    :commands aggressive-indent-mode
     :ensure t)
 #+end_src
 * json
 #+begin_src emacs-lisp :tangle yes
   (use-package json-mode
+    :mode "\\.json\\'"
     :ensure t)
 #+end_src
 * web
@@ -961,17 +970,21 @@
 * yaml
 #+begin_src emacs-lisp :tangle yes
   (use-package yaml-mode
+    :mode "\\.yaml\\'"
     :ensure t)
 #+end_src
 * nginx
 #+begin_src emacs-lisp :tangle yes
   (use-package nginx-mode
+    :mode "\\.nginx\\'"
     :ensure t)
 #+end_src
 * nyan
 #+begin_src emacs-lisp :tangle yes
   (use-package nyan-mode
-    :ensure t)
+    :defer 10
+    :ensure t
+    :config (nyan-mode))
 #+end_src
 * c
 #+begin_src emacs-lisp :tangle yes
@@ -980,11 +993,13 @@
 * rust
 #+begin_src emacs-lisp :tangle yes
   (use-package rust-mode
+    :mode "\\.rs\\'"
     :ensure t)
 #+end_src
 * toml
 #+begin_src emacs-lisp :tangle yes
   (use-package toml-mode
+    :mode "\\.toml\\'"
     :ensure t)
 #+end_src
 * sml
@@ -996,15 +1011,24 @@
 * ocaml
 #+begin_src emacs-lisp :tangle yes
   (use-package tuareg
+    :commands tuareg-run-ocaml
     :ensure t)
 #+end_src
 * llvm
 #+begin_src emacs-lisp :tangle yes
   (use-package llvm-mode
+    :commands llvm-mode
     :ensure t)
 #+end_src
 * jonprl
 #+begin_src emacs-lisp :tangle yes
   (use-package jonprl-mode
+    :mode "\\.jonprl\\'"
+    :ensure t)
+#+end_src
+* gnuplot
+#+begin_src emacs-lisp :tangle yes
+  (use-package gnuplot
+    :commands gnuplot-mode
     :ensure t)
 #+end_src
