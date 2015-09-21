@@ -27,6 +27,8 @@ alias nsm='non-session-manager -- --session-root ~/noise/nsm'
 alias devmon='devmon --no-gui'
 alias si="stack exec ghci"
 alias s="stack"
+alias ghci="stack ghci"
+alias f='find -iname'
 
 export EDITOR=emacsclient
 export MAILDIR=~/mail
