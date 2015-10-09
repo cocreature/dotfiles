@@ -35,3 +35,4 @@
 /emacs/.emacs.d/.emacs.desktop.lock
 /emacs/.emacs.d/.org-id-locations
 /emacs/.emacs.d/bookmarks
+/emacs/.emacs.d/irony/bin/irony-server

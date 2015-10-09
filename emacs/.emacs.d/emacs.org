@@ -135,10 +135,10 @@
     (projectile-global-mode t)
     (setq projectile-completion-system 'helm)
     :config
+    (setq projectile-enable-caching t)
     (use-package helm-projectile
       :ensure t
-      :config (helm-projectile-on)
-              (setq projectile-enable-caching nil)))
+      :config (helm-projectile-on)))
 #+end_src
 * gui
 #+begin_src emacs-lisp :tangle yes
@@ -412,7 +412,9 @@
             (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
             (add-hook 'haskell-mode-hook 'hindent-mode)
             (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
-            (add-hook 'haskell-mode-hook 'hlint-refactor-mode))
+            (add-hook 'haskell-mode-hook 'hlint-refactor-mode)
+            (add-hook 'haskell-mode-hook 'ghc-init)
+            (add-hook 'haskell-mode-hook 'hare-init))
     :config
     (progn
       (use-package stack-mode
@@ -434,7 +436,11 @@
         (insert (format "foreign import ccall safe \"wrapper\"\n  %s ::\n    (%s) ->\n    IO (FunPtr (%s))\n"
                         wrappername typesignature typesignature)))
       (use-package hlint-refactor-mode
-        :load-path "~/code/haskell/hlint-refactor-mode")))
+        :load-path "~/code/haskell/hlint-refactor-mode")
+      (use-package ghc
+        :load-path "~/code/haskell/ghc-mod/elisp")
+      (use-package hare
+        :load-path "~/code/haskell/HaRe/elisp")))
   (defun haskell-stack-pvp (pkgname)
     (interactive "sPackage name: ")
     (let* ((pkgver (with-temp-buffer
@@ -602,8 +608,11 @@
     :ensure t
     :diminish flycheck-mode
     :defer t
-    :config (progn (add-hook 'after-init-hook #'global-flycheck-mode)
-                   (setq flycheck-emacs-lisp-load-path 'inherit)))
+    :config
+    (add-hook 'after-init-hook #'global-flycheck-mode)
+    (setq flycheck-emacs-lisp-load-path 'inherit)
+    (use-package flycheck-package
+      :ensure t))
   ;; (eval-after-load 'flycheck
   ;;   '(add-to-list 'flycheck-checkers 'haskell-process))
   ;; (require 'haskell-flycheck)
@@ -986,9 +995,32 @@
     :ensure t
     :config (nyan-mode))
 #+end_src
-* c
+* c/c++
 #+begin_src emacs-lisp :tangle yes
   (setq c-basic-offset 4)
+  (use-package irony
+    :ensure t
+    :config
+    (use-package company-irony
+      :ensure t
+      :commands company-irony
+      :init
+      (eval-after-load 'company
+        '(add-to-list 'company-backends 'company-irony)))
+    (use-package flycheck-irony
+      :ensure t
+      :commands flycheck-irony-setup
+      :init
+      (eval-after-load 'flycheck
+        '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
+    (use-package irony-eldoc
+      :ensure t)
+    :init
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'objc-mode-hook 'irony-mode))
+  (use-package clang-format
+    :ensure t)
 #+end_src
 * rust
 #+begin_src emacs-lisp :tangle yes
@@ -1030,5 +1062,17 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package gnuplot
     :commands gnuplot-mode
+    :ensure t)
+#+end_src
+* cmake
+#+begin_src emacs-lisp :tangle yes
+  (use-package cmake-mode
+    :mode "CMakeLists\\.txt\\'")
+#+end_src
+* docker
+#+begin_src emacs-lisp :tangle yes
+  (use-package docker
+    :ensure t)
+  (use-package dockerfile-mode
     :ensure t)
 #+end_src
