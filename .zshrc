@@ -110,3 +110,7 @@ export SCALA_HOME=/usr/share/scala
 export ELDARICA_HOME=~/code/eldarica
 export Z3=$(which z3)
 export PATH=$HOME/code/sml/JonPRL/bin:$PATH
+
+export GOPATH=~/go
+export PATH=$PATH:~/go/bin
+export PATH=$PATH:~/code/rtags/build/bin

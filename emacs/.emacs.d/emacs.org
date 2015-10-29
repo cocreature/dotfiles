@@ -60,6 +60,8 @@
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
   (winner-mode 1)
   (defalias 'yes-or-no-p 'y-or-n-p)
+  (global-unset-key (kbd "C-z"))
+  (put 'upcase-region 'disabled nil)
 #+end_src
 * company
 #+begin_src emacs-lisp :tangle yes
@@ -405,7 +407,7 @@
 * haskell
 #+begin_src emacs-lisp :tangle yes
   (use-package haskell-mode
-    :ensure t
+    :load-path "~/code/haskell/haskell-mode/"
     :mode "\\.\\(l\\|c\\)?hs\\'"
     :init (progn
             (add-hook 'haskell-mode-hook 'structured-haskell-mode)
@@ -413,8 +415,9 @@
             (add-hook 'haskell-mode-hook 'hindent-mode)
             (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
             (add-hook 'haskell-mode-hook 'hlint-refactor-mode)
-            (add-hook 'haskell-mode-hook 'ghc-init)
-            (add-hook 'haskell-mode-hook 'hare-init))
+            ;; (add-hook 'haskell-mode-hook 'ghc-init)
+            ;; (add-hook 'haskell-mode-hook 'hare-init)
+            )
     :config
     (progn
       (use-package stack-mode
@@ -1017,8 +1020,19 @@
       :ensure t)
     :init
     (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c++-mode-hook 'irony-eldoc)
+    (add-hook 'c++-mode-hook 'flycheck-irony-setup)
+    (add-hook 'c++-mode-hook (lambda () (flycheck-mode 1)))
     (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'objc-mode-hook 'irony-mode))
+    (add-hook 'objc-mode-hook 'irony-mode)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+  (use-package rtags
+    :load-path "~/code/rtags/src"
+    :config
+    (setq rtags-path "~/code/rtags/build/bin")
+    (use-package cmake-ide
+      :ensure t
+      :init (add-hook 'c++-mode-hook 'cmake-ide-setup)))
   (use-package clang-format
     :ensure t)
 #+end_src
@@ -1075,4 +1089,10 @@
     :ensure t)
   (use-package dockerfile-mode
     :ensure t)
+#+end_src
+* smtlib
+#+begin_src emacs-lisp :tangle yes
+  (use-package smtlib
+     :load-path "~/code/emacs/smtlib-mode"
+     :mode ("\\.smt2" . smtlib-mode))
 #+end_src
