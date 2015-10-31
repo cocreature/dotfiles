@@ -1099,3 +1099,10 @@
      :load-path "~/code/emacs/smtlib-mode"
      :mode ("\\.smt2" . smtlib-mode))
 #+end_src
+* swiper
+#+begin_src emacs-lisp :tangle yes
+  (use-package swiper-helm
+    :ensure t
+    :bind (("C-s" . swiper)
+           ("C-r" . swiper)))
+#+end_src
