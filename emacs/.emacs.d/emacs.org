@@ -851,7 +851,7 @@
     :diminish guide-key-mode
     :init
     (progn
-      (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c" "C-c h"))
+      (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c" "C-c h" "C-c r"))
       (guide-key-mode 1)))
 #+end_src
 * multiple cursors
@@ -1030,11 +1030,14 @@
     :load-path "~/code/rtags/src"
     :config
     (setq rtags-path "~/code/rtags/build/bin")
+    (rtags-enable-standard-keybindings)
+    (define-key c-mode-base-map (kbd "C-c r t") (function rtags-symbol-type))
     (use-package cmake-ide
       :ensure t
       :init (add-hook 'c++-mode-hook 'cmake-ide-setup)))
   (use-package clang-format
-    :ensure t)
+    :ensure t
+    :config (setq clang-format-executable "~/code/llvm/build/bin/clang-format"))
 #+end_src
 * rust
 #+begin_src emacs-lisp :tangle yes
