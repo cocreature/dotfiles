@@ -71,8 +71,6 @@
     :defer 10
     :config
     (global-company-mode t)
-    (use-package company-quickhelp
-      :ensure t)
     (use-package company-cmake
       :ensure t))
 #+end_src
@@ -122,13 +120,18 @@
 #+end_src
 * projectile
 #+begin_src emacs-lisp :tangle yes
+  (use-package magit-popup
+    :ensure t
+    :pin melpa-stable)
   (use-package magit
     :ensure t
+    :pin melpa-stable
     :commands magit-status
     :config
     (progn
       (use-package magit-svn
-        :ensure t)
+        :ensure t
+        :pin melpa-stable)
       (setq magit-last-seen-setup-instructions "1.4.0")
       (setq magit-revert-buffers t)))
   (use-package projectile
@@ -408,42 +411,46 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package haskell-mode
     :load-path "~/code/haskell/haskell-mode/"
-    :mode "\\.\\(l\\|c\\)?hs\\'"
+    :mode "\\.hs\\'"
     :init (progn
             (add-hook 'haskell-mode-hook 'structured-haskell-mode)
-            (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-            (add-hook 'haskell-mode-hook 'hindent-mode)
-            (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
-            (add-hook 'haskell-mode-hook 'hlint-refactor-mode)
+            (defun haskell-indentation-mode-fun () (haskell-indentation-mode 0))
+            (add-hook 'haskell-mode-hook 'haskell-indentation-mode-fun)
+            (defun interactive-haskell-mode-fun () (interactive-haskell-mode 1))
             ;; (add-hook 'haskell-mode-hook 'ghc-init)
-            ;; (add-hook 'haskell-mode-hook 'hare-init)
-            )
+            (add-hook 'haskell-mode-hook 'interactive-haskell-mode-fun)
+            ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+            (add-hook 'haskell-mode-hook 'hindent-mode)
+            ;; (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
+            (add-hook 'haskell-mode-hook 'hlint-refactor-mode)
+            (defun ghc-mod-hook () (progn (ghc-init) ;; (hare-init)
+                                          )) 
     :config
     (progn
-      (use-package stack-mode
-        :load-path "~/code/haskell/stack-ide/stack-mode")
+      ;; (use-package haskell)
+      ;; (use-package stack-mode
+      ;;   :load-path "~/code/haskell/stack-ide/stack-mode")
       (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans"))
+      (use-package haskell)
+      (use-package haskell-decl-scan)
       (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
       (setq haskell-process-log t)
-      (setq haskell-interactive-mode-eval-mode 'haskell-mode)
+      ;; (setq haskell-interactive-mode-eval-mode 'haskell-mode)
       (setq haskell-process-type 'stack-ghci)
       (use-package shm
         :load-path "~/code/haskell/structured-haskell-mode/elisp")
       (use-package hindent
         :load-path "~/code/haskell/hindent/elisp"
         :config (setq hindent-style "chris-done"))
-      (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl)
-      (use-package haskell)
-      (defun haskell-generate-wrapper (wrappername typesignature)
-        (interactive "sname of the wrapper: \nstype signature: ")
-        (insert (format "foreign import ccall safe \"wrapper\"\n  %s ::\n    (%s) ->\n    IO (FunPtr (%s))\n"
-                        wrappername typesignature typesignature)))
-      (use-package hlint-refactor-mode
+      (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl) 
+      (use-package hlint-refactor
         :load-path "~/code/haskell/hlint-refactor-mode")
-      (use-package ghc
-        :load-path "~/code/haskell/ghc-mod/elisp")
-      (use-package hare
-        :load-path "~/code/haskell/HaRe/elisp")))
+      (use-package hie
+        :load-path "~/code/haskell/haskell-ide-engine/elisp"))))
+  (use-package ghc
+    :load-path "~/code/haskell/ghc-mod/elisp")
+  ;; (use-package hare
+  ;;       :load-path "~/code/haskell/HaRe/elisp")
   (defun haskell-stack-pvp (pkgname)
     (interactive "sPackage name: ")
     (let* ((pkgver (with-temp-buffer
@@ -844,15 +851,11 @@
     :load-path "~/code/emacs/github")
 #+end_src
 * guide-key
-#+begin_src emacs-lisp :tangle yes
-  (use-package guide-key
+#+begin_src emacs-lisp :tangle yes 
+  (use-package which-key
     :ensure t
-    :defer t
-    :diminish guide-key-mode
     :init
-    (progn
-      (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c" "C-c h" "C-c r"))
-      (guide-key-mode 1)))
+      (which-key-mode))
 #+end_src
 * multiple cursors
 #+begin_src emacs-lisp :tangle yes
@@ -928,30 +931,18 @@
 * ledger
 #+begin_src emacs-lisp :tangle yes
   (use-package ledger-mode
+    :ensure t
     :commands ledger-mode
     :mode "\\.ledger\\'"
     :config
-    (progn
-      (setq ledger-reconcile-default-commodity "€")
-      (defadvice ledger-report-cmd (around ledger-report-gpg)
-        (let ((ledger-reports
-               (if (string= (file-name-extension (or (buffer-file-name ledger-buf) "")) "gpg")
-                   (mapcar
-                    (lambda (report)
-                      (list (car report)
-                            (concat
-                             "gpg2 --no-tty --quiet -d %(ledger-file) | ledger -f - "
-                             (mapconcat 'identity (cdddr (split-string (cadr report))) " "))))
-                    ledger-reports)
-                 ledger-reports)))
-          ad-do-it))
-
-      (ad-activate 'ledger-report-cmd)))
+    (setq ledger-reconcile-default-commodity "€"))
 #+end_src
 * proofgeneral
 #+begin_src emacs-lisp :tangle yes
   (use-package proof-site
-    :mode "\\.v\\'")
+    :config
+    (use-package coq-mode
+      :mode "\\.v\\'"))
   (add-hook 'coq-mode-hook
             (lambda ()
               (make-local-variable 'face-remapping-alist)
@@ -996,6 +987,7 @@
   (use-package nyan-mode
     :defer 10
     :ensure t
+    :pin melpa-stable
     :config (nyan-mode))
 #+end_src
 * c/c++
@@ -1022,9 +1014,10 @@
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'c++-mode-hook 'irony-eldoc)
     (add-hook 'c++-mode-hook 'flycheck-irony-setup)
-    (add-hook 'c++-mode-hook (lambda () (flycheck-mode 1)))
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'objc-mode-hook 'irony-mode)
+    (add-hook 'c++-mode-hook 'flycheck-mode)
+    (defun flycheck-hook () (flycheck-mode 1))
+    (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
+    (add-hook 'c++-mode-hook 'remap-fill-paragraph)
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
   (use-package rtags
     :load-path "~/code/rtags/src"
@@ -1105,4 +1098,9 @@
     :ensure t
     :bind (("C-s" . swiper)
            ("C-r" . swiper)))
+#+end_src
+* pdf-tools
+#+begin_src emacs-lisp :tangle yes
+  (use-package pdf-tools
+    :ensure t)
 #+end_src
