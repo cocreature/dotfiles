@@ -442,7 +442,7 @@
       (use-package hindent
         :load-path "~/code/haskell/hindent/elisp"
         :config (setq hindent-style "chris-done"))
-      (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl) 
+      (define-key haskell-mode-map (kbd "C-c i") 'hindent-reformat-decl)
       (use-package hlint-refactor
         :load-path "~/code/haskell/hlint-refactor-mode")
       (use-package hie
