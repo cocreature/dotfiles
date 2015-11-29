@@ -237,9 +237,14 @@
       (setq org-agenda-files '("~/org"))
       (setq org-mobile-directory "~/org/mobile")
       (setq org-default-notes-file (concat org-directory "/notes.org"))
+      (setq org-agenda-sorting-strategy
+            '((agenda habit-down time-up priority-down category-keep)
+              (todo category-up priority-down)
+              (tags priority-down category-keep)
+              (search category-keep)))
       (setq org-log-done t)
       (setq org-clock-persist t)
-          (setq org-file-apps
+      (setq org-file-apps
             '((auto-mode . emacs)
               ("\\.mm\\'" . system)
               ("\\.x?html?\\'" . "firefox %s")
