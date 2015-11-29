@@ -1111,3 +1111,15 @@
     :config (use-package org-pdfview
               :load-path "~/code/emacs/org-pdfview"))
 #+end_src
+* lean
+#+begin_src emacs-lisp :tangle yes
+    (use-package dash-functional
+      :ensure t)
+    (use-package f
+      :ensure t)
+    (use-package lua-mode
+      :ensure t)
+    (use-package lean-mode
+      :load-path "~/code/lean/src/emacs"
+      :init (setq lean-rootdir "~/code/lean/"))
+#+end_src
