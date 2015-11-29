@@ -1107,5 +1107,7 @@
 * pdf-tools
 #+begin_src emacs-lisp :tangle yes
   (use-package pdf-tools
-    :ensure t)
+    :ensure t
+    :config (use-package org-pdfview
+              :load-path "~/code/emacs/org-pdfview"))
 #+end_src
