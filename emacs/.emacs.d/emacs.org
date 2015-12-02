@@ -62,6 +62,7 @@
   (defalias 'yes-or-no-p 'y-or-n-p)
   (global-unset-key (kbd "C-z"))
   (put 'upcase-region 'disabled nil)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 * company
 #+begin_src emacs-lisp :tangle yes
@@ -429,7 +430,7 @@
             ;; (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
             (add-hook 'haskell-mode-hook 'hlint-refactor-mode)
             (defun ghc-mod-hook () (progn (ghc-init) ;; (hare-init)
-                                          )) 
+                                          ))
     :config
     (progn
       ;; (use-package haskell)
@@ -856,7 +857,7 @@
     :load-path "~/code/emacs/github")
 #+end_src
 * guide-key
-#+begin_src emacs-lisp :tangle yes 
+#+begin_src emacs-lisp :tangle yes
   (use-package which-key
     :ensure t
     :init
@@ -1107,19 +1108,21 @@
 * pdf-tools
 #+begin_src emacs-lisp :tangle yes
   (use-package pdf-tools
+    :mode ("\\.pdf\\'" . pdf-view-mode)
     :ensure t
     :config (use-package org-pdfview
               :load-path "~/code/emacs/org-pdfview"))
 #+end_src
 * lean
 #+begin_src emacs-lisp :tangle yes
-    (use-package dash-functional
-      :ensure t)
-    (use-package f
-      :ensure t)
-    (use-package lua-mode
-      :ensure t)
-    (use-package lean-mode
-      :load-path "~/code/lean/src/emacs"
-      :init (setq lean-rootdir "~/code/lean/"))
+  (use-package dash-functional
+    :ensure t)
+  (use-package f
+    :ensure t)
+  (use-package lua-mode
+    :ensure t)
+  (use-package lean-mode
+    :mode ("\\.lean\\'" "\\.hlean\\'")
+    :load-path "~/code/lean/src/emacs"
+    :init (setq lean-rootdir "~/code/lean/"))
 #+end_src
