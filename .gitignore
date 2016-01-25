@@ -36,3 +36,4 @@
 /emacs/.emacs.d/.org-id-locations
 /emacs/.emacs.d/bookmarks
 /emacs/.emacs.d/irony/bin/irony-server
+/emacs/.emacs.d/irony/cdb-json-projects

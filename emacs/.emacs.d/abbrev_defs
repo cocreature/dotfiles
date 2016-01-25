@@ -9,13 +9,9 @@
 
 (define-abbrev-table 'TeX-output-mode-abbrev-table '())
 
-(define-abbrev-table 'apropos-mode-abbrev-table '())
-
 (define-abbrev-table 'awk-mode-abbrev-table
   '(
    ))
-
-(define-abbrev-table 'bibtex-mode-abbrev-table '())
 
 (define-abbrev-table 'bookmark-bmenu-mode-abbrev-table '())
 
@@ -29,39 +25,15 @@
   '(
    ))
 
-(define-abbrev-table 'calendar-mode-abbrev-table '())
-
-(define-abbrev-table 'change-log-mode-abbrev-table '())
-
 (define-abbrev-table 'comint-mode-abbrev-table '())
 
 (define-abbrev-table 'completion-list-mode-abbrev-table '())
 
-(define-abbrev-table 'conf-colon-mode-abbrev-table '())
-
-(define-abbrev-table 'conf-javaprop-mode-abbrev-table '())
-
-(define-abbrev-table 'conf-ppd-mode-abbrev-table '())
-
-(define-abbrev-table 'conf-space-mode-abbrev-table '())
-
-(define-abbrev-table 'conf-unix-mode-abbrev-table '())
-
-(define-abbrev-table 'conf-windows-mode-abbrev-table '())
-
-(define-abbrev-table 'conf-xdefaults-mode-abbrev-table '())
+(define-abbrev-table 'context-mode-abbrev-table '())
 
 (define-abbrev-table 'debugger-mode-abbrev-table '())
 
-(define-abbrev-table 'diary-fancy-display-mode-abbrev-table '())
-
-(define-abbrev-table 'diary-mode-abbrev-table '())
-
-(define-abbrev-table 'diff-mode-abbrev-table '())
-
 (define-abbrev-table 'doctex-mode-abbrev-table '())
-
-(define-abbrev-table 'edebug-eval-mode-abbrev-table '())
 
 (define-abbrev-table 'edit-abbrevs-mode-abbrev-table '())
 
@@ -69,25 +41,17 @@
 
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table '())
 
-(define-abbrev-table 'epa-info-mode-abbrev-table '())
-
-(define-abbrev-table 'epa-key-list-mode-abbrev-table '())
-
-(define-abbrev-table 'epa-key-mode-abbrev-table '())
-
 (define-abbrev-table 'ert-results-mode-abbrev-table '())
 
 (define-abbrev-table 'ert-simple-view-mode-abbrev-table '())
 
 (define-abbrev-table 'eshell-mode-abbrev-table '())
 
+(define-abbrev-table 'flycheck-error-list-mode-abbrev-table '())
+
 (define-abbrev-table 'fundamental-mode-abbrev-table '())
 
 (define-abbrev-table 'gfm-mode-abbrev-table '())
-
-(define-abbrev-table 'github-issue-mode-abbrev-table '())
-
-(define-abbrev-table 'github-issues-mode-abbrev-table '())
 
 (define-abbrev-table 'global-abbrev-table '())
 
@@ -119,33 +83,9 @@
 
 (define-abbrev-table 'idl-mode-abbrev-table '())
 
-(define-abbrev-table 'idris-compiler-notes-mode-abbrev-table '())
-
-(define-abbrev-table 'idris-info-mode-abbrev-table '())
-
-(define-abbrev-table 'idris-ipkg-build-mode-abbrev-table '())
-
-(define-abbrev-table 'idris-ipkg-mode-abbrev-table '())
-
-(define-abbrev-table 'idris-log-mode-abbrev-table '())
-
-(define-abbrev-table 'idris-metavariable-list-mode-abbrev-table '())
-
-(define-abbrev-table 'idris-mode-abbrev-table '())
-
-(define-abbrev-table 'idris-prover-script-mode-abbrev-table '())
-
-(define-abbrev-table 'idris-repl-mode-abbrev-table '())
-
-(define-abbrev-table 'idris-tree-info-mode-abbrev-table '())
-
 (define-abbrev-table 'image-dired-display-image-mode-abbrev-table '())
 
 (define-abbrev-table 'image-dired-thumbnail-mode-abbrev-table '())
-
-(define-abbrev-table 'inferior-sml-mode-abbrev-table '())
-
-(define-abbrev-table 'inferior-stack-mode-abbrev-table '())
 
 (define-abbrev-table 'java-mode-abbrev-table
   '(
@@ -153,11 +93,7 @@
 
 (define-abbrev-table 'js-mode-abbrev-table '())
 
-(define-abbrev-table 'json-mode-abbrev-table '())
-
 (define-abbrev-table 'latex-mode-abbrev-table '())
-
-(define-abbrev-table 'ledger-mode-abbrev-table '())
 
 (define-abbrev-table 'ledger-reconcile-mode-abbrev-table '())
 
@@ -167,57 +103,15 @@
 
 (define-abbrev-table 'literate-haskell-mode-abbrev-table '())
 
-(define-abbrev-table 'log-edit-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-cherry-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-diff-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-log-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-log-select-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-mode-abbrev-table '())
-
 (define-abbrev-table 'magit-popup-mode-abbrev-table '())
 
 (define-abbrev-table 'magit-popup-sequence-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-process-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-reflog-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-refs-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-revision-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-stash-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-stashes-mode-abbrev-table '())
-
-(define-abbrev-table 'magit-status-mode-abbrev-table '())
-
-(define-abbrev-table 'makefile-automake-mode-abbrev-table '())
-
-(define-abbrev-table 'makefile-bsdmake-mode-abbrev-table '())
-
-(define-abbrev-table 'makefile-gmake-mode-abbrev-table '())
-
-(define-abbrev-table 'makefile-imake-mode-abbrev-table '())
-
-(define-abbrev-table 'makefile-makepp-mode-abbrev-table '())
-
-(define-abbrev-table 'makefile-mode-abbrev-table '())
 
 (define-abbrev-table 'markdown-mode-abbrev-table '())
 
 (define-abbrev-table 'message-mode-abbrev-table '())
 
 (define-abbrev-table 'messages-buffer-mode-abbrev-table '())
-
-(define-abbrev-table 'mu4e-about-mode-abbrev-table '())
-
-(define-abbrev-table 'mu4e~update-mail-mode-abbrev-table '())
 
 (define-abbrev-table 'objc-mode-abbrev-table
   '(
@@ -227,25 +121,9 @@
 
 (define-abbrev-table 'occur-mode-abbrev-table '())
 
-(define-abbrev-table 'org-export-stack-mode-abbrev-table '())
-
-(define-abbrev-table 'org-mode-abbrev-table '())
-
 (define-abbrev-table 'outline-mode-abbrev-table '())
 
 (define-abbrev-table 'package-menu-mode-abbrev-table '())
-
-(define-abbrev-table 'paradox-commit-list-mode-abbrev-table '())
-
-(define-abbrev-table 'paradox-menu-mode-abbrev-table '())
-
-(define-abbrev-table 'pgocaml-goals-mode-abbrev-table '())
-
-(define-abbrev-table 'pgocaml-mode-abbrev-table '())
-
-(define-abbrev-table 'pgocaml-response-mode-abbrev-table '())
-
-(define-abbrev-table 'pgocaml-shell-mode-abbrev-table '())
 
 (define-abbrev-table 'pike-mode-abbrev-table
   '(
@@ -253,21 +131,21 @@
 
 (define-abbrev-table 'plain-tex-mode-abbrev-table '())
 
-(define-abbrev-table 'plstore-mode-abbrev-table '())
-
 (define-abbrev-table 'process-menu-mode-abbrev-table '())
 
 (define-abbrev-table 'prog-mode-abbrev-table '())
 
-(define-abbrev-table 'proof-mode-abbrev-table '())
+(define-abbrev-table 'rtags-dependency-tree-mode-abbrev-table '())
 
-(define-abbrev-table 'proof-splash-mode-abbrev-table '())
+(define-abbrev-table 'rtags-diagnostics-mode-abbrev-table '())
 
-(define-abbrev-table 'proof-universal-keys-only-mode-abbrev-table '())
+(define-abbrev-table 'rtags-mode-abbrev-table '())
 
-(define-abbrev-table 'rust-mode-abbrev-table '())
+(define-abbrev-table 'rtags-preprocess-mode-abbrev-table '())
 
-(define-abbrev-table 'scomint-mode-abbrev-table '())
+(define-abbrev-table 'rtags-references-tree-mode-abbrev-table '())
+
+(define-abbrev-table 'rtags-taglist-mode-abbrev-table '())
 
 (define-abbrev-table 'select-tags-table-mode-abbrev-table '())
 
@@ -277,389 +155,29 @@
 
 (define-abbrev-table 'shm-edit-string-mode-abbrev-table '())
 
-(define-abbrev-table 'slitex-mode-abbrev-table '())
-
-(define-abbrev-table 'sml-cm-mode-abbrev-table '())
-
-(define-abbrev-table 'sml-lex-mode-abbrev-table '())
-
-(define-abbrev-table 'sml-mode-abbrev-table
-  '(
-   ))
-
-(define-abbrev-table 'sml-prog-proc-comint-mode-abbrev-table '())
-
-(define-abbrev-table 'sml-prog-proc-mode-abbrev-table '())
-
-(define-abbrev-table 'sml-yacc-mode-abbrev-table '())
-
 (define-abbrev-table 'snippet-mode-abbrev-table '())
 
 (define-abbrev-table 'special-mode-abbrev-table '())
 
-(define-abbrev-table 'speedbar-mode-abbrev-table '())
+(define-abbrev-table 'sx-compose-mode-abbrev-table '())
 
-(define-abbrev-table 'sql-mode-abbrev-table
-  '(
-    ("absolute" "ABSOLUTE" nil 1)
-    ("action" "ACTION" nil 1)
-    ("add" "ADD" nil 1)
-    ("after" "AFTER" nil 1)
-    ("all" "ALL" nil 1)
-    ("allocate" "ALLOCATE" nil 1)
-    ("alter" "ALTER" nil 1)
-    ("and" "AND" nil 1)
-    ("any" "ANY" nil 1)
-    ("are" "ARE" nil 1)
-    ("array" "ARRAY" nil 1)
-    ("as" "AS" nil 1)
-    ("asc" "ASC" nil 1)
-    ("asensitive" "ASENSITIVE" nil 1)
-    ("assertion" "ASSERTION" nil 1)
-    ("asymmetric" "ASYMMETRIC" nil 1)
-    ("at" "AT" nil 1)
-    ("atomic" "ATOMIC" nil 1)
-    ("authorization" "AUTHORIZATION" nil 1)
-    ("avg" "AVG" nil 1)
-    ("before" "BEFORE" nil 1)
-    ("begin" "BEGIN" nil 3)
-    ("between" "BETWEEN" nil 1)
-    ("bigint" "BIGINT" nil 1)
-    ("binary" "BINARY" nil 1)
-    ("bit" "BIT" nil 1)
-    ("bitlength" "BITLENGTH" nil 1)
-    ("blob" "BLOB" nil 1)
-    ("boolean" "BOOLEAN" nil 1)
-    ("both" "BOTH" nil 1)
-    ("breadth" "BREADTH" nil 1)
-    ("by" "BY" nil 1)
-    ("call" "CALL" nil 1)
-    ("called" "CALLED" nil 1)
-    ("cascade" "CASCADE" nil 1)
-    ("cascaded" "CASCADED" nil 1)
-    ("case" "CASE" nil 1)
-    ("cast" "CAST" nil 1)
-    ("catalog" "CATALOG" nil 1)
-    ("char" "CHAR" nil 1)
-    ("char_length" "CHAR_LENGTH" nil 1)
-    ("character" "CHARACTER" nil 1)
-    ("character_length" "CHARACTER_LENGTH" nil 1)
-    ("check" "CHECK" nil 1)
-    ("clob" "CLOB" nil 1)
-    ("close" "CLOSE" nil 1)
-    ("coalesce" "COALESCE" nil 1)
-    ("collate" "COLLATE" nil 1)
-    ("collation" "COLLATION" nil 1)
-    ("column" "COLUMN" nil 1)
-    ("commit" "COMMIT" nil 1)
-    ("condition" "CONDITION" nil 1)
-    ("connect" "CONNECT" nil 1)
-    ("connection" "CONNECTION" nil 1)
-    ("constraint" "CONSTRAINT" nil 1)
-    ("constraints" "CONSTRAINTS" nil 1)
-    ("constructor" "CONSTRUCTOR" nil 1)
-    ("contains" "CONTAINS" nil 1)
-    ("continue" "CONTINUE" nil 1)
-    ("convert" "CONVERT" nil 1)
-    ("corresponding" "CORRESPONDING" nil 1)
-    ("count" "COUNT" nil 1)
-    ("create" "CREATE" nil 1)
-    ("cross" "CROSS" nil 1)
-    ("cube" "CUBE" nil 1)
-    ("current" "CURRENT" nil 1)
-    ("current_date" "CURRENT_DATE" nil 1)
-    ("current_default_transform_group" "CURRENT_DEFAULT_TRANSFORM_GROUP" nil 1)
-    ("current_path" "CURRENT_PATH" nil 1)
-    ("current_role" "CURRENT_ROLE" nil 1)
-    ("current_time" "CURRENT_TIME" nil 1)
-    ("current_timestamp" "CURRENT_TIMESTAMP" nil 1)
-    ("current_transform_group_for_type" "CURRENT_TRANSFORM_GROUP_FOR_TYPE" nil 1)
-    ("current_user" "CURRENT_USER" nil 1)
-    ("cursor" "CURSOR" nil 1)
-    ("cycle" "CYCLE" nil 1)
-    ("data" "DATA" nil 1)
-    ("date" "DATE" nil 1)
-    ("day" "DAY" nil 1)
-    ("deallocate" "DEALLOCATE" nil 1)
-    ("dec" "DEC" nil 1)
-    ("decimal" "DECIMAL" nil 1)
-    ("declare" "DECLARE" nil 1)
-    ("default" "DEFAULT" nil 1)
-    ("deferrable" "DEFERRABLE" nil 1)
-    ("deferred" "DEFERRED" nil 1)
-    ("delete" "DELETE" nil 2)
-    ("depth" "DEPTH" nil 1)
-    ("deref" "DEREF" nil 1)
-    ("desc" "DESC" nil 1)
-    ("describe" "DESCRIBE" nil 1)
-    ("descriptor" "DESCRIPTOR" nil 1)
-    ("deterministic" "DETERMINISTIC" nil 1)
-    ("diagnostics" "DIAGNOSTICS" nil 1)
-    ("disconnect" "DISCONNECT" nil 1)
-    ("distinct" "DISTINCT" nil 1)
-    ("do" "DO" nil 1)
-    ("domain" "DOMAIN" nil 1)
-    ("double" "DOUBLE" nil 1)
-    ("drop" "DROP" nil 1)
-    ("dynamic" "DYNAMIC" nil 1)
-    ("each" "EACH" nil 1)
-    ("element" "ELEMENT" nil 1)
-    ("else" "ELSE" nil 1)
-    ("elseif" "ELSEIF" nil 1)
-    ("end" "END" nil 1)
-    ("equals" "EQUALS" nil 1)
-    ("escape" "ESCAPE" nil 1)
-    ("except" "EXCEPT" nil 1)
-    ("exception" "EXCEPTION" nil 1)
-    ("exec" "EXEC" nil 1)
-    ("execute" "EXECUTE" nil 1)
-    ("exists" "EXISTS" nil 1)
-    ("exit" "EXIT" nil 1)
-    ("external" "EXTERNAL" nil 1)
-    ("extract" "EXTRACT" nil 1)
-    ("false" "FALSE" nil 1)
-    ("fetch" "FETCH" nil 1)
-    ("filter" "FILTER" nil 1)
-    ("float" "FLOAT" nil 1)
-    ("for" "FOR" nil 1)
-    ("foreign" "FOREIGN" nil 1)
-    ("found" "FOUND" nil 1)
-    ("free" "FREE" nil 1)
-    ("from" "FROM" nil 12)
-    ("full" "FULL" nil 1)
-    ("function" "FUNCTION" nil 1)
-    ("general" "GENERAL" nil 1)
-    ("get" "GET" nil 1)
-    ("global" "GLOBAL" nil 1)
-    ("go" "GO" nil 1)
-    ("goto" "GOTO" nil 1)
-    ("grant" "GRANT" nil 1)
-    ("group" "GROUP" nil 1)
-    ("grouping" "GROUPING" nil 1)
-    ("handler" "HANDLER" nil 1)
-    ("having" "HAVING" nil 1)
-    ("hold" "HOLD" nil 1)
-    ("hour" "HOUR" nil 1)
-    ("identity" "IDENTITY" nil 1)
-    ("if" "IF" nil 1)
-    ("immediate" "IMMEDIATE" nil 1)
-    ("in" "IN" nil 1)
-    ("indicator" "INDICATOR" nil 1)
-    ("initially" "INITIALLY" nil 1)
-    ("inner" "INNER" nil 1)
-    ("inout" "INOUT" nil 1)
-    ("input" "INPUT" nil 1)
-    ("insensitive" "INSENSITIVE" nil 1)
-    ("insert" "INSERT" nil 5)
-    ("int" "INT" nil 1)
-    ("integer" "INTEGER" nil 1)
-    ("intersect" "INTERSECT" nil 1)
-    ("interval" "INTERVAL" nil 1)
-    ("into" "INTO" nil 5)
-    ("is" "IS" nil 1)
-    ("isolation" "ISOLATION" nil 1)
-    ("iterate" "ITERATE" nil 1)
-    ("join" "JOIN" nil 4)
-    ("key" "KEY" nil 1)
-    ("language" "LANGUAGE" nil 1)
-    ("large" "LARGE" nil 1)
-    ("lateral" "LATERAL" nil 1)
-    ("leading" "LEADING" nil 1)
-    ("leave" "LEAVE" nil 1)
-    ("left" "LEFT" nil 1)
-    ("level" "LEVEL" nil 1)
-    ("like" "LIKE" nil 1)
-    ("local" "LOCAL" nil 1)
-    ("localtime" "LOCALTIME" nil 1)
-    ("localtimestamp" "LOCALTIMESTAMP" nil 1)
-    ("locator" "LOCATOR" nil 1)
-    ("loop" "LOOP" nil 1)
-    ("lower" "LOWER" nil 1)
-    ("map" "MAP" nil 1)
-    ("match" "MATCH" nil 1)
-    ("member" "MEMBER" nil 1)
-    ("merge" "MERGE" nil 1)
-    ("method" "METHOD" nil 1)
-    ("min" "MIN" nil 1)
-    ("minute" "MINUTE" nil 1)
-    ("modifies" "MODIFIES" nil 1)
-    ("module" "MODULE" nil 1)
-    ("month" "MONTH" nil 1)
-    ("multiset" "MULTISET" nil 1)
-    ("names" "NAMES" nil 1)
-    ("national" "NATIONAL" nil 1)
-    ("natural" "NATURAL" nil 1)
-    ("nchar" "NCHAR" nil 1)
-    ("nclob" "NCLOB" nil 1)
-    ("new" "NEW" nil 1)
-    ("next" "NEXT" nil 1)
-    ("no" "NO" nil 1)
-    ("none" "NONE" nil 1)
-    ("not" "NOT" nil 1)
-    ("null" "NULL" nil 1)
-    ("nullif" "NULLIF" nil 1)
-    ("numeric" "NUMERIC" nil 1)
-    ("object" "OBJECT" nil 1)
-    ("octet_length" "OCTET_LENGTH" nil 1)
-    ("of" "OF" nil 1)
-    ("old" "OLD" nil 1)
-    ("on" "ON" nil 4)
-    ("only" "ONLY" nil 1)
-    ("open" "OPEN" nil 1)
-    ("option" "OPTION" nil 1)
-    ("or" "OR" nil 1)
-    ("order" "ORDER" nil 1)
-    ("ordinality" "ORDINALITY" nil 1)
-    ("out" "OUT" nil 1)
-    ("outer" "OUTER" nil 1)
-    ("output" "OUTPUT" nil 1)
-    ("over" "OVER" nil 1)
-    ("overlaps" "OVERLAPS" nil 1)
-    ("pad" "PAD" nil 1)
-    ("parameter" "PARAMETER" nil 1)
-    ("partial" "PARTIAL" nil 1)
-    ("partition" "PARTITION" nil 1)
-    ("path" "PATH" nil 1)
-    ("position" "POSITION" nil 1)
-    ("precision" "PRECISION" nil 1)
-    ("prepare" "PREPARE" nil 1)
-    ("preserve" "PRESERVE" nil 1)
-    ("primary" "PRIMARY" nil 1)
-    ("prior" "PRIOR" nil 1)
-    ("privileges" "PRIVILEGES" nil 1)
-    ("procedure" "PROCEDURE" nil 1)
-    ("public" "PUBLIC" nil 1)
-    ("range" "RANGE" nil 1)
-    ("read" "READ" nil 1)
-    ("reads" "READS" nil 1)
-    ("real" "REAL" nil 1)
-    ("recursive" "RECURSIVE" nil 1)
-    ("ref" "REF" nil 1)
-    ("references" "REFERENCES" nil 1)
-    ("referencing" "REFERENCING" nil 1)
-    ("relative" "RELATIVE" nil 1)
-    ("release" "RELEASE" nil 1)
-    ("repeat" "REPEAT" nil 1)
-    ("resignal" "RESIGNAL" nil 1)
-    ("restrict" "RESTRICT" nil 1)
-    ("result" "RESULT" nil 1)
-    ("return" "RETURN" nil 1)
-    ("returns" "RETURNS" nil 1)
-    ("revoke" "REVOKE" nil 1)
-    ("right" "RIGHT" nil 1)
-    ("role" "ROLE" nil 1)
-    ("rollback" "ROLLBACK" nil 2)
-    ("rollup" "ROLLUP" nil 1)
-    ("routine" "ROUTINE" nil 1)
-    ("row" "ROW" nil 1)
-    ("rows" "ROWS" nil 1)
-    ("savepoint" "SAVEPOINT" nil 1)
-    ("schema" "SCHEMA" nil 1)
-    ("scope" "SCOPE" nil 1)
-    ("scroll" "SCROLL" nil 1)
-    ("search" "SEARCH" nil 1)
-    ("second" "SECOND" nil 1)
-    ("section" "SECTION" nil 1)
-    ("select" "SELECT" nil 11)
-    ("sensitive" "SENSITIVE" nil 1)
-    ("session" "SESSION" nil 1)
-    ("session_user" "SESSION_USER" nil 1)
-    ("set" "SET" nil 1)
-    ("sets" "SETS" nil 1)
-    ("signal" "SIGNAL" nil 1)
-    ("similar" "SIMILAR" nil 1)
-    ("size" "SIZE" nil 1)
-    ("smallint" "SMALLINT" nil 1)
-    ("some" "SOME" nil 1)
-    ("space" "SPACE" nil 1)
-    ("specific" "SPECIFIC" nil 1)
-    ("specifictype" "SPECIFICTYPE" nil 1)
-    ("sql" "SQL" nil 1)
-    ("sqlcode" "SQLCODE" nil 1)
-    ("sqlerror" "SQLERROR" nil 1)
-    ("sqlexception" "SQLEXCEPTION" nil 1)
-    ("sqlstate" "SQLSTATE" nil 1)
-    ("sqlwarning" "SQLWARNING" nil 1)
-    ("start" "START" nil 1)
-    ("state" "STATE" nil 1)
-    ("static" "STATIC" nil 1)
-    ("submultiset" "SUBMULTISET" nil 1)
-    ("substring" "SUBSTRING" nil 1)
-    ("sum" "SUM" nil 1)
-    ("symmetric" "SYMMETRIC" nil 1)
-    ("system" "SYSTEM" nil 1)
-    ("system_user" "SYSTEM_USER" nil 1)
-    ("table" "TABLE" nil 1)
-    ("tablesample" "TABLESAMPLE" nil 1)
-    ("temporary" "TEMPORARY" nil 1)
-    ("then" "THEN" nil 1)
-    ("time" "TIME" nil 1)
-    ("timestamp" "TIMESTAMP" nil 1)
-    ("timezone_hour" "TIMEZONE_HOUR" nil 1)
-    ("timezone_minute" "TIMEZONE_MINUTE" nil 1)
-    ("to" "TO" nil 1)
-    ("trailing" "TRAILING" nil 1)
-    ("transaction" "TRANSACTION" nil 1)
-    ("translate" "TRANSLATE" nil 1)
-    ("translation" "TRANSLATION" nil 1)
-    ("treat" "TREAT" nil 1)
-    ("trigger" "TRIGGER" nil 1)
-    ("trim" "TRIM" nil 1)
-    ("true" "TRUE" nil 1)
-    ("under" "UNDER" nil 1)
-    ("undo" "UNDO" nil 1)
-    ("union" "UNION" nil 1)
-    ("unique" "UNIQUE" nil 1)
-    ("unknown" "UNKNOWN" nil 1)
-    ("unnest" "UNNEST" nil 1)
-    ("until" "UNTIL" nil 1)
-    ("update" "UPDATE" nil 1)
-    ("upper" "UPPER" nil 1)
-    ("usage" "USAGE" nil 1)
-    ("user" "USER" nil 1)
-    ("using" "USING" nil 1)
-    ("value" "VALUE" nil 1)
-    ("values" "VALUES" nil 6)
-    ("varchar" "VARCHAR" nil 1)
-    ("varying" "VARYING" nil 1)
-    ("view" "VIEW" nil 1)
-    ("when" "WHEN" nil 1)
-    ("whenever" "WHENEVER" nil 1)
-    ("where" "WHERE" nil 5)
-    ("while" "WHILE" nil 1)
-    ("window" "WINDOW" nil 1)
-    ("with" "WITH" nil 1)
-    ("within" "WITHIN" nil 1)
-    ("without" "WITHOUT" nil 1)
-    ("work" "WORK" nil 1)
-    ("write" "WRITE" nil 1)
-    ("year" "YEAR" nil 1)
-    ("zone" "ZONE" nil 1)
-   ))
+(define-abbrev-table 'sx-inbox-mode-abbrev-table '())
+
+(define-abbrev-table 'sx-question-list-mode-abbrev-table '())
+
+(define-abbrev-table 'sx-question-mode-abbrev-table '())
 
 (define-abbrev-table 'tabulated-list-mode-abbrev-table '())
 
 (define-abbrev-table 'tar-mode-abbrev-table '())
 
-(define-abbrev-table 'term-mode-abbrev-table '())
-
-(define-abbrev-table 'tex-mode-abbrev-table '())
-
-(define-abbrev-table 'tex-shell-abbrev-table '())
+(define-abbrev-table 'texinfo-mode-abbrev-table '())
 
 (define-abbrev-table 'text-mode-abbrev-table '())
-
-(define-abbrev-table 'toml-mode-abbrev-table '())
 
 (define-abbrev-table 'url-cookie-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-git-log-edit-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-git-log-view-mode-abbrev-table '())
-
-(define-abbrev-table 'vc-hg-log-view-mode-abbrev-table '())
-
-(define-abbrev-table 'web-mode-abbrev-table '())
-
-(define-abbrev-table 'yaml-mode-abbrev-table '())
 

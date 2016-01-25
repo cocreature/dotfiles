@@ -95,6 +95,7 @@ export PATH=$HOME/code/arcanist/bin:$PATH
 export PATH=$HOME/.gem/ruby/2.2.0/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.node/bin:$PATH
+export PATH=$HOME/.cask/bin:$PATH
 
 source /home/moritz/.nix-profile/etc/profile.d/nix.sh
 
@@ -114,3 +115,6 @@ export PATH=$HOME/code/sml/JonPRL/bin:$PATH
 export GOPATH=~/go
 export PATH=$PATH:~/go/bin
 export PATH=$PATH:~/code/rtags/build/bin
+
+# added by travis gem
+[ -f /home/moritz/.travis/travis.sh ] && source /home/moritz/.travis/travis.sh
