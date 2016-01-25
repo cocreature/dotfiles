@@ -5,8 +5,8 @@
                '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives
                '("melpa-stable" . "http://stable.melpa.org/packages/"))
-  (add-to-list 'package-archives
-               '("org" . "http://orgmode.org/elpa/"))
+  ;; (add-to-list 'package-archives
+  ;;              '("org" . "http://orgmode.org/elpa/"))
   (add-to-list 'package-archives
                '("melpa" . "http://melpa.org/packages/") t)
   (unless (package-installed-p 'use-package)
@@ -51,6 +51,7 @@
 #+begin_src emacs-lisp :tangle yes
   (setq save-interprogram-paste-before-kill t)
   (setq ag-highlight-search t)
+  (blink-cursor-mode -1)
   (use-package undo-tree
     :ensure t
     :init (global-undo-tree-mode)
@@ -70,6 +71,7 @@
     :ensure t
     :diminish company-mode
     :defer 10
+    :bind ("C-M-i" . company-complete)
     :config
     (global-company-mode t)
     (use-package company-cmake
@@ -461,7 +463,6 @@
       ;; (use-package haskell)
       ;; (use-package stack-mode
       ;;   :load-path "~/code/haskell/stack-ide/stack-mode")
-      (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans"))
       (setq haskell-process-args-stack-ghci '("--ghc-options=\"-ferror-spans -fobject-code\"" "--test"))
       (use-package haskell)
       (use-package haskell-decl-scan)
@@ -819,7 +820,8 @@
   (defhydra hydra-zoom (global-map "<f2>")
     "zoom"
     ("g" text-scale-increase "in")
-    ("l" text-scale-decrease "out"))
+    ("l" text-scale-decrease "out")
+    ("0" text-scale-adjust "reset"))
   (defhydra hydra-error (global-map "M-g")
     "goto-error"
     ("h" first-error "first")
@@ -867,8 +869,8 @@
      ("q" nil "quit")))
   (use-package volume
     :ensure t)
-  (global-set-key
-   (kbd "C-c v")
+  (bind-key*
+   "C-c v"
    (defhydra hydra-volume (:color amaranth)
      ("d" (volume-lower 5))
      ("u" (volume-raise 5))
@@ -970,11 +972,16 @@
     (setq ledger-reconcile-default-commodity "€"))
 #+end_src
 * proofgeneral
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (use-package proof-site
+    :load-path "~/code/emacs/PG/generic"
     :config
-    (use-package coq-mode
-      :mode "\\.v\\'"))
+    (use-package coq
+      :mode ("\\.v\\'" . coq-mode)
+      :load-path "~/code/emacs/PG/coq"
+      :config (add-hook 'coq-mode-hook #'company-coq-mode))
+    (use-package company-coq
+      :ensure t))
   (add-hook 'coq-mode-hook
             (lambda ()
               (make-local-variable 'face-remapping-alist)
@@ -1141,14 +1148,38 @@
 #+end_src
 * lean
 #+begin_src emacs-lisp :tangle yes
+  (use-package dash
+    :defer t
+    :ensure t)
   (use-package dash-functional
+    :defer t
     :ensure t)
   (use-package f
+    :defer t
     :ensure t)
   (use-package lua-mode
+    :defer t
+    :ensure t)
+  (use-package mmm-mode
+    :defer t
     :ensure t)
   (use-package lean-mode
     :mode ("\\.lean\\'" "\\.hlean\\'")
     :load-path "~/code/lean/src/emacs"
     :init (setq lean-rootdir "~/code/lean/"))
+#+end_src
+* scala
+#+begin_src emacs-lisp :tangle yes
+  (use-package ensime
+    :ensure t
+    :commands (ensime-scala-mode-hook))
+  (use-package scala-mode2
+    :ensure t
+    :mode ("\\.scala\\'" . scala-mode)
+    :config (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
+#+end_src
+* cask
+#+begin_src emacs-lisp :tangle yes
+  (use-package cask
+    :ensure t)
 #+end_src
