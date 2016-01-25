@@ -462,6 +462,7 @@
       ;; (use-package stack-mode
       ;;   :load-path "~/code/haskell/stack-ide/stack-mode")
       (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans"))
+      (setq haskell-process-args-stack-ghci '("--ghc-options=\"-ferror-spans -fobject-code\"" "--test"))
       (use-package haskell)
       (use-package haskell-decl-scan)
       (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
