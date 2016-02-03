@@ -70,10 +70,11 @@
   (use-package company
     :ensure t
     :diminish company-mode
-    :defer 10
-    :bind ("C-M-i" . company-complete)
+    :defer 3
+    :bind ("C-TAB" . company-complete)
     :config
     (global-company-mode t)
+    (push 'company-rtags company-backends)
     (use-package company-cmake
       :ensure t))
 #+end_src
@@ -612,7 +613,7 @@
         :diminish elisp-slime-nav-mode
         :ensure t
         :commands turn-on-elisp-slime-nav-mode)
-      (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook eval-expression-minibuffer-setup-hook))
+      (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook eval-expression-minibuffer-setup-hook smtlib-mode-hook))
         (add-hook hook 'turn-on-elisp-slime-nav-mode)
         (add-hook hook 'enable-paredit-mode))
       (use-package eldoc
@@ -953,7 +954,7 @@
 #+begin_src emacs-lisp :tangle no
   (use-package proof-site
     :load-path "~/code/emacs/PG/generic"
-    :config
+    :init
     (use-package coq
       :mode ("\\.v\\'" . coq-mode)
       :load-path "~/code/emacs/PG/coq"
@@ -1013,12 +1014,6 @@
   (use-package irony
     :ensure t
     :config
-    (use-package company-irony
-      :ensure t
-      :commands company-irony
-      :init
-      (eval-after-load 'company
-        '(add-to-list 'company-backends 'company-irony)))
     (use-package flycheck-irony
       :ensure t
       :commands flycheck-irony-setup
@@ -1042,6 +1037,8 @@
     (setq rtags-path "~/code/rtags/build/bin")
     (rtags-enable-standard-keybindings)
     (define-key c-mode-base-map (kbd "C-c r t") (function rtags-symbol-type))
+    (setq rtags-autostart-diagnostics t)
+    (setq rtags-completions-enabled t)
     (use-package cmake-ide
       :ensure t
       :init (add-hook 'c++-mode-hook 'cmake-ide-setup)))
