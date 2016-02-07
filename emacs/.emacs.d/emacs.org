@@ -955,17 +955,18 @@
   (use-package proof-site
     :load-path "~/code/emacs/PG/generic"
     :init
-    (use-package coq
-      :mode ("\\.v\\'" . coq-mode)
-      :load-path "~/code/emacs/PG/coq"
-      :config (add-hook 'coq-mode-hook #'company-coq-mode))
-    (use-package company-coq
-      :ensure t))
-  (add-hook 'coq-mode-hook
+    (progn
+      (use-package coq
+        :mode ("\\.v\\'" . coq-mode)
+        :load-path "~/code/emacs/PG/coq"
+        :config (add-hook 'coq-mode-hook #'company-coq-mode)
+        :init (add-hook 'coq-mode-hook
             (lambda ()
               (make-local-variable 'face-remapping-alist)
               (setq face-remapping-alist
-                    '((font-lock-comment-face . font-lock-doc-face)))))
+                    '((font-lock-comment-face . font-lock-doc-face))))))
+      (use-package company-coq
+        :ensure t)))
 #+end_src
 * aggressive indent
 #+begin_src emacs-lisp :tangle yes
@@ -1157,4 +1158,12 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package cask
     :ensure t)
+#+end_src
+* rainbow
+#+begin_src emacs-lisp :tangle yes
+  (use-package rainbow-delimiters
+    :ensure t
+    :commands rainbow-delimiters-mode
+    :init
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+end_src
