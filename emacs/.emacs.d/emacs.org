@@ -71,7 +71,7 @@
     :ensure t
     :diminish company-mode
     :defer 3
-    :bind ("C-TAB" . company-complete)
+    :bind ("C-<tab>" . company-complete)
     :config
     (global-company-mode t)
     (push 'company-rtags company-backends)
@@ -1026,8 +1026,8 @@
     :init
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'c++-mode-hook 'irony-eldoc)
-    (add-hook 'c++-mode-hook 'flycheck-irony-setup)
-    (add-hook 'c++-mode-hook 'flycheck-mode)
+    ;; (add-hook 'c++-mode-hook 'flycheck-irony-setup)
+    ;; (add-hook 'c++-mode-hook 'flycheck-mode)
     (defun flycheck-hook () (flycheck-mode 1))
     (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
     (add-hook 'c++-mode-hook 'remap-fill-paragraph)
@@ -1045,7 +1045,7 @@
       :init (add-hook 'c++-mode-hook 'cmake-ide-setup)))
   (use-package clang-format
     :ensure t
-    :config (setq clang-format-executable "~/code/llvm/build/bin/clang-format"))
+    :config (setq clang-format-executable "~/code/llvm-3.8.0rc2/build/bin/clang-format"))
 #+end_src
 * rust
 #+begin_src emacs-lisp :tangle yes
