@@ -33,6 +33,39 @@
       (setq paradox-execute-asynchronously t)
       (setq paradox-automatically-star t)))
 #+end_src
+* swiper/ivy
+#+begin_src emacs-lisp :tangle yes
+  (use-package ivy
+    :init
+    (progn
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t))
+    :config
+    (progn
+      (use-package swiper
+        :ensure t
+        :bind (("C-s" . swiper)
+               ("C-r" . swiper)
+               ("C-c C-r" . ivy-resume)))
+      (use-package counsel
+        :ensure t
+        :bind (("M-x" . counsel-M-x)
+               ("C-x C-f" . counsel-find-file)
+               ("C-h f" . counsel-describe-function)
+               ("C-h v" . counsel-describe-variable)
+               ("C-h l" . counsel-load-library)
+               ("C-h i" . counsel-info-lookup-symbol)
+               ("C-h u" . counsel-unicode-char)
+               ("C-c k" . counsel-ag)
+               ("C-x l" . counsel-locate)
+               ("C-c j" . counsel-git-grep)
+               ("C-c g" . counsel-git)
+               ("C-c i" . counsel-imenu)))
+      (ivy-set-actions
+       'counsel-find-file
+       '(("j" find-file-other-window "other")))))
+#+end_src
+
 * elnode
 #+begin_src emacs-lisp :tangle yes
   (use-package elnode
@@ -90,38 +123,6 @@
       (setq-default dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.")))
 #+end_src
 
-* helm
-#+begin_src emacs-lisp :tangle yes
-  (use-package helm-config
-    :diminish helm-mode
-    :demand t
-    :ensure helm
-    :bind (("C-c h" . helm-command-prefix)
-           ("M-x" . helm-M-x)
-           ("C-x b" . helm-mini)
-           ("C-x C-f" . helm-find-files)
-           ("C-h SPC" . helm-all-mark-rings)
-           ("M-y" . helm-show-kill-ring))
-    :config
-    (progn
-      (use-package helm-descbinds
-        :ensure t
-        :config (bind-key "d" 'helm-descbinds helm-command-map))
-      (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
-      ;; make tab work in terminal
-      (bind-key "C-i" 'helm-execute-persistent-action helm-map)
-      (bind-key "C-z" 'helm-select-action helm-map)
-      (setq helm-man-or-woman-function 'woman
-            helm-google-suggest-use-curl-p t
-            helm-quick-update t
-            helm-idle-delay 0.01
-            helm-input-idle-delay 0.01
-            helm-split-window-in-side-p t
-            helm-scroll-amount 4)
-      (helm-mode)))
-  (use-package helm-ag
-    :ensure t)
-#+end_src
 * projectile
 #+begin_src emacs-lisp :tangle yes
   (use-package magit-popup
@@ -137,17 +138,15 @@
         :ensure t
         :pin melpa-stable)
       (setq magit-last-seen-setup-instructions "1.4.0")
-      (setq magit-revert-buffers t)))
+      (setq magit-revert-buffers t)
+      (setq magit-completing-read-function 'ivy-completing-read)))
   (use-package projectile
     :ensure t
     :init
     (projectile-global-mode t)
-    (setq projectile-completion-system 'helm)
+    (setq projectile-completion-system 'ivy)
     :config
-    (setq projectile-enable-caching t)
-    (use-package helm-projectile
-      :ensure t
-      :config (helm-projectile-on)))
+    (setq projectile-enable-caching t))
 #+end_src
 * gui
 #+begin_src emacs-lisp :tangle yes
@@ -159,19 +158,18 @@
   (use-package moe-theme
     :ensure t
     :config
-    (progn
-      (moe-dark)
-      (use-package smart-mode-line
-        :ensure t
-        :config
-        (progn
-          (setq sml/no-confirm-load-theme t)
-          (setq sml/theme 'dark)
-          (if (daemonp)
-              (add-hook 'after-make-frame-functions
-                        (lambda (frame)
-                          (sml/setup)))
-            (sml/setup))))))
+    (use-package smart-mode-line
+      :ensure t
+      :config
+      (progn
+        (setq sml/no-confirm-load-theme t)
+        (setq sml/theme 'dark)
+        (if (daemonp)
+            (add-hook 'after-make-frame-functions
+                      (lambda (frame)
+                        (sml/setup)))
+          (sml/setup)))
+      :init (moe-dark)))
 
   ;; show-paren-mode
   (setq show-paren-delay 0)
@@ -246,6 +244,10 @@
               (todo category-up priority-down)
               (tags priority-down category-keep)
               (search category-keep)))
+      (use-package ob-ipython
+        :load-path "~/code/emacs/ob-ipython")
+      (setq org-confirm-babel-evaluate nil)
+      (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
       (setq org-log-done t)
       (setq org-clock-persist t)
       (setq org-file-apps
@@ -523,7 +525,7 @@
                        :vars '((user-mail-address . "moritz.kiefer@purelyfunctional.org")
                                (mu4e-sent-folder . "/purelyfunctional/sent")
                                (mu4e-drafts-folder . "/purelyfunctional/drafts")
-                               (mu4e-trash-folder . "/purelyfunctional/trash")
+                               (mu4e-trash-folder . "/purelyfunctional/Trash")
                                (mu4e-sent-messages-behavior . sent)
                                (smtpmail-default-smtp-server . "cassiopeia.uberspace.de")
                                (smtpmail-smtp-server . "cassiopeia.uberspace.de")
@@ -577,11 +579,12 @@
                   ("/holarse/inbox"       . ?h)
                   ("/purelyfunctional/inbox" . ?p)))
 
-          (setq mu4e-bookmarks '(("flag:unread AND NOT flag:trashed AND NOT maildir:/gmail/spam"
+          (setq mu4e-bookmarks '(("flag:unread AND NOT flag:trashed AND NOT maildir:/gmail/spam AND NOT maildir:/purelyfunctional/haskell AND NOT maildir:/purelyfunctional/github"
                                   "Unread messages"     ?u)
                                  ("date:today..now"                  "Today's messages"     ?t)
                                  ("date:7d..now"                     "Last 7 days"          ?w)
-                                 ("mime:image/*"                     "Messages with images" ?p)))
+                                 ("mime:image/*"                     "Messages with images" ?p)
+                                 ("maildir:/purelyfunctional/haskell" "haskell" ?h)))
 
           (add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign)
           ;; (add-hook 'mu4e-view-mode-hook '(lambda ()
@@ -657,10 +660,6 @@
     (progn
       (setq yas-snippet-dirs '("~/code/emacs/snippets/custom" "~/code/emacs/snippets/yasnippet-snippets"))
       (yas-global-mode t)))
-  (use-package helm-c-yasnippet
-    :ensure t
-    :bind (("C-c y" . helm-yas-complete))
-    :config (setq helm-yas-display-key-on-candidate t))
 #+end_src
 * symlinks
 #+begin_src emacs-lisp :tangle yes
@@ -792,8 +791,8 @@
      ("s" ace-swap-window "swap")
      ("k" ace-delete-window "del")
      ("i" ace-maximize-window "ace-one" :color blue)
-     ("b" helm-mini "buf")
-     ("f" helm-find-files "file")
+     ("b" ivy-switch-buffer "buf")
+     ("f" counsel-find-file "file")
      ("m" headlong-bookmark-jump "bmk")
      ("q" nil "cancel")))
   (defhydra hydra-zoom (global-map "<f2>")
@@ -1026,8 +1025,8 @@
     :init
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'c++-mode-hook 'irony-eldoc)
-    ;; (add-hook 'c++-mode-hook 'flycheck-irony-setup)
-    ;; (add-hook 'c++-mode-hook 'flycheck-mode)
+    (add-hook 'c++-mode-hook 'flycheck-irony-setup)
+    (add-hook 'c++-mode-hook 'flycheck-mode)
     (defun flycheck-hook () (flycheck-mode 1))
     (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
     (add-hook 'c++-mode-hook 'remap-fill-paragraph)
@@ -1038,7 +1037,7 @@
     (setq rtags-path "~/code/rtags/build/bin")
     (rtags-enable-standard-keybindings)
     (define-key c-mode-base-map (kbd "C-c r t") (function rtags-symbol-type))
-    (setq rtags-autostart-diagnostics t)
+    ;; (setq rtags-autostart-diagnostics t)
     (setq rtags-completions-enabled t)
     (use-package cmake-ide
       :ensure t
@@ -1107,13 +1106,6 @@
      :load-path "~/code/emacs/smtlib-mode"
      :mode ("\\.smt2" . smtlib-mode))
 #+end_src
-* swiper
-#+begin_src emacs-lisp :tangle yes
-  (use-package swiper-helm
-    :ensure t
-    :bind (("C-s" . swiper)
-           ("C-r" . swiper)))
-#+end_src
 * pdf-tools
 #+begin_src emacs-lisp :tangle yes
   (use-package pdf-tools
@@ -1166,4 +1158,8 @@
     :commands rainbow-delimiters-mode
     :init
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+#+end_src
+* tramp
+#+begin_src emacs-lisp :tangle yes
+  (setq tramp-default-method "ssh")
 #+end_src
