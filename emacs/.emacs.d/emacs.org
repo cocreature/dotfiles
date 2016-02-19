@@ -75,6 +75,7 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package pos-tip
     :ensure t
+    :defer t
     :config
     (setq pos-tip-background-color "#4e4e4e")
     (setq pos-tip-foreground-color "#5fafd7"))
@@ -86,9 +87,8 @@
   (blink-cursor-mode -1)
   (use-package undo-tree
     :ensure t
-    :init (global-undo-tree-mode)
+    :config (global-undo-tree-mode)
     :diminish undo-tree-mode)
-  (global-undo-tree-mode)
   (setq show-paren-style 'paranthesis)
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
   (winner-mode 1)
@@ -126,6 +126,7 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package magit-popup
     :ensure t
+    :defer t
     :pin melpa-stable)
   (use-package magit
     :ensure t
@@ -141,6 +142,7 @@
       (setq magit-completing-read-function 'ivy-completing-read)))
   (use-package projectile
     :ensure t
+    :commands (projectile-switch-project-by-name projectile-find-file)
     :init
     (projectile-global-mode t)
     (setq projectile-completion-system 'ivy)
@@ -411,6 +413,7 @@
   (pending-delete-mode t)
   (use-package expand-region
     :ensure t
+    :commands er/expand-region
     :bind (("C-=" . er/expand-region)))
   (global-set-key (kbd "C-x C-b") 'ibuffer)
   (global-set-key (kbd "C-x C-r") 'revert-buffer)
@@ -418,9 +421,6 @@
 #+end_src
 * ace
 #+begin_src emacs-lisp :tangle yes
-  (use-package ace-window
-    :ensure t
-    :bind ("M-ä" . ace-window))
   (use-package avy
     :ensure avy
     :bind (("C-ß" . avy-goto-char)
@@ -459,24 +459,20 @@
   (use-package haskell-mode
     :load-path "~/code/haskell/haskell-mode/"
     :mode "\\.hs\\'"
-    :init (progn
-            (add-hook 'haskell-mode-hook 'structured-haskell-mode)
-            (defun haskell-indentation-mode-fun () (haskell-indentation-mode 0))
-            (add-hook 'haskell-mode-hook 'haskell-indentation-mode-fun)
-            (defun interactive-haskell-mode-fun () (interactive-haskell-mode 1))
-            ;; (add-hook 'haskell-mode-hook 'ghc-init)
-            (add-hook 'haskell-mode-hook 'interactive-haskell-mode-fun)
-            ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-            (add-hook 'haskell-mode-hook 'hindent-mode)
-            ;; (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
-            (add-hook 'haskell-mode-hook 'hlint-refactor-mode)
-            (defun ghc-mod-hook () (progn (ghc-init) ;; (hare-init)
-                                          ))
     :config
     (progn
       ;; (use-package haskell)
       ;; (use-package stack-mode
       ;;   :load-path "~/code/haskell/stack-ide/stack-mode")
+      (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+      (defun haskell-indentation-mode-fun () (haskell-indentation-mode 0))
+      (add-hook 'haskell-mode-hook 'haskell-indentation-mode-fun)
+      (defun interactive-haskell-mode-fun () (interactive-haskell-mode 1))
+      (add-hook 'haskell-mode-hook 'interactive-haskell-mode-fun)
+      ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+      (add-hook 'haskell-mode-hook 'hindent-mode)
+      ;; (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
+      (add-hook 'haskell-mode-hook 'hlint-refactor-mode)
       (setq haskell-process-args-stack-ghci '("--ghc-options=\"-ferror-spans -fobject-code\"" "--test"))
       (use-package haskell)
       (use-package haskell-decl-scan)
@@ -493,11 +489,7 @@
       (use-package hlint-refactor
         :load-path "~/code/haskell/hlint-refactor-mode")
       (use-package hie
-        :load-path "~/code/haskell/haskell-ide-engine/elisp"))))
-  (use-package ghc
-    :load-path "~/code/haskell/ghc-mod/elisp")
-  ;; (use-package hare
-  ;;       :load-path "~/code/haskell/HaRe/elisp")
+        :load-path "~/code/haskell/haskell-ide-engine/elisp")))
   (defun haskell-stack-pvp (pkgname)
     (interactive "sPackage name: ")
     (let* ((pkgver (with-temp-buffer
@@ -506,7 +498,6 @@
                      (search-forward-regexp (concat pkgname " \\(\\([[:digit:]]+\.\\)+[[:digit:]]+\\)"))
                      (match-string 1))))
       (insert (haskell-pvpify pkgver))))
-
   (defun haskell-pvpify (pkgver)
     (let* ((splitted (split-string pkgver "\\."))
           (ver0 (nth 0 splitted))
@@ -618,6 +609,7 @@
 * lisp
 #+begin_src emacs-lisp :tangle yes
   (use-package lisp-mode
+    :defer t
     :init
     (progn
       (use-package paredit
@@ -633,6 +625,7 @@
         (add-hook hook 'enable-paredit-mode))
       (use-package eldoc
         :diminish eldoc-mode
+        :commands turn-on-eldoc-mode
         :init
         (progn
           (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
@@ -871,6 +864,7 @@
 * github
 #+begin_src emacs-lisp :tangle yes
   (use-package github
+    :disabled t
     :commands github-issues-mode
     :load-path "~/code/emacs/github")
 #+end_src
@@ -878,7 +872,7 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package which-key
     :ensure t
-    :init
+    :config
       (which-key-mode))
 #+end_src
 * multiple cursors
@@ -907,12 +901,6 @@
     ("M-p" mc/unmark-previous-like-this)
     ("r" mc/mark-all-in-region-regexp :exit t)
     ("q" nil)))
-#+end_src
-* sx
-#+begin_src emacs-lisp :tangle yes
-  (use-package sx
-    :commands sx-search
-    :ensure t)
 #+end_src
 * markdown
 #+begin_src emacs-lisp :tangle yes
@@ -973,7 +961,6 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package ledger-mode
     :ensure t
-    :commands ledger-mode
     :mode "\\.ledger\\'"
     :config
     (setq ledger-reconcile-default-commodity "€"))
@@ -982,10 +969,10 @@
 #+begin_src emacs-lisp :tangle no
   (use-package proof-site
     :load-path "~/code/emacs/PG/generic"
-    :init
+    :mode ("\\.v\\." . coq-mode)
+    :config
     (progn
       (use-package coq
-        :mode ("\\.v\\'" . coq-mode)
         :load-path "~/code/emacs/PG/coq"
         :config (add-hook 'coq-mode-hook #'company-coq-mode)
         :init (add-hook 'coq-mode-hook
@@ -995,12 +982,6 @@
                     '((font-lock-comment-face . font-lock-doc-face))))))
       (use-package company-coq
         :ensure t)))
-#+end_src
-* aggressive indent
-#+begin_src emacs-lisp :tangle yes
-  (use-package aggressive-indent
-    :commands aggressive-indent-mode
-    :ensure t)
 #+end_src
 * json
 #+begin_src emacs-lisp :tangle yes
@@ -1040,40 +1021,43 @@
 * c/c++
 #+begin_src emacs-lisp :tangle yes
   (setq c-basic-offset 4)
-  (use-package irony
-    :ensure t
+  (use-package cc-mode
+    :mode ("\\.cpp\\'" . c++-mode)
     :config
-    (use-package flycheck-irony
+    (use-package irony
       :ensure t
-      :commands flycheck-irony-setup
+      :config
+      (use-package flycheck-irony
+        :ensure t
+        :commands flycheck-irony-setup
+        :init
+        (eval-after-load 'flycheck
+          '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
+      (use-package irony-eldoc
+        :ensure t)
       :init
-      (eval-after-load 'flycheck
-        '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
-    (use-package irony-eldoc
-      :ensure t)
-    :init
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c++-mode-hook 'irony-eldoc)
-    (add-hook 'c++-mode-hook 'flycheck-irony-setup)
-    (add-hook 'c++-mode-hook 'flycheck-mode)
-    (defun flycheck-hook () (flycheck-mode 1))
-    (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
-    (add-hook 'c++-mode-hook 'remap-fill-paragraph)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-  (use-package rtags
-    :load-path "~/code/rtags/src"
-    :config
-    (setq rtags-path "~/code/rtags/build/bin")
-    (rtags-enable-standard-keybindings)
-    (define-key c-mode-base-map (kbd "C-c r t") (function rtags-symbol-type))
-    ;; (setq rtags-autostart-diagnostics t)
-    (setq rtags-completions-enabled t)
-    (use-package cmake-ide
+      (add-hook 'c++-mode-hook 'irony-mode)
+      (add-hook 'c++-mode-hook 'irony-eldoc)
+      (add-hook 'c++-mode-hook 'flycheck-irony-setup)
+      (add-hook 'c++-mode-hook 'flycheck-mode)
+      (defun flycheck-hook () (flycheck-mode 1))
+      (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
+      (add-hook 'c++-mode-hook 'remap-fill-paragraph)
+      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+    (use-package rtags
+      :load-path "~/code/rtags/src"
+      :config
+      (setq rtags-path "~/code/rtags/build/bin")
+      (rtags-enable-standard-keybindings)
+      (define-key c-mode-base-map (kbd "C-c r t") (function rtags-symbol-type))
+      ;; (setq rtags-autostart-diagnostics t)
+      (setq rtags-completions-enabled t)
+      (use-package cmake-ide
+        :ensure t
+        :init (add-hook 'c++-mode-hook 'cmake-ide-setup)))
+    (use-package clang-format
       :ensure t
-      :init (add-hook 'c++-mode-hook 'cmake-ide-setup)))
-  (use-package clang-format
-    :ensure t
-    :config (setq clang-format-executable "~/code/llvm-3.8.0rc2/build/bin/clang-format"))
+      :config (setq clang-format-executable "~/code/llvm-3.8.0rc2/build/bin/clang-format")))
 #+end_src
 * rust
 #+begin_src emacs-lisp :tangle yes
@@ -1097,12 +1081,13 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package tuareg
     :commands tuareg-run-ocaml
+    :disabled t
     :ensure t)
 #+end_src
 * llvm
 #+begin_src emacs-lisp :tangle yes
   (use-package llvm-mode
-    :commands llvm-mode
+    :mode "\\.ll\\'"
     :ensure t)
 #+end_src
 * jonprl
@@ -1115,6 +1100,7 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package gnuplot
     :commands gnuplot-mode
+    :defer t
     :ensure t)
 #+end_src
 * cmake
@@ -1124,9 +1110,8 @@
 #+end_src
 * docker
 #+begin_src emacs-lisp :tangle yes
-  (use-package docker
-    :ensure t)
   (use-package dockerfile-mode
+    :mode "Dockerfile\\'"
     :ensure t)
 #+end_src
 * smtlib
@@ -1174,11 +1159,6 @@
     :ensure t
     :mode ("\\.scala\\'" . scala-mode)
     :config (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
-#+end_src
-* cask
-#+begin_src emacs-lisp :tangle yes
-  (use-package cask
-    :ensure t)
 #+end_src
 * rainbow
 #+begin_src emacs-lisp :tangle yes
