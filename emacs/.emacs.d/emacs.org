@@ -969,22 +969,21 @@
     (setq ledger-reconcile-default-commodity "€"))
 #+end_src
 * proofgeneral
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
   (use-package proof-site
-    :load-path "~/code/emacs/PG/generic"
-    :mode ("\\.v\\." . coq-mode)
-    :config
-    (progn
-      (use-package coq
-        :load-path "~/code/emacs/PG/coq"
-        :config (add-hook 'coq-mode-hook #'company-coq-mode)
-        :init (add-hook 'coq-mode-hook
-            (lambda ()
-              (make-local-variable 'face-remapping-alist)
-              (setq face-remapping-alist
-                    '((font-lock-comment-face . font-lock-doc-face))))))
-      (use-package company-coq
-        :ensure t)))
+    :load-path ("~/code/emacs/PG/coq" "~/code/emacs/PG/generic")
+    :mode ("\\.v\\'" . coq-mode)
+    :config (add-hook 'coq-mode-hook #'company-coq-mode)
+    :init
+    (add-hook 'coq-mode-hook
+              (lambda ()
+                (make-local-variable 'face-remapping-alist)
+                (setq face-remapping-alist
+                      '((font-lock-comment-face . font-lock-doc-face)))))
+    (setq proof-splash-enable nil)
+    (use-package company-coq
+      :ensure t
+      :commands company-coq-mode))
 #+end_src
 * json
 #+begin_src emacs-lisp :tangle yes
