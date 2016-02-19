@@ -16,7 +16,6 @@
   (eval-when-compile
     (require 'use-package))
   (require 'diminish)
-  (setq load-prefer-newer t)
 #+end_src
 * secrets
 #+begin_src emacs-lisp :tangle yes

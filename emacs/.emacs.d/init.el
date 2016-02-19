@@ -1,3 +1,4 @@
+(setq load-prefer-newer t)
 (load "~/.emacs.d/emacs.el")
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
