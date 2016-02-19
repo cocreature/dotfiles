@@ -158,7 +158,8 @@
                 :caller 'counsel-switch-project))
     (ivy-set-actions
      'counsel-switch-project
-     '(("g" magit-status "magit")))
+     '(("g" magit-status "magit")
+       ("s" (lambda (a) (setq default-directory a) (counsel-git-grep)) "git grep")))
     (bind-key* "C-c p p" 'counsel-switch-project))
 #+end_src
 * gui
