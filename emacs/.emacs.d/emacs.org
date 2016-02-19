@@ -191,17 +191,19 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package libmpdee
     :ensure t
-    :defer t)
-  (defun get-current-song ()
-    (let* ((mpd-conn (mpd-conn-new "localhost" 6600))
-           (mpd-status (mpd-get-status mpd-conn)))
-      (if (and mpd-status (eq 'play (plist-get mpd-status 'state)))
-          (let* ((song (car (mpd-get-songs mpd-conn "currentsong")))
-                 (title (plist-get song 'Title))
-                 (album (plist-get song 'Album))
-                 (artist (plist-get song 'Artist)))
-            `(title ,title artist ,artist album ,album))
-        (get-spotify-song))))
+    :commands get-current-song
+    :functions (mpd-conn-new mpd-get-status mpd-get-songs)
+    :config
+    (defun get-current-song ()
+      (let* ((mpd-conn (mpd-conn-new "localhost" 6600))
+             (mpd-status (mpd-get-status mpd-conn)))
+        (if (and mpd-status (eq 'play (plist-get mpd-status 'state)))
+            (let* ((song (car (mpd-get-songs mpd-conn "currentsong")))
+                   (title (plist-get song 'Title))
+                   (album (plist-get song 'Album))
+                   (artist (plist-get song 'Artist)))
+              `(title ,title artist ,artist album ,album))
+          (get-spotify-song)))))
   (defun format-current-song (song)
     (let ((title (plist-get song 'title))
           (artist (plist-get song 'artist))
@@ -220,7 +222,7 @@
                     "org.freedesktop.DBus.Properties.Get"
                     "string:org.mpris.MediaPlayer2.Player"
                     "string:Metadata")
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (let ((album
              (progn
                (search-forward-regexp "album\"\n.*string \"\\\(.*\\\)\"")
@@ -360,22 +362,22 @@
           (comment-dwim arg)))
 
   ;; functions to paste to http://sprunge.us using web.el
-  (use-package web
-    :commands (sprunge-region sprunge-buffer)
-    :ensure t)
-  (defun sprunge-region (start end)
-    (interactive "r")
-    (let ((buffer-contents (buffer-substring-no-properties start end))
-               (query-data (make-hash-table :test 'equal)))
-            (puthash 'sprunge buffer-contents query-data)
-        (web-http-post
-         (lambda (con header data)
-           (kill-new (substring data 0 -1)))
-         :url "http://sprunge.us"
-         :data query-data)))
   (defun sprunge-buffer ()
     (interactive)
     (sprunge-region (point-min) (point-max)))
+  (defun sprunge-region (start end)
+    (interactive "r")
+    (let ((buffer-contents (buffer-substring-no-properties start end))
+          (query-data (make-hash-table :test 'equal)))
+      (puthash 'sprunge buffer-contents query-data)
+      (web-http-post
+       (lambda (con header data)
+         (kill-new (substring data 0 -1)))
+       :url "http://sprunge.us"
+       :data query-data)))
+  (use-package web
+    :commands (sprunge-region sprunge-buffer)
+    :ensure t)
   (defun narrow-or-widen-dwim (p)
     "Widen if buffer is narrowed, narrow-dwim otherwise.
   Dwim means: region, org-src-block, org-subtree, or defun,
@@ -503,7 +505,7 @@
     (interactive "sPackage name: ")
     (let* ((pkgver (with-temp-buffer
                      (call-process "stack" nil t nil "list-dependencies")
-                     (beginning-of-buffer)
+                     (goto-char (point-min))
                      (search-forward-regexp (concat pkgname " \\(\\([[:digit:]]+\.\\)+[[:digit:]]+\\)"))
                      (match-string 1))))
       (insert (haskell-pvpify pkgver))))
@@ -806,7 +808,7 @@
      ("i" ace-maximize-window "ace-one" :color blue)
      ("b" ivy-switch-buffer "buf")
      ("f" counsel-find-file "file")
-     ("m" headlong-bookmark-jump "bmk")
+     ;; ("m" headlong-bookmark-jump "bmk")
      ("q" nil "cancel")))
   (defhydra hydra-zoom (global-map "<f2>")
     "zoom"
