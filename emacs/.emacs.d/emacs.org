@@ -153,12 +153,11 @@
                 :sort t
                 :require-match t
                 :preselect (when (projectile-project-p) (abbreviate-file-name (projectile-project-root)))
-                :action 'projectile-switch-project-by-name
+                :action '(1
+                          ("o" projectile-switch-project-by-name "goto")
+                          ("g" magit-status "magit")
+                          ("s" (lambda (a) (setq default-directory a) (counsel-git-grep)) "git grep"))
                 :caller 'counsel-switch-project))
-    (ivy-set-actions
-     'counsel-switch-project
-     '(("g" magit-status "magit")
-       ("s" (lambda (a) (setq default-directory a) (counsel-git-grep)) "git grep")))
     (bind-key* "C-c p p" 'counsel-switch-project))
 #+end_src
 * gui
