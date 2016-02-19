@@ -146,7 +146,20 @@
     (projectile-global-mode t)
     (setq projectile-completion-system 'ivy)
     :config
-    (setq projectile-enable-caching t))
+    (setq projectile-enable-caching t)
+    (defun counsel-switch-project ()
+      (interactive)
+      (ivy-read "Switch to project: "
+                projectile-known-projects
+                :sort t
+                :require-match t
+                :preselect (when (projectile-project-p) (abbreviate-file-name (projectile-project-root)))
+                :action 'projectile-switch-project-by-name
+                :caller 'counsel-switch-project))
+    (ivy-set-actions
+     'counsel-switch-project
+     '(("g" magit-status "magit")))
+    (bind-key* "C-c p p" 'counsel-switch-project))
 #+end_src
 * gui
 #+begin_src emacs-lisp :tangle yes
