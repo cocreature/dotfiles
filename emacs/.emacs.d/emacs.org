@@ -421,6 +421,9 @@
 #+end_src
 * ace
 #+begin_src emacs-lisp :tangle yes
+  (use-package ace-window
+    :ensure t
+    :bind ("M-ä" . ace-window))
   (use-package avy
     :ensure avy
     :bind (("C-ß" . avy-goto-char)
