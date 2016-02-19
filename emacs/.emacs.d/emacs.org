@@ -528,6 +528,7 @@
           (setq mu4e-html2text-command
                 'mu4e-shr2text)
           (setq mu4e-context-policy 'pick-first)
+          (setq mu4e-completing-read-function 'ivy-completing-read)
           (setq message-send-mail-function 'smtpmail-send-it)
           (setq mu4e-contexts
                 (list (make-mu4e-context
