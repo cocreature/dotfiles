@@ -431,31 +431,28 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package tex
     :ensure auctex
-    :commands latex-mode
+    :mode ("\\.tex\\'" . LaTeX-mode)
     :config
-    (use-package latex
+    (setq TeX-view-program-list
+          '(("zathura"
+             ("zathura" (mode-io-correlate "-sync.sh")
+              " "
+              (mode-io-correlate "%n:1:%b ")
+              "%o"))))
+    (setq TeX-view-program-selection '((output-pdf "zathura")))
+    (setq TeX-PDF-mode t)
+    (add-to-list
+     'TeX-command-list
+     '("-LaTeX" "%`%l%(mode)%' %t" TeX-run-TeX nil
+       (latex-mode doctex-mode)
+       :help "Run LaTeX"))
+    (TeX-source-correlate-mode)
+    (use-package preview
       :config
-      (progn
-        (setq TeX-view-program-list
-              '(("zathura"
-                 ("zathura" (mode-io-correlate "-sync.sh")
-                  " "
-                  (mode-io-correlate "%n:1:%b ")
-                  "%o"))))
-        (setq TeX-view-program-selection '((output-pdf "zathura")))
-        (set-default 'preview-scale-function 1.2)
-        (use-package preview
-          :config
-          (set-face-attribute 'preview-reference-face nil
-                              :background "white"
-                              :foreground "black"))
-        (add-hook 'LaTeX-mode-hook (lambda () (TeX-global-PDF-mode t)))
-        (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-        (add-to-list 'LaTeX-verbatim-environments "comment")
-        (add-to-list 'TeX-command-list
-                     '("Glossary" "makeglossaries %s" TeX-run-command nil
-                       (latex-mode) :help "Create glossaries")))))
-
+      (set-face-attribute 'preview-reference-face nil
+                          :background "white"
+                          :foreground "black")
+      (set-default 'preview-scale-function 1.2)))
 #+end_src
 * haskell
 #+begin_src emacs-lisp :tangle yes
