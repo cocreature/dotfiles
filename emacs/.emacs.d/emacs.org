@@ -34,35 +34,34 @@
 #+end_src
 * swiper/ivy
 #+begin_src emacs-lisp :tangle yes
-  (use-package ivy
-    :init
-    (progn
-      (ivy-mode 1)
-      (setq ivy-use-virtual-buffers t))
-    :config
-    (progn
-      (use-package swiper
+  (use-package swiper
         :ensure t
         :bind (("C-s" . swiper)
                ("C-r" . swiper)
-               ("C-c C-r" . ivy-resume)))
-      (use-package counsel
-        :ensure t
-        :bind (("M-x" . counsel-M-x)
-               ("C-x C-f" . counsel-find-file)
-               ("C-h f" . counsel-describe-function)
-               ("C-h v" . counsel-describe-variable)
-               ("C-h l" . counsel-load-library)
-               ("C-h i" . counsel-info-lookup-symbol)
-               ("C-h u" . counsel-unicode-char)
-               ("C-c k" . counsel-ag)
-               ("C-x l" . counsel-locate)
-               ("C-c j" . counsel-git-grep)
-               ("C-c g" . counsel-git)
-               ("C-c i" . counsel-imenu)))
-      (ivy-set-actions
-       'counsel-find-file
-       '(("j" find-file-other-window "other")))))
+               ("C-c C-r" . ivy-resume))
+        :config
+        (ivy-mode 1)
+        (setq ivy-use-virtual-buffers t))
+  (use-package counsel
+    :ensure t
+    :bind (("M-x" . counsel-M-x)
+           ("C-x C-f" . counsel-find-file)
+           ("C-h f" . counsel-describe-function)
+           ("C-h v" . counsel-describe-variable)
+           ("C-h i" . counsel-info-lookup-symbol)
+           ("C-h u" . counsel-unicode-char)
+           ("C-c k" . counsel-ag)
+           ("C-x l" . counsel-locate)
+           ("C-c j" . counsel-git-grep)
+           ("C-c g" . counsel-git)
+           ("C-c i" . counsel-imenu)
+           ("C-x p" . counsel-list-processes))
+    :config
+    (ivy-set-actions
+             'counsel-find-file
+             '(("j" find-file-other-window "other")))
+    (ivy-set-actions 'counsel-git-grep
+                     '(("j" find-file-other-window "other"))))
 #+end_src
 
 * elnode
