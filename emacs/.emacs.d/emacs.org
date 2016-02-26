@@ -863,6 +863,31 @@
      ("n" volume-raise)
      ("p" volume-lower)
      ("q" nil "quit")))
+  (bind-key
+   "C-="
+   (defhydra hydra-mark (:hint nil)
+     "
+  ^Structure^      ^Pairs^              ^Misc^
+  ^^^^^^^^-------------------------------------------
+  _SPC_: region    _P_: inside pairs    _u_: url
+  _d_: defun       _p_: outside pairs   _m_: email
+  _c_: comment     _Q_: inside quotes   _s_: symbol
+  _._: sentence    _q_: outside quotes
+  _h_: paragraph
+  "
+     ("SPC" er/expand-region)
+     ("P" er/mark-inside-pairs)
+     ("Q" er/mark-inside-quotes)
+     ("p" er/mark-outside-pairs)
+     ("q" er/mark-outside-quotes)
+     ("d" er/mark-defun)
+     ("c" er/mark-comment)
+     ("." er/mark-text-sentence)
+     ("h" er/mark-text-paragraph)
+     ("w" er/mark-word)
+     ("u" er/mark-url)
+     ("m" er/mark-email)
+     ("s" er/mark-symbol)))
 #+end_src
 * github
 #+begin_src emacs-lisp :tangle yes
