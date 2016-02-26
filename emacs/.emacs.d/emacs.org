@@ -102,11 +102,10 @@
   (use-package company
     :ensure t
     :diminish company-mode
-    :defer 3
+    :defer 2
     :bind ("C-<tab>" . company-complete)
     :config
     (global-company-mode t)
-    (push 'company-rtags company-backends)
     (use-package company-cmake
       :ensure t))
 #+end_src
@@ -114,11 +113,11 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package dired
     :commands dired-mode
+    :bind (:map dired-mode-map ("C-o" . dired-omit-mode))
     :config
     (progn
       (setq dired-dwim-target t)
       (setq-default dired-omit-mode t)
-      (bind-key  "C-o" 'dired-omit-mode dired-mode-map)
       (setq-default dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.")))
 #+end_src
 
@@ -147,7 +146,6 @@
     (projectile-global-mode t)
     (setq projectile-completion-system 'ivy)
     :config
-    (setq projectile-enable-caching t)
     (defun counsel-switch-project ()
       (interactive)
       (ivy-read "Switch to project: "
@@ -511,6 +509,7 @@
 * mu4e
 #+begin_src emacs-lisp :tangle yes
   (use-package mu4e
+    :load-path "/usr/share/emacs/site-lisp/mu4e"
     :commands mu4e
     :config
     (use-package mu4e-contrib)
@@ -640,9 +639,10 @@
   (use-package flycheck
     :ensure t
     :diminish flycheck-mode
-    :defer t
+    :init
     :config
-    (add-hook 'after-init-hook #'global-flycheck-mode)
+    (global-flycheck-mode)
+    (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-gcc flycheck-rtags))
     (setq flycheck-emacs-lisp-load-path 'inherit)
     (use-package flycheck-package
       :ensure t))
@@ -854,6 +854,7 @@
      ("d" hydra-move-splitter-right)
      ("q" nil "quit")))
   (use-package volume
+    :commands (volume-lower volume-raise)
     :ensure t)
   (bind-key*
    "C-c v"
@@ -944,20 +945,18 @@
                                    (list 4 19 displayed-year))
                                   adjusted-epact))
                  (easter (calendar-dayname-on-or-before 0 (+ paschal-moon 7))))
-            (filter-visible-calendar-holidays
+            (holiday-filter-visible-calendar
              (mapcar
               (lambda (l)
                 (list (calendar-gregorian-from-absolute (+ easter (car l)))
                       (nth 1 l)))
-              '(
-                ( -2 "Karfreitag")
+              '(( -2 "Karfreitag")
                 (  0 "Ostersonntag")
                 ( +1 "Ostermontag")
                 (+39 "Christi Himmelfahrt")
                 (+49 "Pfingstsonntag")
                 (+50 "Pfingstmontag")
-                (+60 "Fronleichnam")
-                ))))))
+                (+60 "Fronleichnam")))))))
   (setq calendar-holidays (append holiday-general-holidays holiday-christian-holidays))
 #+end_src
 * ledger
@@ -1025,38 +1024,20 @@
   (setq c-basic-offset 4)
   (use-package cc-mode
     :mode ("\\.cpp\\'" . c++-mode)
+    :init
+    (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
+    (add-hook 'c++-mode-hook 'remap-fill-paragraph)
     :config
-    (use-package irony
-      :ensure t
-      :config
-      (use-package flycheck-irony
-        :ensure t
-        :commands flycheck-irony-setup
-        :init
-        (eval-after-load 'flycheck
-          '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
-      (use-package irony-eldoc
-        :ensure t)
-      :init
-      (add-hook 'c++-mode-hook 'irony-mode)
-      (add-hook 'c++-mode-hook 'irony-eldoc)
-      (add-hook 'c++-mode-hook 'flycheck-irony-setup)
-      (add-hook 'c++-mode-hook 'flycheck-mode)
-      (defun flycheck-hook () (flycheck-mode 1))
-      (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
-      (add-hook 'c++-mode-hook 'remap-fill-paragraph)
-      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
     (use-package rtags
       :load-path "~/code/rtags/src"
+      :bind (:map c-mode-base-map ("C-c r t" . rtags-symbol-type))
       :config
       (setq rtags-path "~/code/rtags/build/bin")
       (rtags-enable-standard-keybindings)
-      (define-key c-mode-base-map (kbd "C-c r t") (function rtags-symbol-type))
-      ;; (setq rtags-autostart-diagnostics t)
-      (setq rtags-completions-enabled t)
-      (use-package cmake-ide
-        :ensure t
-        :init (add-hook 'c++-mode-hook 'cmake-ide-setup)))
+      ;; (setq rtags-autostart-diagnostics nil)
+      ;; (setq rtags-completions-enabled t)
+      ;; (require 'rtags-flycheck)
+      )
     (use-package clang-format
       :ensure t
       :config (setq clang-format-executable "~/code/llvm-3.8.0rc2/build/bin/clang-format")))
@@ -1128,7 +1109,8 @@
     :mode ("\\.pdf\\'" . pdf-view-mode)
     :ensure t
     :config (use-package org-pdfview
-              :load-path "~/code/emacs/org-pdfview"))
+              :load-path "~/code/emacs/org-pdfview")
+    :init (add-hook 'pdf-view-mode-hook 'pdf-view-fit-page-to-window))
 #+end_src
 * lean
 #+begin_src emacs-lisp :tangle yes
@@ -1173,4 +1155,27 @@
 * tramp
 #+begin_src emacs-lisp :tangle yes
   (setq tramp-default-method "ssh")
+#+end_src
+* ycmd
+#+begin_src emacs-lisp :tangle yes
+  (use-package ycmd
+    :ensure t
+    :commands ycmd-mode
+    :config
+    (set-variable 'ycmd-extra-conf-whitelist '("~/code/llreve/reve/reve/*"))
+    (use-package company-ycmd
+      :ensure
+      :config
+      (require 'company)
+      (company-ycmd-setup))
+    :init
+    (add-hook 'c++-mode-hook 'ycmd-mode)
+    (set-variable 'ycmd-server-command (list "python" (expand-file-name "~/code/ycmd/ycmd"))))
+  (use-package flycheck-ycmd
+    :ensure t
+    ;; Make sure the flycheck cache sees the parse results
+    :init
+    (add-hook 'ycmd-file-parse-result-hook 'flycheck-ycmd--cache-parse-results)
+    ;; Add the ycmd checker to the list of available checkers
+    (add-to-list 'flycheck-checkers 'ycmd))
 #+end_src

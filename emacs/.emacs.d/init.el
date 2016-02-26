@@ -1,3 +1,5 @@
+;(package-initialize)
+
 (setq load-prefer-newer t)
 (load "~/.emacs.d/emacs.el")
 (custom-set-variables
