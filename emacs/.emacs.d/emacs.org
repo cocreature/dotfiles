@@ -1202,3 +1202,25 @@
     ;; Add the ycmd checker to the list of available checkers
     (add-to-list 'flycheck-checkers 'ycmd))
 #+end_src
+* keyfreq
+#+begin_src emacs-lisp :tangle yes
+  (use-package keyfreq
+    :ensure t
+    :config
+    (setq keyfreq-excluded-commands
+        '(self-insert-command
+          previous-line
+          next-line
+          mu4e~headers-jump-to-maildir
+          mwheel-scroll
+          mouse-drag-region
+          mouse-set-point
+          left-char
+          ivy-done
+          kill-line
+          save-buffers
+          mu4e-headers-search-bookmark))
+    :config
+    (keyfreq-mode 1)
+    (keyfreq-autosave-mode 1))
+#+end_src
