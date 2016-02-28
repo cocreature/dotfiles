@@ -1054,6 +1054,7 @@
     (use-package rtags
       :load-path "~/code/rtags/src"
       :bind (:map c-mode-base-map ("C-c r t" . rtags-symbol-type))
+      :demand t
       :config
       (setq rtags-path "~/code/rtags/build/bin")
       (rtags-enable-standard-keybindings)
