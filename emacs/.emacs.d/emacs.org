@@ -696,12 +696,6 @@
     :init (use-package prop-menu
             :ensure t))
 #+end_src
-* skewer
-#+begin_src emacs-lisp :tangle yes
-  (add-hook 'js2-mode-hook 'skewer-mode)
-  (add-hook 'css-mode-hook 'skewer-css-mode)
-  (add-hook 'html-mode-hook 'skewer-html-mode)
-#+end_src
 * gpgfix
 #+begin_src emacs-lisp :tangle yes
   (defun epg--list-keys-1 (context name mode)
