@@ -22,16 +22,6 @@
   (add-to-list 'load-path "~/.emacs.d/notsynced")
   (require 'secret)
 #+end_src
-* paradox
-#+begin_src emacs-lisp :tangle yes
-  (use-package paradox
-    :ensure t
-    :commands paradox-list-packages
-    :config
-    (progn
-      (setq paradox-execute-asynchronously t)
-      (setq paradox-automatically-star t)))
-#+end_src
 * swiper/ivy
 #+begin_src emacs-lisp :tangle yes
   (use-package swiper
@@ -63,12 +53,6 @@
                      '(("j" find-file-other-window "other"))))
 #+end_src
 
-* elnode
-#+begin_src emacs-lisp :tangle yes
-  (use-package elnode
-    :ensure t
-    :commands elnode-start)
-#+end_src
 * pos-tip
 #+begin_src emacs-lisp :tangle yes
   (use-package pos-tip
@@ -440,11 +424,6 @@
               "%o"))))
     (setq TeX-view-program-selection '((output-pdf "zathura")))
     (setq TeX-PDF-mode t)
-    (add-to-list
-     'TeX-command-list
-     '("-LaTeX" "%`%l%(mode)%' %t" TeX-run-TeX nil
-       (latex-mode doctex-mode)
-       :help "Run LaTeX"))
     (TeX-source-correlate-mode)
     (use-package preview
       :config
@@ -519,6 +498,7 @@
           (setq mu4e-context-policy 'pick-first)
           (setq mu4e-completing-read-function 'ivy-completing-read)
           (setq message-send-mail-function 'smtpmail-send-it)
+          (setq mu4e-view-html-plaintext-ratio-heuristic 50)
           (setq mu4e-contexts
                 (list (make-mu4e-context
                        :name "purelyfunctional"
@@ -675,11 +655,6 @@
 * magit
 #+begin_src emacs-lisp :tangle yes
   (add-hook 'magit-mode-hook 'magit-load-config-extensions)
-#+end_src
-* emmet
-#+begin_src emacs-lisp :tangle yes
-  (add-hook 'sgml-mode-hook 'emmet-mode)
-  (add-hook 'css-mode-hook  'emmet-mode)
 #+end_src
 * pkgbuild
 #+begin_src emacs-lisp :tangle yes
@@ -1021,7 +996,8 @@
     :mode ("\\.html\\'"
            "\\.js\\'"
            "\\.css\\'"
-           "\\.jsx\\'"))
+           "\\.jsx\\'"
+           "\\.php\\'"))
 #+end_src
 * yaml
 #+begin_src emacs-lisp :tangle yes
@@ -1114,6 +1090,7 @@
 * cmake
 #+begin_src emacs-lisp :tangle yes
   (use-package cmake-mode
+    :ensure t
     :mode "CMakeLists\\.txt\\'")
 #+end_src
 * docker
