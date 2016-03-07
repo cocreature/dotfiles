@@ -28,7 +28,8 @@
         :ensure t
         :bind (("C-s" . swiper)
                ("C-r" . swiper)
-               ("C-c C-r" . ivy-resume))
+               ("C-c C-r" . ivy-resume)
+               ("C-c h m" . woman))
         :config
         (ivy-mode 1)
         (setq ivy-use-virtual-buffers t))
@@ -642,8 +643,7 @@
   (use-package yasnippet
     :diminish yas-minor-mode
     :ensure t
-    :commands yas-global-mode
-    :init
+    :config
     (progn
       (setq yas-snippet-dirs '("~/code/emacs/snippets/custom" "~/code/emacs/snippets/yasnippet-snippets"))
       (yas-global-mode t)))
@@ -991,7 +991,9 @@
            "\\.js\\'"
            "\\.css\\'"
            "\\.jsx\\'"
-           "\\.php\\'"))
+           "\\.php\\'")
+    :config
+    (setq-default web-mode-markup-indent-offset 2))
 #+end_src
 * yaml
 #+begin_src emacs-lisp :tangle yes
@@ -1196,4 +1198,25 @@
     :config
     (keyfreq-mode 1)
     (keyfreq-autosave-mode 1))
+#+end_src
+* systemd
+#+begin_src emacs-lisp :tangle yes
+  (use-package systemd
+    :ensure t
+    :mode "\\.socket\\'")
+#+end_src
+* writeroom
+#+begin_src emacs-lisp :tangle yes
+  (use-package writeroom-mode
+    :ensure t
+    :commands writeroom-mode
+    :init (defun my-writeroom-theme (arg)
+              (cond
+               ((= arg 1)
+                (enable-theme 'leuven))
+               ((= arg -1)
+                (disable-theme 'leuven)
+                (smart-mode-line-enable))))
+    (add-to-list 'writeroom-global-effects 'my-writeroom-theme)
+    (add-to-list 'writeroom-global-effects 'visual-line-mode))
 #+end_src
