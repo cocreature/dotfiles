@@ -2,19 +2,19 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 module MyAntigen where
 
-import Antigen (AntigenConfiguration (..), bundle, antigen, antigenSourcingStrategy, filePathsSourcingStrategy, sourcingStrategy)
-import Shelly (shelly, verbosely)
+import Antigen
+       (AntigenConfig(..), defaultConfig, bundle, antigen, antigenSourcingStrategy,
+        filePathsSourcingStrategy, sourcingStrategy)
 
 bundles =
   [bundle "zsh-users/zsh-syntax-highlighting"
   ,bundle "zsh-users/zsh-history-substring-search"
-  ,bundle "zsh-users/zaw"
   ,(bundle "sindresorhus/pure") {sourcingStrategy =
                                    filePathsSourcingStrategy
                                      ["async.zsh","pure.plugin.zsh"]}
   ,(bundle "rupa/z") {sourcingStrategy = antigenSourcingStrategy}]
 
-config = AntigenConfiguration bundles
+config = defaultConfig { plugins = bundles }
 
 main :: IO ()
-main = shelly $ verbosely $ antigen config
+main = antigen config

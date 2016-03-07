@@ -81,8 +81,6 @@ source ~/.zsh/antigen-hs/init.zsh
 export PURE_GIT_PULL=0
 
 setopt prompt_subst
-bindkey '^R' zaw-history
-bindkey '^X^F' zaw-open-file
 # bind P and N for EMACS mode
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
@@ -105,12 +103,9 @@ eval "$(stack --bash-completion-script "$(which stack)")"
 # OPAM configuration
 . /home/moritz/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-export PATH=$HOME/code/sml/smlnj/bin:$PATH
-
 export SCALA_HOME=/usr/share/scala
 export ELDARICA_HOME=~/code/eldarica
 export Z3=$(which z3)
-export PATH=$HOME/code/sml/JonPRL/bin:$PATH
 
 export GOPATH=~/go
 export PATH=$PATH:~/go/bin
@@ -118,3 +113,6 @@ export PATH=$PATH:~/code/rtags/build/bin
 
 # added by travis gem
 [ -f /home/moritz/.travis/travis.sh ] && source /home/moritz/.travis/travis.sh
+
+export CDP_SOUND_EXT=wav
+systemctl --user import-environment
