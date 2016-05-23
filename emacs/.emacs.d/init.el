@@ -1,5 +1,5 @@
 ;(package-initialize)
-(setq server-name "server-proxied")
+;(setq server-name "server-proxied")
 (setq load-prefer-newer t)
 (load "~/.emacs.d/emacs.el")
 (custom-set-variables
@@ -10,13 +10,24 @@
  '(custom-safe-themes
    (quote
     ("613a7c50dbea57860eae686d580f83867582ffdadd63f0f3ebe6a85455ab7706" default)))
- '(debug-on-error t)
+ '(debug-on-error nil)
+ '(org-agenda-files
+   (quote
+    ("~/org/satsmtar.org" "~/docs/studium/proseminar/notes.org" "/home/moritz/org/bachelor.org" "/home/moritz/org/einkauf.org" "/home/moritz/org/ghcerrors.org" "/home/moritz/org/hie.org" "/home/moritz/org/job.org" "/home/moritz/org/notes.org" "/home/moritz/org/org.org" "/home/moritz/org/recipe.org" "/home/moritz/org/travel.org" "/home/moritz/org/typetheory.org")))
  '(package-selected-packages
    (quote
-    (irfc keyfreq yaml-mode which-key web-mode volume use-package undo-tree unbound tuareg travis toml-mode sx sml-mode smart-mode-line rust-mode rainbow-delimiters prop-menu projectile pos-tip pkgbuild-mode pdf-tools paredit paradox nyan-mode nginx-mode multiple-cursors moe-theme mmm-mode magit-svn lua-mode llvm-mode libmpdee ledger-mode json-mode jonprl-mode irony-eldoc gnuplot github-issues flycheck-ycmd flycheck-package flycheck-irony flx expand-region eww-lnum ensime emmet-mode elnode elisp-slime-nav dockerfile-mode docker dash-functional counsel company-ycmd company-irony company-coq company-cmake cmake-ide clang-format cdlatex cask auctex aggressive-indent ace-window)))
+    (ws-butler bison-mode org-ref outline-magic outshine julia-shell julia-mode irfc keyfreq yaml-mode which-key web-mode volume use-package undo-tree unbound tuareg travis toml-mode sx sml-mode smart-mode-line rust-mode rainbow-delimiters prop-menu projectile pos-tip pkgbuild-mode pdf-tools paredit paradox nyan-mode nginx-mode multiple-cursors moe-theme mmm-mode magit-svn lua-mode llvm-mode libmpdee ledger-mode json-mode jonprl-mode irony-eldoc gnuplot github-issues flycheck-package flycheck-irony flx expand-region eww-lnum ensime emmet-mode elnode elisp-slime-nav dockerfile-mode docker dash-functional counsel company-irony company-coq company-cmake cmake-ide clang-format cdlatex cask auctex aggressive-indent ace-window)))
  '(safe-local-variable-values
    (quote
-    ((c-style-alist
+    ((buffer-file-coding-system . utf-8-unix)
+     (eval remove-hook
+           (quote write-contents-functions)
+           (quote delete-trailing-whitespace))
+     (eval remove-hook
+           (quote before-save-hook)
+           (quote delete-trailing-whitespace)
+           t)
+     (c-style-alist
       ("ledger"
        (indent-tabs-mode)
        (c-basic-offset . 2)
@@ -57,9 +68,13 @@
      (projectile-project-compilation-cmd . "cd reve/reve/build && make -j8")
      (coq-prog-args "-emacs-U" "-R" "/home/moritz/docs/books/typetheory/cpdt/src" "Cpdt"))))
  '(yas-global-mode t nil (yasnippet)))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))

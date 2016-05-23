@@ -65,20 +65,23 @@
 #+end_src
 * misc
 #+begin_src emacs-lisp :tangle yes
-  (setq save-interprogram-paste-before-kill t)
-  (setq ag-highlight-search t)
-  (blink-cursor-mode -1)
-  (use-package undo-tree
-    :ensure t
-    :config (global-undo-tree-mode)
-    :diminish undo-tree-mode)
-  (setq show-paren-style 'paranthesis)
-  (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
-  (winner-mode 1)
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  (global-unset-key (kbd "C-z"))
-  (put 'upcase-region 'disabled nil)
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+      (setq save-interprogram-paste-before-kill t)
+      (setq ag-highlight-search t)
+      (blink-cursor-mode -1)
+      (use-package undo-tree
+        :ensure t
+        :config (global-undo-tree-mode)
+        :diminish undo-tree-mode)
+      (setq show-paren-style 'paranthesis)
+      (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
+      (winner-mode 1)
+      (defalias 'yes-or-no-p 'y-or-n-p)
+      (global-unset-key (kbd "C-z"))
+      (put 'upcase-region 'disabled nil)
+      (use-package ws-butler :ensure t
+        :config
+        (ws-butler-global-mode)
+        (setq ws-butler-keep-whitespace-before-point nil))
 #+end_src
 * company
 #+begin_src emacs-lisp :tangle yes
@@ -90,7 +93,8 @@
     :config
     (global-company-mode t)
     (use-package company-cmake
-      :ensure t))
+      :ensure t)
+    (push 'company-rtags company-backends))
 #+end_src
 * dired
 #+begin_src emacs-lisp :tangle yes
@@ -236,6 +240,7 @@
       (setq org-agenda-files '("~/org"))
       (setq org-mobile-directory "~/org/mobile")
       (setq org-default-notes-file (concat org-directory "/notes.org"))
+      (setq org-latex-listings t)
       (setq org-agenda-sorting-strategy
             '((agenda habit-down time-up priority-down category-keep)
               (todo category-up priority-down)
@@ -282,7 +287,7 @@
         :config
         (add-to-list 'org-latex-classes
                      '("koma-article"
-                       "\\documentclass{scrartcl}"
+                       "\\documentclass[fontsize=12pt,a4paper]{scrartcl}\n\\usepackage[AUTO]{polyglossia}\n\\usepackage[utf8]{inputenc}[NO-PACKAGES]"
                        ("\\section{%s}" . "\\section*{%s}")
                        ("\\subsection{%s}" . "\\subsection*{%s}")
                        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -296,13 +301,26 @@
                        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                        ("\\paragraph{%s}" . "\\paragraph*{%s}")
                        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+        (add-to-list 'org-latex-classes
+                     '("koma-report" "\\documentclass[fontsize=12pt,a4paper]{scrreprt}\n\\usepackage[AUTO]{polyglossia}\n\\usepackage[utf8]{inputenc}[NO-PACKAGES]"
+                       ("\\chapter{%s}" . "\\chapter*{%s}")
+                       ("\\section{%s}" . "\\section*{%s}")
+                       ("\\subsection{%s}" . "\\subsection*{%s}")
+                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+        (use-package org-inline-task
+          :init
+          (defun org-latex-format-inlinetask
+              (todo _todo-type priority title tags contents info)
+            (format "\\todo[inline]{\\textbf{%s}%s}" title contents))
+          (setq org-latex-format-inlinetask-function 'org-latex-format-inlinetask))
+        (setq org-latex-prefer-user-labels t)
         (use-package ox-bibtex)
         (use-package ox :config
           (setq org-export-default-language "de-de"))
         (setq org-latex-packages-alist '(("ngerman" "babel" nil)))
-        (setq org-latex-default-packages-alist '(("AUTO" "inputenc" t)
-                                                 ("T1" "fontenc" t)
-                                                 ("" "fixltx2e" nil)
+        (setq org-latex-default-packages-alist '(("" "fixltx2e" nil)
                                                  ("" "graphicx" t)
                                                  ("" "longtable" nil)
                                                  ("" "float" nil)
@@ -454,6 +472,7 @@
       (add-hook 'haskell-mode-hook 'hlint-refactor-mode)
       (setq haskell-process-args-stack-ghci '("--ghc-options=\"-ferror-spans -fobject-code\"" "--test"))
       (use-package haskell)
+      (use-package haskell-doc)
       (use-package haskell-decl-scan)
       (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
       (setq haskell-process-log t)
@@ -1031,13 +1050,12 @@
       :config
       (setq rtags-path "~/code/rtags/build/bin")
       (rtags-enable-standard-keybindings)
-      ;; (setq rtags-autostart-diagnostics nil)
-      ;; (setq rtags-completions-enabled t)
-      ;; (require 'rtags-flycheck)
+      (setq rtags-autostart-diagnostics nil)
+      (setq rtags-completions-enabled t)
+      (require 'flycheck-rtags)
       )
     (use-package clang-format
-      :ensure t
-      :config (setq clang-format-executable "~/code/llvm-3.8.0rc2/build/bin/clang-format")))
+      :ensure t))
 #+end_src
 * rust
 #+begin_src emacs-lisp :tangle yes
@@ -1154,29 +1172,6 @@
 #+begin_src emacs-lisp :tangle yes
   (setq tramp-default-method "ssh")
 #+end_src
-* ycmd
-#+begin_src emacs-lisp :tangle yes
-  (use-package ycmd
-    :ensure t
-    :commands ycmd-mode
-    :config
-    (set-variable 'ycmd-extra-conf-whitelist '("~/code/llreve/reve/reve/*"))
-    (use-package company-ycmd
-      :ensure
-      :config
-      (require 'company)
-      (company-ycmd-setup))
-    :init
-    (add-hook 'c++-mode-hook 'ycmd-mode)
-    (set-variable 'ycmd-server-command (list "python" (expand-file-name "~/code/ycmd/ycmd"))))
-  (use-package flycheck-ycmd
-    :ensure t
-    ;; Make sure the flycheck cache sees the parse results
-    :init
-    (add-hook 'ycmd-file-parse-result-hook 'flycheck-ycmd--cache-parse-results)
-    ;; Add the ycmd checker to the list of available checkers
-    (add-to-list 'flycheck-checkers 'ycmd))
-#+end_src
 * keyfreq
 #+begin_src emacs-lisp :tangle yes
   (use-package keyfreq
@@ -1210,7 +1205,7 @@
   (use-package writeroom-mode
     :ensure t
     :commands writeroom-mode
-    :init (defun my-writeroom-theme (arg)
+    :config (defun my-writeroom-theme (arg)
               (cond
                ((= arg 1)
                 (enable-theme 'leuven))
@@ -1220,3 +1215,17 @@
     (add-to-list 'writeroom-global-effects 'my-writeroom-theme)
     (add-to-list 'writeroom-global-effects 'visual-line-mode))
 #+end_src
+* purescript
+#+begin_src emacs-lisp :tangle yes
+
+#+end_src
+* outshine
+#+begin_src emacs-lisp :tangle yes
+  (use-package outshine
+    :ensure t)
+#+end_src
+* bison
+#+BEGIN_SRC elisp
+  (use-package bison-mode
+    :ensure t)
+#+END_SRC
