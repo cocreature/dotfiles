@@ -29,7 +29,8 @@
         :bind (("C-s" . swiper)
                ("C-r" . swiper)
                ("C-c C-r" . ivy-resume)
-               ("C-c h m" . woman))
+               ("C-c h m" . woman)
+               ("C-x b" . ivy-switch-buffer))
         :config
         (ivy-mode 1)
         (setq ivy-use-virtual-buffers t))
@@ -154,6 +155,13 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (column-number-mode t)
+  ;; (load-theme 'leuven t)
+  ;; (use-package smart-mode-line
+  ;;   :ensure t
+  ;;   :config
+  ;;   (progn (setq sml-no-confirm-load-theme t)
+  ;;          (setq sml/theme 'dark)
+  ;;          (sml/setup)))
   (use-package moe-theme
     :ensure t
     :config
@@ -453,41 +461,36 @@
 #+end_src
 * haskell
 #+begin_src emacs-lisp :tangle yes
+  (use-package shm
+    :load-path "~/code/haskell/structured-haskell-mode/elisp/"
+    :commands (structured-haskell-mode)
+    :init
+    (add-hook 'haskell-mode-hook 'structured-haskell-mode))
+  (use-package intero
+    :load-path "~/code/haskell/intero/elisp/"
+    :commands (intero-mode)
+    :init
+    (add-hook 'haskell-mode-hook 'intero-mode))
+  (use-package hindent
+    :load-path "~/code/haskell/hindent/elisp"
+    :commands (hindent-reformat-decl hindent-mode)
+    :config (setq hindent-style "chris-done")
+    :init
+    (add-hook 'haskell-mode-hook 'hindent-mode))
   (use-package haskell-mode
     :load-path "~/code/haskell/haskell-mode/"
     :mode "\\.hs\\'"
     :config
     (progn
-      ;; (use-package haskell)
-      ;; (use-package stack-mode
-      ;;   :load-path "~/code/haskell/stack-ide/stack-mode")
-      (add-hook 'haskell-mode-hook 'structured-haskell-mode)
-      (defun haskell-indentation-mode-fun () (haskell-indentation-mode 0))
-      (add-hook 'haskell-mode-hook 'haskell-indentation-mode-fun)
-      (defun interactive-haskell-mode-fun () (interactive-haskell-mode 1))
-      (add-hook 'haskell-mode-hook 'interactive-haskell-mode-fun)
-      ;; (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-      (add-hook 'haskell-mode-hook 'hindent-mode)
-      ;; (add-hook 'haskell-interactive-mode-hook 'structured-haskell-repl-mode)
-      (add-hook 'haskell-mode-hook 'hlint-refactor-mode)
       (setq haskell-process-args-stack-ghci '("--ghc-options=\"-ferror-spans -fobject-code\"" "--test"))
       (use-package haskell)
       (use-package haskell-doc)
       (use-package haskell-decl-scan)
       (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
       (setq haskell-process-log t)
-      ;; (setq haskell-interactive-mode-eval-mode 'haskell-mode)
       (setq haskell-process-type 'stack-ghci)
-      (use-package shm
-        :load-path "~/code/haskell/structured-haskell-mode/elisp")
-      (use-package hindent
-        :load-path "~/code/haskell/hindent/elisp"
-        :config (setq hindent-style "chris-done"))
       (define-key haskell-mode-map (kbd "C-c i") 'hindent-reformat-decl)
-      (use-package hlint-refactor
-        :load-path "~/code/haskell/hlint-refactor-mode")
-      (use-package hie
-        :load-path "~/code/haskell/haskell-ide-engine/elisp")))
+      ))
   (defun haskell-stack-pvp (pkgname)
     (interactive "sPackage name: ")
     (let* ((pkgver (with-temp-buffer
@@ -498,8 +501,8 @@
       (insert (haskell-pvpify pkgver))))
   (defun haskell-pvpify (pkgver)
     (let* ((splitted (split-string pkgver "\\."))
-          (ver0 (nth 0 splitted))
-          (ver1 (string-to-number (nth 1 splitted))))
+           (ver0 (nth 0 splitted))
+           (ver1 (string-to-number (nth 1 splitted))))
       (message (format ">= %s.%d && < %s.%d" ver0 ver1 ver0 (+ ver1 1)))))
   (setq flycheck-hlint-ignore-rules '("Eta reduce" "Use String"))
 #+end_src
@@ -1038,9 +1041,30 @@
 #+begin_src emacs-lisp :tangle yes
   (setq c-basic-offset 4)
   (use-package cc-mode
-    :mode ("\\.cpp\\'" . c++-mode)
+    :mode (("\\.cpp\\'" . c++-mode)
+           ("\\.c\\'" . c-mode))
     :init
     (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
+    (use-package cc-mode
+    :mode ("\\.cpp\\'" . c++-mode)
+    :init
+    (defun remap-fill-paragraph-c () (define-key c-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
+    (add-hook 'c++-mode-hook 'remap-fill-paragraph)
+    (add-hook 'c-mode-hook 'remap-fill-paragraph-c)
+    :config
+    (use-package rtags
+      :load-path "~/code/rtags/src"
+      :bind (:map c-mode-base-map ("C-c r t" . rtags-symbol-type))
+      :demand t
+      :config
+      (setq rtags-path "~/code/rtags/build/bin")
+      (rtags-enable-standard-keybindings)
+      (setq rtags-autostart-diagnostics nil)
+      (setq rtags-completions-enabled t)
+      (require 'flycheck-rtags)
+      )
+    (use-package clang-format
+      :ensure t))
     (add-hook 'c++-mode-hook 'remap-fill-paragraph)
     :config
     (use-package rtags
@@ -1218,11 +1242,6 @@
 * purescript
 #+begin_src emacs-lisp :tangle yes
 
-#+end_src
-* outshine
-#+begin_src emacs-lisp :tangle yes
-  (use-package outshine
-    :ensure t)
 #+end_src
 * bison
 #+BEGIN_SRC elisp
