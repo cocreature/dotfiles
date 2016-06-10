@@ -116,3 +116,19 @@ export PATH=$PATH:~/code/rtags/build/bin
 
 export CDP_SOUND_EXT=wav
 systemctl --user import-environment
+
+fpath=(~/code/llreve/reve $fpath)
+
+compdef _gnu_generic reve
+compdef _gnu_generic reve-analyzer
+
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    bg
+    zle redisplay
+  else
+    zle push-input
+  fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
