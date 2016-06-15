@@ -420,8 +420,7 @@
   (pending-delete-mode t)
   (use-package expand-region
     :ensure t
-    :commands er/expand-region
-    :bind (("C-=" . er/expand-region)))
+    :commands (er/expand-region er/mark-defun))
   (global-set-key (kbd "C-x C-b") 'ibuffer)
   (global-set-key (kbd "C-x C-r") 'revert-buffer)
 
@@ -640,6 +639,7 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package flycheck
     :ensure t
+    :defer 2
     :diminish flycheck-mode
     :init
     :config
@@ -648,9 +648,6 @@
     (setq flycheck-emacs-lisp-load-path 'inherit)
     (use-package flycheck-package
       :ensure t))
-  ;; (eval-after-load 'flycheck
-  ;;   '(add-to-list 'flycheck-checkers 'haskell-process))
-  ;; (require 'haskell-flycheck)
 #+end_src
 * browser
 #+begin_src emacs-lisp :tangle yes
@@ -665,6 +662,7 @@
   (use-package yasnippet
     :diminish yas-minor-mode
     :ensure t
+    :defer 2
     :config
     (progn
       (setq yas-snippet-dirs '("~/code/emacs/snippets/custom" "~/code/emacs/snippets/yasnippet-snippets"))
