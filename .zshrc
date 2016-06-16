@@ -6,7 +6,7 @@ setopt interactivecomments
 # history
 HISTFILE=$HOME/.zhistory       # enable history saving on shell exit
 setopt APPEND_HISTORY          # append rather than overwrite history file.
-HISTSIZE=1000                  # lines of history to maintain memory
+HISTSIZE=1000000                 # lines of history to maintain memory
 SAVEHIST=1000000                 # lines of history to maintain in history file.
 setopt HIST_EXPIRE_DUPS_FIRST  # allow dups, but expire old ones when I hit HISTSIZE
 setopt EXTENDED_HISTORY        # save timestamp and runtime information
@@ -19,7 +19,7 @@ zstyle ':completion:*' menu select
 
 setopt completealiases
 alias ls='ls --color=auto'
-alias nopaste='nopaste -p -n Haskellfant'
+alias nopaste='nopaste -p -n cocreature'
 alias sprunge="curl -F 'sprunge=<-' http://sprunge.us"
 alias ec='emacsclient'
 alias mus='mosh -p 62308 us'
