@@ -1220,7 +1220,7 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package systemd
     :ensure t
-    :mode "\\.socket\\'")
+    :mode ("\\.socket\\'" . systemd-mode))
 #+end_src
 * writeroom
 #+begin_src emacs-lisp :tangle yes
