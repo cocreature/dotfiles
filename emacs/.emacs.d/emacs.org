@@ -45,7 +45,7 @@
            ("C-c k" . counsel-ag)
            ("C-x l" . counsel-locate)
            ("C-c g" . counsel-git-grep)
-           ("C-c i" . counsel-imenu)
+           ("C-c h i" . counsel-imenu)
            ("C-x p" . counsel-list-processes))
     :config
     (ivy-set-actions
@@ -1242,7 +1242,16 @@
 
 #+end_src
 * bison
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   (use-package bison-mode
     :ensure t)
+#+END_SRC
+* prolog
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package prolog
+    :load-path "~/code/emacs/prolog"
+    :mode ("\\.pl\\'" . prolog-mode)
+    :config
+      (setq-default prolog-system 'swi)
+      (setq prolog-system 'swi))
 #+END_SRC
