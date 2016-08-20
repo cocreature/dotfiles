@@ -30,7 +30,8 @@
                ("C-r" . swiper)
                ("C-c C-r" . ivy-resume)
                ("C-c h m" . woman)
-               ("C-x b" . ivy-switch-buffer))
+               ("C-x b" . ivy-switch-buffer)
+               ("C-c u" . swiper-all))
         :config
         (ivy-mode 1)
         (setq ivy-use-virtual-buffers t))
@@ -53,6 +54,8 @@
              '(("j" find-file-other-window "other")))
     (ivy-set-actions 'counsel-git-grep
                      '(("j" find-file-other-window "other"))))
+  (use-package ivy-hydra
+    :ensure t)
 #+end_src
 
 * pos-tip
@@ -73,7 +76,6 @@
         :ensure t
         :config (global-undo-tree-mode)
         :diminish undo-tree-mode)
-      (setq show-paren-style 'paranthesis)
       (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
       (winner-mode 1)
       (defalias 'yes-or-no-p 'y-or-n-p)
@@ -155,13 +157,6 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (column-number-mode t)
-  ;; (load-theme 'leuven t)
-  ;; (use-package smart-mode-line
-  ;;   :ensure t
-  ;;   :config
-  ;;   (progn (setq sml-no-confirm-load-theme t)
-  ;;          (setq sml/theme 'dark)
-  ;;          (sml/setup)))
   (use-package moe-theme
     :ensure t
     :config
@@ -177,10 +172,6 @@
                         (sml/setup)))
           (sml/setup)))
       :init (moe-dark)))
-
-  ;; show-paren-mode
-  (setq show-paren-delay 0)
-  (show-paren-mode t)
 #+end_src
 * org
 #+begin_src emacs-lisp :tangle yes
@@ -473,12 +464,12 @@
   (use-package hindent
     :load-path "~/code/haskell/hindent/elisp"
     :commands (hindent-reformat-decl hindent-mode)
-    :config (setq hindent-style "chris-done")
+    :config (setq hindent-style "")
     :init
     (add-hook 'haskell-mode-hook 'hindent-mode))
   (use-package haskell-mode
     :load-path "~/code/haskell/haskell-mode/"
-    :mode "\\.hs\\'"
+    :mode "\\.c?hs\\'"
     :config
     (progn
       (setq haskell-process-args-stack-ghci '("--ghc-options=\"-ferror-spans -fobject-code\"" "--test"))
@@ -615,17 +606,12 @@
     :defer t
     :init
     (progn
-      (use-package paredit
-        :diminish paredit-mode
-        :ensure t
-        :commands enable-paredit-mode)
       (use-package elisp-slime-nav
         :diminish elisp-slime-nav-mode
         :ensure t
         :commands turn-on-elisp-slime-nav-mode)
       (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook eval-expression-minibuffer-setup-hook smtlib-mode-hook))
-        (add-hook hook 'turn-on-elisp-slime-nav-mode)
-        (add-hook hook 'enable-paredit-mode))
+        (add-hook hook 'turn-on-elisp-slime-nav-mode))
       (use-package eldoc
         :diminish eldoc-mode
         :commands turn-on-eldoc-mode
@@ -1254,4 +1240,60 @@
     :config
       (setq-default prolog-system 'swi)
       (setq prolog-system 'swi))
+#+END_SRC
+* racket
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package racket-mode
+    :mode "\\.rkt\\'"
+    :ensure t)
+#+END_SRC
+* smartparens
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package smartparens-config
+    :ensure smartparens
+    :demand t
+    :config
+    (progn
+      (setq sp-show-pair-delay 0)
+      (show-smartparens-global-mode t)
+      (add-hook 'racket-mode-hook #'turn-on-smartparens-strict-mode)
+      (add-hook 'racket-mode-hook #'turn-on-show-smartparens-mode))
+    :bind
+    (:map smartparens-mode-map
+          ("C-M-f" . sp-forward-sexp)
+          ("C-M-b" . sp-backward-sexp)
+
+          ("C-M-d" . sp-down-sexp)
+          ("C-M-e" . sp-up-sexp)
+
+          ("C-M-a" . sp-backward-down-sexp)
+          ("C-M-u" . sp-backward-up-sexp)
+
+          ("C-S-d" . sp-beginning-of-sexp)
+          ("C-S-a" . sp-end-of-sexp)
+
+          ("C-M-n" . sp-next-sexp)
+          ("C-M-p" . sp-previous-sexp)
+
+          ("C-M-k" . sp-kill-sexp)
+          ("C-M-w" . sp-copy-sexp)
+
+          ("M-<delete>" . sp-backward-unwrap-sexp)
+          ("M-<backspace>" . sp-unwrap-sexp)
+
+          ("C-)" . sp-forward-slurp-sexp)
+          ("C-(" . sp-forward-barf-sexp)
+          ("C-M-)"  . sp-backward-slurp-sexp)
+          ("C-M-("  . sp-backward-barf-sexp)
+
+          ("M-D" . sp-splice-sexp)
+          ("C-M-<delete>" . sp-spilce-sexp-killing-forward)
+          ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
+          ("C-S-<backspace>" . sp-splice-sexp-killing-around)
+
+          ("C-]" . sp-select-next-thing-exchange)
+          ("C-M-]" . sp-select-next-thing)
+
+          ("M-F" . sp-forward-symbol)
+          ("M-B" . sp-backward-symbol)))
 #+END_SRC
