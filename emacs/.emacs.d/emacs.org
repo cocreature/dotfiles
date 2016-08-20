@@ -681,19 +681,6 @@
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   (setq ediff-split-window-function 'split-window-horizontally)
 #+end_src
-* reveal
-#+begin_src emacs-lisp :tangle yes
-  (setq org-reveal-root "file:///home/moritz/code/web/reveal.js/")
-  (setq org-reveal-title-slide-template
-        "<h1>%t</h1>
-         <h2>%a</h2>
-         <h2>%d</h2>")
-#+end_src
-* impress
-#+begin_src emacs-lisp :tangle yes
-  (setq org-impress-js-javascript "/home/moritz/code/web/impress.js/js/impress.js")
-  (setq org-impress-js-stylesheet "/home/moritz/code/web/impress.js/css/impress-demo.css")
-#+end_src
 * idris
 #+begin_src emacs-lisp :tangle yes
   (use-package idris-mode
@@ -1257,7 +1244,7 @@
       (setq sp-show-pair-delay 0)
       (show-smartparens-global-mode t)
       (add-hook 'racket-mode-hook #'turn-on-smartparens-strict-mode)
-      (add-hook 'racket-mode-hook #'turn-on-show-smartparens-mode))
+      (add-hook 'racket-repl-mode-hook #'turn-on-smartparens-strict-mode))
     :bind
     (:map smartparens-mode-map
           ("C-M-f" . sp-forward-sexp)
