@@ -1010,47 +1010,30 @@
 #+end_src
 * c/c++
 #+begin_src emacs-lisp :tangle yes
-  (setq c-basic-offset 4)
-  (use-package cc-mode
-    :mode (("\\.cpp\\'" . c++-mode)
-           ("\\.c\\'" . c-mode))
-    :init
-    (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
     (use-package cc-mode
-    :mode ("\\.cpp\\'" . c++-mode)
-    :init
-    (defun remap-fill-paragraph-c () (define-key c-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
-    (add-hook 'c++-mode-hook 'remap-fill-paragraph)
-    (add-hook 'c-mode-hook 'remap-fill-paragraph-c)
-    :config
-    (use-package rtags
-      :load-path "~/code/rtags/src"
-      :bind (:map c-mode-base-map ("C-c r t" . rtags-symbol-type))
-      :demand t
+      :mode (("\\.cpp\\'" . c++-mode)
+             ("\\.c\\'" . c-mode))
+      :init
+      (progn
+        (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
+        (defun remap-fill-paragraph-c () (define-key c-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
+        (add-hook 'c++-mode-hook 'remap-fill-paragraph)
+        (add-hook 'c-mode-hook 'remap-fill-paragraph-c))
       :config
-      (setq rtags-path "~/code/rtags/build/bin")
-      (rtags-enable-standard-keybindings)
-      (setq rtags-autostart-diagnostics nil)
-      (setq rtags-completions-enabled t)
-      (require 'flycheck-rtags)
-      )
-    (use-package clang-format
-      :ensure t))
-    (add-hook 'c++-mode-hook 'remap-fill-paragraph)
-    :config
-    (use-package rtags
-      :load-path "~/code/rtags/src"
-      :bind (:map c-mode-base-map ("C-c r t" . rtags-symbol-type))
-      :demand t
-      :config
-      (setq rtags-path "~/code/rtags/build/bin")
-      (rtags-enable-standard-keybindings)
-      (setq rtags-autostart-diagnostics nil)
-      (setq rtags-completions-enabled t)
-      (require 'flycheck-rtags)
-      )
-    (use-package clang-format
-      :ensure t))
+      (progn
+        (setq c-basic-offset 4)
+        (use-package rtags
+          :load-path "~/code/rtags/src"
+          :bind (:map c-mode-base-map ("C-c r t" . rtags-symbol-type))
+          :demand t
+          :config
+          (setq rtags-path "~/code/rtags/build/bin")
+          (rtags-enable-standard-keybindings)
+          (setq rtags-autostart-diagnostics nil)
+          (setq rtags-completions-enabled t)
+          (require 'flycheck-rtags))
+        (use-package clang-format
+          :ensure t)))
 #+end_src
 * rust
 #+begin_src emacs-lisp :tangle yes
@@ -1217,6 +1200,7 @@
 * bison
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package bison-mode
+    :commands (bison-mode)
     :ensure t)
 #+END_SRC
 * prolog
@@ -1237,50 +1221,57 @@
 * smartparens
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package smartparens-config
-    :ensure smartparens
-    :demand t
-    :config
-    (progn
-      (setq sp-show-pair-delay 0)
-      (show-smartparens-global-mode t)
-      (add-hook 'racket-mode-hook #'turn-on-smartparens-strict-mode)
-      (add-hook 'racket-repl-mode-hook #'turn-on-smartparens-strict-mode))
-    :bind
-    (:map smartparens-mode-map
-          ("C-M-f" . sp-forward-sexp)
-          ("C-M-b" . sp-backward-sexp)
+      :ensure smartparens
+      :commands (turn-on-smartparens-strict-mode)
+      :demand t
+      :init
+      (progn
+        (add-hook 'racket-mode-hook #'turn-on-smartparens-strict-mode)
+        (add-hook 'racket-repl-mode-hook #'turn-on-smartparens-strict-mode)
+        (add-hook 'lisp-mode-hook #'turn-on-smartparens-strict-mode)
+        (add-hook 'emacs-lisp-mode-hook #'turn-on-smartparens-strict-mode))
+      :config
+      (progn
+        (setq sp-show-pair-delay 0)
+        (show-smartparens-global-mode t))
+      :bind
+      (:map smartparens-mode-map
+            ("C-M-f" . sp-forward-sexp)
+            ("C-M-b" . sp-backward-sexp)
 
-          ("C-M-d" . sp-down-sexp)
-          ("C-M-e" . sp-up-sexp)
+            ("C-M-d" . sp-down-sexp)
+            ("C-M-e" . sp-up-sexp)
 
-          ("C-M-a" . sp-backward-down-sexp)
-          ("C-M-u" . sp-backward-up-sexp)
+            ("C-M-a" . sp-backward-down-sexp)
+            ("C-M-u" . sp-backward-up-sexp)
 
-          ("C-S-d" . sp-beginning-of-sexp)
-          ("C-S-a" . sp-end-of-sexp)
+            ("C-S-d" . sp-beginning-of-sexp)
+            ("C-S-a" . sp-end-of-sexp)
 
-          ("C-M-n" . sp-next-sexp)
-          ("C-M-p" . sp-previous-sexp)
+            ("C-M-n" . sp-next-sexp)
+            ("C-M-p" . sp-previous-sexp)
 
-          ("C-M-k" . sp-kill-sexp)
-          ("C-M-w" . sp-copy-sexp)
+            ("C-M-k" . sp-kill-sexp)
+            ("C-M-w" . sp-copy-sexp)
 
-          ("M-<delete>" . sp-backward-unwrap-sexp)
-          ("M-<backspace>" . sp-unwrap-sexp)
+            ("M-[" . sp-backward-unwrap-sexp)
+            ("M-]" . sp-unwrap-sexp)
 
-          ("C-)" . sp-forward-slurp-sexp)
-          ("C-(" . sp-forward-barf-sexp)
-          ("C-M-)"  . sp-backward-slurp-sexp)
-          ("C-M-("  . sp-backward-barf-sexp)
+            ("C-)" . sp-forward-slurp-sexp)
+            ("C-(" . sp-forward-barf-sexp)
+            ("C-M-)"  . sp-backward-slurp-sexp)
+            ("C-M-("  . sp-backward-barf-sexp)
 
-          ("M-D" . sp-splice-sexp)
-          ("C-M-<delete>" . sp-spilce-sexp-killing-forward)
-          ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
-          ("C-S-<backspace>" . sp-splice-sexp-killing-around)
+            ("M-D" . sp-splice-sexp)
+            ("C-M-<delete>" . sp-spilce-sexp-killing-forward)
+            ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
+            ("C-S-<backspace>" . sp-splice-sexp-killing-around)
 
-          ("C-]" . sp-select-next-thing-exchange)
-          ("C-M-]" . sp-select-next-thing)
+            ("C-]" . sp-select-next-thing-exchange)
+            ("C-M-]" . sp-select-next-thing)
 
-          ("M-F" . sp-forward-symbol)
-          ("M-B" . sp-backward-symbol)))
+            ("M-F" . sp-forward-symbol)
+            ("M-B" . sp-backward-symbol)
+            ("M-q" . sp-indent-defun)
+            ("M-r" . sp-raise-sexp)))
 #+END_SRC
