@@ -1275,3 +1275,9 @@
             ("M-q" . sp-indent-defun)
             ("M-r" . sp-raise-sexp)))
 #+END_SRC
+* ocaml
+#+begin_src emacs-lisp :tangle yes
+  (use-package tuareg
+    :ensure t
+    :mode ("\\.ml\\'" . tuareg-mode))
+#+end_src
