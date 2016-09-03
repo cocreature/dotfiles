@@ -2,13 +2,17 @@
 #+begin_src emacs-lisp :tangle yes
   (package-initialize nil)
   (add-to-list 'package-archives
-               '("marmalade" . "http://marmalade-repo.org/packages/"))
-  (add-to-list 'package-archives
                '("melpa-stable" . "http://stable.melpa.org/packages/"))
   (add-to-list 'package-archives
                '("org" . "http://orgmode.org/elpa/"))
   (add-to-list 'package-archives
                '("melpa" . "http://melpa.org/packages/") t)
+  (setq package-archive-priorities '(("org" . 4)
+                                     ("melpa-stable" . 3)
+                                     ("melpa" . 2)
+                                     ("gnu" . 1)))
+  (add-to-list 'package-pinned-packages
+               '(use-package . "melpa-stable"))
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package))
@@ -81,7 +85,8 @@
       (defalias 'yes-or-no-p 'y-or-n-p)
       (global-unset-key (kbd "C-z"))
       (put 'upcase-region 'disabled nil)
-      (use-package ws-butler :ensure t
+      (use-package ws-butler
+        :ensure t
         :config
         (ws-butler-global-mode)
         (setq ws-butler-keep-whitespace-before-point nil))
@@ -1136,7 +1141,7 @@
   (use-package ensime
     :ensure t
     :commands (ensime-scala-mode-hook))
-  (use-package scala-mode2
+  (use-package scala-mode
     :ensure t
     :mode ("\\.scala\\'" . scala-mode)
     :config (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
