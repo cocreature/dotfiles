@@ -97,8 +97,6 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.node/bin:$PATH
 export PATH=$HOME/.cask/bin:$PATH
 
-source /home/moritz/.nix-profile/etc/profile.d/nix.sh
-
 autoload -U bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script "$(which stack)")"
 

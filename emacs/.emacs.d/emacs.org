@@ -5,8 +5,8 @@
                '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives
                '("melpa-stable" . "http://stable.melpa.org/packages/"))
-  ;; (add-to-list 'package-archives
-  ;;              '("org" . "http://orgmode.org/elpa/"))
+  (add-to-list 'package-archives
+               '("org" . "http://orgmode.org/elpa/"))
   (add-to-list 'package-archives
                '("melpa" . "http://melpa.org/packages/") t)
   (unless (package-installed-p 'use-package)
@@ -223,8 +223,7 @@
                (match-string 1))))
         `(title ,title artist ,artist album ,album))))
   (use-package org
-    :load-path ("~/code/org-mode/lisp/" "~/code/org-mode/contrib/lisp/")
-    :pin manual
+    :ensure t
     :mode ("\\.org\\'" . org-mode)
     :bind (("C-c l" . org-store-link)
            ("C-c c" . org-capture)
@@ -346,6 +345,10 @@
          'org-babel-load-languages
          '((emacs-lisp . t)
            (R . t))))))
+  (use-package org-inlinetask
+    :bind (:map org-mode-map
+                ("C-c C-x t" . org-inlinetask-insert-task))
+    :commands (org-inlinetask-insert-task))
 #+end_src
 * functions
 #+begin_src emacs-lisp :tangle yes
