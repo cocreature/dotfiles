@@ -100,8 +100,6 @@
     :bind ("C-<tab>" . company-complete)
     :config
     (global-company-mode t)
-    (use-package company-cmake
-      :ensure t)
     (push 'company-rtags company-backends))
 #+end_src
 * dired
@@ -118,22 +116,6 @@
 
 * projectile
 #+begin_src emacs-lisp :tangle yes
-  (use-package magit-popup
-    :ensure t
-    :defer t
-    :pin melpa-stable)
-  (use-package magit
-    :ensure t
-    :pin melpa-stable
-    :commands magit-status
-    :config
-    (progn
-      (use-package magit-svn
-        :ensure t
-        :pin melpa-stable)
-      (setq magit-last-seen-setup-instructions "1.4.0")
-      (setq magit-revert-buffers t)
-      (setq magit-completing-read-function 'ivy-completing-read)))
   (use-package projectile
     :ensure t
     :commands (projectile-switch-project-by-name projectile-find-file)
@@ -249,8 +231,6 @@
               (todo category-up priority-down)
               (tags priority-down category-keep)
               (search category-keep)))
-      (use-package ob-ipython
-        :load-path "~/code/emacs/ob-ipython")
       (setq org-confirm-babel-evaluate nil)
       (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
       (setq org-log-done t)
@@ -281,79 +261,16 @@
       (org-clock-persistence-insinuate)
       (setq org-use-speed-commands t)
       (use-package org-habit)
-      (org-load-modules-maybe t)
-      (use-package cdlatex
-        :ensure t
-        :commands turn-on-org-cdlatex)
-      (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
-      (use-package ox-latex
-        :config
-        (add-to-list 'org-latex-classes
-                     '("koma-article"
-                       "\\documentclass[fontsize=12pt,a4paper]{scrartcl}\n\\usepackage[AUTO]{polyglossia}\n\\usepackage[utf8]{inputenc}[NO-PACKAGES]"
-                       ("\\section{%s}" . "\\section*{%s}")
-                       ("\\subsection{%s}" . "\\subsection*{%s}")
-                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-        (add-to-list 'org-latex-classes
-                     '("semproc"
-                       "\\documentclass[a4paper,10pt,openright,parskip=half-]{semproc}\n[NO-DEFAULT-PACKAGES]\n[NO-PACKAGES]"
-                       ("\\section{%s}" . "\\section*{%s}")
-                       ("\\subsection{%s}" . "\\subsection*{%s}")
-                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-        (add-to-list 'org-latex-classes
-                     '("koma-report" "\\documentclass[fontsize=12pt,a4paper]{scrreprt}\n\\usepackage[AUTO]{polyglossia}\n\\usepackage[utf8]{inputenc}[NO-PACKAGES]"
-                       ("\\chapter{%s}" . "\\chapter*{%s}")
-                       ("\\section{%s}" . "\\section*{%s}")
-                       ("\\subsection{%s}" . "\\subsection*{%s}")
-                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-        (use-package org-inline-task
-          :init
-          (defun org-latex-format-inlinetask
-              (todo _todo-type priority title tags contents info)
-            (format "\\todo[inline]{\\textbf{%s}%s}" title contents))
-          (setq org-latex-format-inlinetask-function 'org-latex-format-inlinetask))
-        (setq org-latex-prefer-user-labels t)
-        (use-package ox-bibtex)
-        (use-package ox :config
-          (setq org-export-default-language "de-de"))
-        (setq org-latex-packages-alist '(("ngerman" "babel" nil)))
-        (setq org-latex-default-packages-alist '(("" "fixltx2e" nil)
-                                                 ("" "graphicx" t)
-                                                 ("" "longtable" nil)
-                                                 ("" "float" nil)
-                                                 ("" "wrapfig" nil)
-                                                 ("" "rotating" nil)
-                                                 ("normalem" "ulem" t)
-                                                 ("" "amsmath" t)
-                                                 ("" "textcomp" t)
-                                                 ("" "marvosym" t)
-                                                 ("" "wasysym" t)
-                                                 ("" "amssymb" t)
-                                                 ("hyphens" "url" nil)
-                                                 ("" "hyperref" nil)
-                                                 "\\tolerance=1000"))
-        (use-package org-bullets
-          :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-        (setq org-highlight-latex-and-related '(latex script entities))
-        (setq org-latex-toc-command "\\tableofcontents\n\\clearpage\n")
-        (mapc (lambda (x) (setq org-format-latex-options (plist-put org-format-latex-options (car x) (cadr x))))
-              '((:scale 2.0)
-                (:foreground "Black")
-                (:background "White")))
-        (org-babel-do-load-languages
-         'org-babel-load-languages
-         '((emacs-lisp . t)
-           (R . t))))))
+      (org-load-modules-maybe t)))
   (use-package org-inlinetask
     :bind (:map org-mode-map
                 ("C-c C-x t" . org-inlinetask-insert-task))
+    :after (org)
     :commands (org-inlinetask-insert-task))
+  (use-package org-bullets
+    :ensure t
+    :commands (org-bullets-mode)
+    :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+end_src
 * functions
 #+begin_src emacs-lisp :tangle yes
@@ -472,12 +389,12 @@
   (use-package hindent
     :load-path "~/code/haskell/hindent/elisp"
     :commands (hindent-reformat-decl hindent-mode)
-    :config (setq hindent-style "")
     :init
     (add-hook 'haskell-mode-hook 'hindent-mode))
   (use-package haskell-mode
     :load-path "~/code/haskell/haskell-mode/"
-    :mode "\\.c?hs\\'"
+    :mode (("\\.c?hs\\'" . haskell-mode)
+           ("\\.cabal\\'" . haskell-cabal-mode))
     :config
     (progn
       (setq haskell-process-args-stack-ghci '("--ghc-options=\"-ferror-spans -fobject-code\"" "--test"))
@@ -487,8 +404,7 @@
       (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
       (setq haskell-process-log t)
       (setq haskell-process-type 'stack-ghci)
-      (define-key haskell-mode-map (kbd "C-c i") 'hindent-reformat-decl)
-      ))
+      (define-key haskell-mode-map (kbd "C-c i") 'hindent-reformat-decl)))
   (defun haskell-stack-pvp (pkgname)
     (interactive "sPackage name: ")
     (let* ((pkgver (with-temp-buffer
@@ -635,13 +551,14 @@
     :ensure t
     :defer 2
     :diminish flycheck-mode
-    :init
     :config
-    (global-flycheck-mode)
-    (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-gcc flycheck-rtags))
-    (setq flycheck-emacs-lisp-load-path 'inherit)
-    (use-package flycheck-package
-      :ensure t))
+    (progn
+      (global-flycheck-mode)
+      (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-gcc flycheck-rtags))
+      (setq flycheck-emacs-lisp-load-path 'inherit)))
+  (use-package flycheck-package
+    :ensure t
+    :defer t)
 #+end_src
 * browser
 #+begin_src emacs-lisp :tangle yes
@@ -668,7 +585,18 @@
 #+end_src
 * magit
 #+begin_src emacs-lisp :tangle yes
-  (add-hook 'magit-mode-hook 'magit-load-config-extensions)
+  (use-package magit
+    :ensure t
+    :commands magit-status
+    :config
+    (progn
+      (magit-auto-revert-mode 1)
+      (setq magit-completing-read-function 'ivy-completing-read))
+    :init
+    (add-hook 'magit-mode-hook 'magit-load-config-extensions))
+  (use-package magit-svn
+    :ensure t
+    :after (magit))
 #+end_src
 * pkgbuild
 #+begin_src emacs-lisp :tangle yes
@@ -1013,35 +941,36 @@
   (use-package nyan-mode
     :defer 10
     :ensure t
-    :pin melpa-stable
     :config (nyan-mode))
 #+end_src
 * c/c++
 #+begin_src emacs-lisp :tangle yes
-    (use-package cc-mode
-      :mode (("\\.cpp\\'" . c++-mode)
-             ("\\.c\\'" . c-mode))
-      :init
-      (progn
-        (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
-        (defun remap-fill-paragraph-c () (define-key c-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
-        (add-hook 'c++-mode-hook 'remap-fill-paragraph)
-        (add-hook 'c-mode-hook 'remap-fill-paragraph-c))
-      :config
-      (progn
-        (setq c-basic-offset 4)
-        (use-package rtags
-          :load-path "~/code/rtags/src"
-          :bind (:map c-mode-base-map ("C-c r t" . rtags-symbol-type))
-          :demand t
-          :config
-          (setq rtags-path "~/code/rtags/build/bin")
-          (rtags-enable-standard-keybindings)
-          (setq rtags-autostart-diagnostics nil)
-          (setq rtags-completions-enabled t)
-          (require 'flycheck-rtags))
-        (use-package clang-format
-          :ensure t)))
+  (use-package cc-mode
+    :mode (("\\.cpp\\'" . c++-mode)
+           ("\\.c\\'" . c-mode))
+    :init
+    (progn
+      (defun remap-fill-paragraph () (define-key c++-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
+      (defun remap-fill-paragraph-c () (define-key c-mode-map [remap c-fill-paragraph] #'clang-format-buffer))
+      (add-hook 'c++-mode-hook 'remap-fill-paragraph)
+      (add-hook 'c-mode-hook 'remap-fill-paragraph-c))
+    :config
+    (progn
+      (setq c-basic-offset 4)))
+  (use-package clang-format
+    :ensure t
+    :commands (clang-format-buffer))
+  (use-package rtags
+    :load-path "~/code/rtags/src"
+    :bind (:map c-mode-base-map ("C-c r t" . rtags-symbol-type))
+    :after (cc-mode)
+    :config
+    (progn
+      (setq rtags-path "~/code/rtags/build/bin")
+      (rtags-enable-standard-keybindings)
+      (setq rtags-autostart-diagnostics nil)
+      (setq rtags-completions-enabled t)
+      (require 'flycheck-rtags)))
 #+end_src
 * rust
 #+begin_src emacs-lisp :tangle yes
@@ -1057,16 +986,9 @@
 #+end_src
 * sml
 #+begin_src emacs-lisp :tangle yes
-    (use-package sml-mode
-      :ensure t
-      :mode ("\\.fun\\'" "\\.sig\\'" "\\.sml\\'"))
-#+end_src
-* ocaml
-#+begin_src emacs-lisp :tangle yes
-  (use-package tuareg
-    :commands tuareg-run-ocaml
-    :disabled t
-    :ensure t)
+  (use-package sml-mode
+    :ensure t
+    :mode ("\\.fun\\'" "\\.sig\\'" "\\.sml\\'"))
 #+end_src
 * llvm
 #+begin_src emacs-lisp :tangle yes
@@ -1101,7 +1023,7 @@
 #+end_src
 * smtlib
 #+begin_src emacs-lisp :tangle yes
-  (use-package smtlib
+  (use-package smtlib-mode
      :load-path "~/code/emacs/smtlib-mode"
      :mode ("\\.smt2" . smtlib-mode))
 #+end_src
@@ -1110,9 +1032,10 @@
   (use-package pdf-tools
     :mode ("\\.pdf\\'" . pdf-view-mode)
     :ensure t
-    :config (use-package org-pdfview
-              :load-path "~/code/emacs/org-pdfview")
     :init (add-hook 'pdf-view-mode-hook 'pdf-view-fit-page-to-window))
+  (use-package org-pdfview
+    :load-path "~code/emacs/org-pdfview"
+    :after pdf-tools)
 #+end_src
 * lean
 #+begin_src emacs-lisp :tangle yes
@@ -1200,10 +1123,6 @@
                 (smart-mode-line-enable))))
     (add-to-list 'writeroom-global-effects 'my-writeroom-theme)
     (add-to-list 'writeroom-global-effects 'visual-line-mode))
-#+end_src
-* purescript
-#+begin_src emacs-lisp :tangle yes
-
 #+end_src
 * bison
 #+BEGIN_SRC emacs-lisp :tangle yes
