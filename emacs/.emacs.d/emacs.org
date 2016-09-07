@@ -151,7 +151,7 @@
   (use-package spaceline-config
     :ensure spaceline
     :config
-    (spaceline-spacemacs-theme))
+    (spaceline-emacs-theme))
 #+end_src
 * org
 #+begin_src emacs-lisp :tangle yes
