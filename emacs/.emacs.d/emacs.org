@@ -62,34 +62,32 @@
     :ensure t)
 #+end_src
 
-* pos-tip
-#+begin_src emacs-lisp :tangle yes
-  (use-package pos-tip
-    :ensure t
-    :defer t
-    :config
-    (setq pos-tip-background-color "#4e4e4e")
-    (setq pos-tip-foreground-color "#5fafd7"))
-#+end_src
 * misc
 #+begin_src emacs-lisp :tangle yes
-      (setq save-interprogram-paste-before-kill t)
-      (setq ag-highlight-search t)
-      (blink-cursor-mode -1)
-      (use-package undo-tree
-        :ensure t
-        :config (global-undo-tree-mode)
-        :diminish undo-tree-mode)
-      (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
-      (winner-mode 1)
-      (defalias 'yes-or-no-p 'y-or-n-p)
-      (global-unset-key (kbd "C-z"))
-      (put 'upcase-region 'disabled nil)
-      (use-package ws-butler
-        :ensure t
-        :config
-        (ws-butler-global-mode)
-        (setq ws-butler-keep-whitespace-before-point nil))
+  (setq save-interprogram-paste-before-kill t)
+  (setq ag-highlight-search t)
+  (blink-cursor-mode -1)
+  (use-package undo-tree
+    :ensure t
+    :config (global-undo-tree-mode)
+    :diminish undo-tree-mode)
+  (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
+  (winner-mode 1)
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (global-unset-key (kbd "C-z"))
+  (put 'upcase-region 'disabled nil)
+  (use-package ws-butler
+    :ensure t
+    :config
+    (ws-butler-global-mode)
+    (setq ws-butler-keep-whitespace-before-point nil))
+  (use-package server
+    :config
+    (progn
+      (defun server-enable ()
+        (unless (server-running-p)
+          (server-start)))
+      (add-hook 'after-init-hook 'server-enable t)))
 #+end_src
 * company
 #+begin_src emacs-lisp :tangle yes
@@ -144,21 +142,13 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (column-number-mode t)
-  (use-package moe-theme
-    :ensure t
+  (add-to-list 'load-path "~/code/emacs/emacs-doom-theme/")
+  (add-to-list 'custom-theme-load-path "~/code/emacs/emacs-doom-theme")
+  (load-theme 'doom-one t)
+  (use-package spaceline-config
+    :ensure spaceline
     :config
-    (use-package smart-mode-line
-      :ensure t
-      :config
-      (progn
-        (setq sml/no-confirm-load-theme t)
-        (setq sml/theme 'dark)
-        (if (daemonp)
-            (add-hook 'after-make-frame-functions
-                      (lambda (frame)
-                        (sml/setup)))
-          (sml/setup)))
-      :init (moe-dark)))
+    (spaceline-spacemacs-theme))
 #+end_src
 * org
 #+begin_src emacs-lisp :tangle yes
@@ -366,19 +356,14 @@
               "%o"))))
     (setq TeX-view-program-selection '((output-pdf "zathura")))
     (setq TeX-PDF-mode t)
-    (TeX-source-correlate-mode)
-    (use-package preview
-      :config
-      (set-face-attribute 'preview-reference-face nil
-                          :background "white"
-                          :foreground "black")
-      (set-default 'preview-scale-function 1.2)))
+    (TeX-source-correlate-mode))
 #+end_src
 * haskell
 #+begin_src emacs-lisp :tangle yes
   (use-package shm
     :load-path "~/code/haskell/structured-haskell-mode/elisp/"
     :commands (structured-haskell-mode)
+    :disabled t
     :init
     (add-hook 'haskell-mode-hook 'structured-haskell-mode))
   (use-package intero
@@ -397,11 +382,9 @@
            ("\\.cabal\\'" . haskell-cabal-mode))
     :config
     (progn
-      (setq haskell-process-args-stack-ghci '("--ghc-options=\"-ferror-spans -fobject-code\"" "--test"))
       (use-package haskell)
       (use-package haskell-doc)
       (use-package haskell-decl-scan)
-      (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
       (setq haskell-process-log t)
       (setq haskell-process-type 'stack-ghci)
       (define-key haskell-mode-map (kbd "C-c i") 'hindent-reformat-decl)))
@@ -591,12 +574,17 @@
     :config
     (progn
       (magit-auto-revert-mode 1)
+      (use-package magit-svn
+        :ensure t)
       (setq magit-completing-read-function 'ivy-completing-read))
     :init
     (add-hook 'magit-mode-hook 'magit-load-config-extensions))
-  (use-package magit-svn
+#+end_src
+* git-gutter-fringe
+#+begin_src emacs-lisp :tangle yes
+  (use-package git-gutter-fringe
     :ensure t
-    :after (magit))
+    :config (global-git-gutter-mode))
 #+end_src
 * pkgbuild
 #+begin_src emacs-lisp :tangle yes
@@ -894,17 +882,11 @@
   (use-package proof-site
     :load-path ("~/code/emacs/PG/coq" "~/code/emacs/PG/generic")
     :mode ("\\.v\\'" . coq-mode)
-    :config (add-hook 'coq-mode-hook #'company-coq-mode)
-    :init
-    (add-hook 'coq-mode-hook
-              (lambda ()
-                (make-local-variable 'face-remapping-alist)
-                (setq face-remapping-alist
-                      '((font-lock-comment-face . font-lock-doc-face)))))
-    (setq proof-splash-enable nil)
-    (use-package company-coq
-      :ensure t
-      :commands company-coq-mode))
+    :init (setq proof-splash-enable nil))
+  (use-package company-coq
+    :ensure t
+    :commands (company-coq-mode)
+    :init (add-hook 'coq-mode-hook 'company-coq-mode t))
 #+end_src
 * json
 #+begin_src emacs-lisp :tangle yes
@@ -1208,3 +1190,6 @@
     :ensure t
     :mode ("\\.ml\\'" . tuareg-mode))
 #+end_src
+
+eaiunrtd
+eauinrtd
