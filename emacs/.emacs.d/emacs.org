@@ -382,7 +382,7 @@
     :init
     (add-hook 'haskell-mode-hook 'structured-haskell-mode))
   (use-package intero
-    :load-path "~/code/haskell/intero/elisp/"
+    :ensure t
     :commands (intero-mode)
     :init
     (add-hook 'haskell-mode-hook 'intero-mode))
@@ -392,7 +392,7 @@
     :init
     (add-hook 'haskell-mode-hook 'hindent-mode))
   (use-package haskell-mode
-    :load-path "~/code/haskell/haskell-mode/"
+    :ensure t
     :mode (("\\.c?hs\\'" . haskell-mode)
            ("\\.cabal\\'" . haskell-cabal-mode))
     :config
