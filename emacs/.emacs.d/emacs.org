@@ -923,13 +923,6 @@
     :mode "\\.nginx\\'"
     :ensure t)
 #+end_src
-* nyan
-#+begin_src emacs-lisp :tangle yes
-  (use-package nyan-mode
-    :defer 10
-    :ensure t
-    :config (nyan-mode))
-#+end_src
 * c/c++
 #+begin_src emacs-lisp :tangle yes
   (use-package cc-mode
