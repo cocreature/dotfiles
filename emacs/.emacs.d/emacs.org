@@ -148,10 +148,11 @@
   (add-to-list 'load-path "~/code/emacs/emacs-doom-theme/")
   (add-to-list 'custom-theme-load-path "~/code/emacs/emacs-doom-theme")
   (load-theme 'doom-one t)
-  (use-package spaceline-config
-    :ensure spaceline
-    :config
-    (spaceline-emacs-theme))
+  (use-package powerline
+    :ensure t
+    :defer t)
+  (use-package doom-modeline
+    :load-path "~/code/emacs/doom-modeline")
 #+end_src
 * org
 #+begin_src emacs-lisp :tangle yes
