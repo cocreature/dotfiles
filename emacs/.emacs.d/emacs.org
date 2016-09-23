@@ -70,7 +70,10 @@
   (blink-cursor-mode -1)
   (use-package undo-tree
     :ensure t
-    :config (global-undo-tree-mode)
+    :config
+    (progn
+      (global-undo-tree-mode)
+      (setq undo-tree-visualizer-timestamps t))
     :diminish undo-tree-mode)
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
   (winner-mode 1)
@@ -145,9 +148,13 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (column-number-mode t)
-  (add-to-list 'load-path "~/code/emacs/emacs-doom-theme/")
-  (add-to-list 'custom-theme-load-path "~/code/emacs/emacs-doom-theme")
-  (load-theme 'doom-one t)
+  (use-package doom-themes
+    :load-path "~/code/emacs/emacs-doom-theme"
+    :config
+    (progn
+      (load-theme 'doom-one t)
+      (add-hook 'find-file-hook 'doom-buffer-mode)
+      (add-hook 'minibuffer-setup-hook 'doom-buffer-mode)))
   (use-package powerline
     :ensure t
     :defer t)
@@ -578,8 +585,8 @@
     :config
     (progn
       (magit-auto-revert-mode 1)
-      (use-package magit-svn
-        :ensure t)
+      ;; (use-package magit-svn
+      ;;   :ensure t)
       (setq magit-completing-read-function 'ivy-completing-read))
     :init
     (add-hook 'magit-mode-hook 'magit-load-config-extensions))
@@ -613,7 +620,8 @@
 * idris
 #+begin_src emacs-lisp :tangle yes
   (use-package idris-mode
-    :load-path "~/code/idris/idris-mode"
+    :ensure t
+    :pin melpa
     :mode "\\.idr\\'"
     :init (use-package prop-menu
             :ensure t))
@@ -1004,7 +1012,7 @@
 #+end_src
 * smtlib
 #+begin_src emacs-lisp :tangle yes
-  (use-package smtlib-mode
+  (use-package smtlib
      :load-path "~/code/emacs/smtlib-mode"
      :mode ("\\.smt2" . smtlib-mode))
 #+end_src
