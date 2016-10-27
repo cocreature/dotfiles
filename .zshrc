@@ -79,7 +79,20 @@ BASE16_SHELL="$HOME/.config/base16-shell/base16-$BASE16_SCHEME.dark.sh"
 # fix tramp in emacs
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ '
 
-source ~/.zsh/antigen-hs/init.zsh
+source ~/.zplug/init.zsh
+zplug "mafredri/zsh-async"
+zplug "sindresorhus/pure"
+zplug "zsh-users/zsh-syntax-highlighting"
+zplug "zsh-users/zsh-history-substring-search"
+zplug "rupa/z", use:"z.sh"
+
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+zplug load --verbose
 export PURE_GIT_PULL=0
 
 setopt prompt_subst
