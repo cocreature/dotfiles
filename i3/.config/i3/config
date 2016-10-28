@@ -169,3 +169,15 @@ for_window [class="B2g"] floating enable
 for_window [window_role="presentation"] move container to output HDMI2
 for_window [window_role="presenter"] move container to output eDP1
 assign [class="mpv"] 4
+
+# volume
+
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
+
+bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10
+bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
+
+bindsym button3 floating toggle
+bindsym --release button2 kill
