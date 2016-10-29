@@ -152,6 +152,7 @@
     :load-path "~/code/emacs/emacs-doom-theme"
     :config
     (progn
+      (setq doom-enable-brighter-comments t)
       (load-theme 'doom-one t)
       (add-hook 'find-file-hook 'doom-buffer-mode)
       (add-hook 'minibuffer-setup-hook 'doom-buffer-mode)))
