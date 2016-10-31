@@ -38,6 +38,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export FM_SVNPATH=$HOME/freiesmagazin/freiesMagazin
 export BUP_DIR=/media/backup/bup
 export SSH_AUTH_SOCK=~/.gnupg/S.gpg-agent.ssh.proxied
+export MOZ_USE_XINPUT2=1
 
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
