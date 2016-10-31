@@ -179,5 +179,7 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
 
+bindsym XF86PowerOff exec --no-startup-id systemctl suspend
+
 bindsym button3 floating toggle
 bindsym --release button2 kill
