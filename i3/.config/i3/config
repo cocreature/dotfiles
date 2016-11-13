@@ -61,10 +61,10 @@ bindsym $mod+Shift+d moveright
 bindsym $mod+q move workspace to output right
 bindsym $mod+f move workspace to output left
 # alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Left exec --no-startup-id playerctl previous
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+bindsym $mod+Shift+Right exec --no-startup-id playerctl next
 
 # split in horizontal orientation
 bindsym $mod+s split h
