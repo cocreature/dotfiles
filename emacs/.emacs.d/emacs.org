@@ -590,6 +590,11 @@
       (setq magit-completing-read-function 'ivy-completing-read))
     :init
     (add-hook 'magit-mode-hook 'magit-load-config-extensions))
+  (use-package git-commit
+    :defer t
+    :config
+    (progn
+      (setq git-commit-summary-max-length 72)))
 #+end_src
 * git-gutter-fringe
 #+begin_src emacs-lisp :tangle yes
