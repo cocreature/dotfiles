@@ -522,13 +522,14 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package lisp-mode
     :defer t
+    :mode "\\.smt2\\'"
     :init
     (progn
       (use-package elisp-slime-nav
         :diminish elisp-slime-nav-mode
         :ensure t
         :commands turn-on-elisp-slime-nav-mode)
-      (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook eval-expression-minibuffer-setup-hook smtlib-mode-hook))
+      (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook eval-expression-minibuffer-setup-hook))
         (add-hook hook 'turn-on-elisp-slime-nav-mode))
       (use-package eldoc
         :diminish eldoc-mode
@@ -1012,9 +1013,6 @@
 #+end_src
 * smtlib
 #+begin_src emacs-lisp :tangle yes
-  (use-package smtlib
-     :load-path "~/code/emacs/smtlib-mode"
-     :mode ("\\.smt2" . smtlib-mode))
 #+end_src
 * pdf-tools
 #+begin_src emacs-lisp :tangle yes
