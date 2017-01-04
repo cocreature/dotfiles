@@ -29,6 +29,7 @@ alias si="stack exec ghci"
 alias s="stack"
 alias ghci="stack ghci"
 alias f='find -iname'
+alias fixsound="amixer -c 0 cset 'numid=10' 1"
 
 export EDITOR=emacsclient
 export MAILDIR=~/mail
