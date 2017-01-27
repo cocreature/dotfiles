@@ -107,6 +107,7 @@ export PATH=$HOME/.gem/ruby/2.2.0/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.node/bin:$PATH
 export PATH=$HOME/.cask/bin:$PATH
+export PATH=$HOME/.cargo/bin:$PATH
 
 autoload -U bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script "$(which stack)")"
