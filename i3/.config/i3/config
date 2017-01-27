@@ -166,7 +166,7 @@ for_window [title="Welcome to Wolfram Mathematica 10"] floating enable
 for_window [title="Choose a custom style"] floating enable
 for_window [title="Wolfram Mathematica 10.0 Student Edition - Personal Use Only"] floating enable
 for_window [class="B2g"] floating enable
-for_window [window_role="presentation"] move container to output HDMI2
+for_window [window_role="presentation"] move container to output DP1
 for_window [window_role="presenter"] move container to output eDP1
 assign [class="mpv"] 4
 
@@ -178,6 +178,12 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
+
+bindsym XF86PowerOff exec --no-startup-id systemctl suspend
+
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 
 bindsym button3 floating toggle
 bindsym --release button2 kill

@@ -29,6 +29,7 @@ alias si="stack exec ghci"
 alias s="stack"
 alias ghci="stack ghci"
 alias f='find -iname'
+alias fixsound="amixer -c 0 cset 'numid=10' 1"
 
 export EDITOR=emacsclient
 export MAILDIR=~/mail
@@ -38,6 +39,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export FM_SVNPATH=$HOME/freiesmagazin/freiesMagazin
 export BUP_DIR=/media/backup/bup
 export SSH_AUTH_SOCK=~/.gnupg/S.gpg-agent.ssh.proxied
+export MOZ_USE_XINPUT2=1
 
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
