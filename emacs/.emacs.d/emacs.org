@@ -115,7 +115,12 @@
     (progn
       (setq dired-dwim-target t)
       (setq-default dired-omit-mode t)
-      (setq-default dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.")))
+      (setq-default dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.")
+      (define-key dired-mode-map "i" 'dired-subtree-insert)
+      (define-key dired-mode-map ";" 'dired-subtree-remove)))
+  (use-package dired-subtree
+    :ensure t
+    :commands (dired-subtree-insert))
 #+end_src
 
 * projectile
