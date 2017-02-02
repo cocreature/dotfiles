@@ -855,11 +855,11 @@
 * proofgeneral
 #+begin_src emacs-lisp :tangle yes
   (use-package proof-site
-    :load-path ("~/code/emacs/PG/coq" "~/code/emacs/PG/generic")
+    :load-path ("~/code/emacs/PG/generic")
     :mode ("\\.v\\'" . coq-mode)
     :init (setq proof-splash-enable nil))
   (use-package company-coq
-    :ensure t
+    :load-path ("~/code/emacs/company-coq/")
     :commands (company-coq-mode)
     :init (add-hook 'coq-mode-hook 'company-coq-mode t))
 #+end_src
