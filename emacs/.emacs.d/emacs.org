@@ -526,7 +526,7 @@
     :defer 2
     :config
     (progn
-      (setq yas-snippet-dirs '("~/code/emacs/snippets/custom" "~/code/emacs/snippets/yasnippet-snippets"))
+      (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
       (yas-global-mode t)))
 #+end_src
 * symlinks
