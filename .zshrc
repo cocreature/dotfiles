@@ -30,6 +30,7 @@ alias s="stack"
 alias ghci="stack ghci"
 alias f='find -iname'
 alias fixsound="amixer -c 0 cset 'numid=10' 1"
+alias pdfgrep="pdfgrep --cache"
 
 export EDITOR=emacsclient
 export MAILDIR=~/mail
