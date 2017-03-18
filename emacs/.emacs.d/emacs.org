@@ -179,6 +179,7 @@
            ("C-c C-w" . org-refile)
            ("C-c j" . org-clock-goto)
            ("C-c C-x C-o" . org-clock-out))
+    :init (add-hook 'org-mode-hook (lambda () (set-input-method "TeX")))
     :config
     (progn
       (setq org-directory "~/org")
