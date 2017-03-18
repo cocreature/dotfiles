@@ -17,7 +17,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (cdlatex magit-svn yaml-mode ws-butler writeroom-mode which-key web-mode web volume use-package undo-tree unbound tuareg toml-mode systemd sml-mode smartparens rust-mode rainbow-delimiters racket-mode projectile powerline pkgbuild-mode pdf-tools org-bullets nginx-mode multiple-cursors mmm-mode markdown-mode magit lua-mode llvm-mode libmpdee ledger-mode keyfreq json-mode jonprl-mode ivy-hydra intero idris-mode hydra gnuplot git-gutter-fringe flycheck-package f expand-region ensime elisp-slime-nav dockerfile-mode dash-functional counsel company-coq cmake-mode clang-format bison-mode auctex ace-window)))
+    (ggtags cmake-project cdlatex magit-svn yaml-mode ws-butler writeroom-mode which-key web-mode web volume use-package undo-tree unbound tuareg toml-mode systemd sml-mode smartparens rust-mode rainbow-delimiters racket-mode projectile powerline pkgbuild-mode pdf-tools org-bullets nginx-mode multiple-cursors mmm-mode markdown-mode magit lua-mode llvm-mode libmpdee ledger-mode keyfreq json-mode jonprl-mode ivy-hydra intero idris-mode hydra gnuplot git-gutter-fringe flycheck-package f expand-region ensime elisp-slime-nav dockerfile-mode dash-functional counsel company-coq cmake-mode clang-format bison-mode auctex ace-window)))
  '(safe-local-variable-values
    (quote
     ((eval if
