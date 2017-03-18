@@ -879,7 +879,10 @@
            "\\.jsx\\'"
            "\\.php\\'")
     :config
-    (setq-default web-mode-markup-indent-offset 2))
+    (progn
+      (setq web-mode-content-types-alist
+            '(("jsx" . "\\.js[x]?\\'")))
+      (setq web-mode-enable-auto-quoting nil)))
 #+end_src
 * yaml
 #+begin_src emacs-lisp :tangle yes
