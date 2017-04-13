@@ -48,7 +48,7 @@
            ("C-h v" . counsel-describe-variable)
            ("C-h i" . counsel-info-lookup-symbol)
            ("C-h u" . counsel-unicode-char)
-           ("C-c k" . counsel-ag)
+           ("C-c k" . counsel-rg)
            ("C-x l" . counsel-locate)
            ("C-c g" . counsel-git-grep)
            ("C-c h i" . counsel-imenu)
