@@ -1162,3 +1162,11 @@
     :ensure t
     :mode ("\\.ml\\'" . tuareg-mode))
 #+end_src
+* js
+#+begin_src emacs-lisp :tangle yes
+  (use-package prettier-js
+    :load-path "~/code/js/prettier/editors/emacs"
+    :commands (prettier-mode)
+    :init (add-hook 'web-mode-hook 'prettier-mode)
+    :config (setq prettier-target-mode "web-mode"))
+#+end_src
