@@ -111,6 +111,7 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.node/bin:$PATH
 export PATH=$HOME/.cask/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
+export PATH=$HOME/.config/yarn/global/node_modules/.bin:$PATH
 
 autoload -U bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script "$(which stack)")"
