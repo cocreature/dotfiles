@@ -887,15 +887,11 @@
   (use-package web-mode
     :ensure t
     :mode ("\\.html\\'"
-           "\\.js\\'"
            "\\.css\\'"
-           "\\.jsx\\'"
            "\\.php\\'")
     :config
     (progn
-      (setq web-mode-content-types-alist
-            '(("jsx" . "\\.js[x]?\\'")))
-      (set web-mode-code-indent-offset 2)
+      (setq web-mode-code-indent-offset 2)
       (setq web-mode-enable-auto-quoting nil)))
 #+end_src
 * yaml
@@ -1174,9 +1170,19 @@
 #+end_src
 * js
 #+begin_src emacs-lisp :tangle yes
+  (use-package js2-mode
+    :ensure t
+    :mode ("\\.js\\'" . js2-mode)
+    :config
+    (progn
+      (setq js2-basic-offset 2)))
+  (use-package rjsx-mode
+    :mode ("\\(components\\|containers\\).*\\.js\\'" . rjsx-mode)
+    :ensure t)
   (use-package prettier-js
     :load-path "~/code/js/prettier/editors/emacs"
-    :commands (prettier-mode)
-    :init (add-hook 'web-mode-hook 'prettier-mode)
-    :config (setq prettier-target-mode "web-mode"))
+    :commands (prettier-mode prettier)
+    :init (add-hook 'js2-mode-hook 'prettier-mode)
+    :bind (:map js2-mode-map ("M-q" . prettier))
+    :config (setq prettier-target-mode "js2-mode"))
 #+end_src
