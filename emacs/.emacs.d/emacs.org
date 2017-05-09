@@ -338,9 +338,12 @@
     (add-hook 'haskell-mode-hook 'structured-haskell-mode))
   (use-package intero
     :ensure t
-    :commands (intero-mode)
+    :commands (intero-mode intero-mode-blacklist)
+    :config
+    (setq intero-blacklist '("/home/moritz/code/haskell/bytestring"))
     :init
-    (add-hook 'haskell-mode-hook 'intero-mode))
+    (progn
+      (add-hook 'haskell-mode-hook 'intero-mode-blacklist)))
   (use-package hindent
     :load-path "~/code/haskell/hindent/elisp"
     :commands (hindent-reformat-decl hindent-mode)
