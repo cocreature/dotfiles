@@ -153,8 +153,10 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (column-number-mode t)
+  (use-package all-the-icons
+    :ensure t)
   (use-package doom-themes
-    :load-path "~/code/emacs/emacs-doom-theme"
+    :ensure t
     :config
     (progn
       (setq doom-enable-brighter-comments t)
