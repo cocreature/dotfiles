@@ -871,6 +871,10 @@
     :load-path ("~/code/emacs/company-coq/")
     :commands (company-coq-mode)
     :init (add-hook 'coq-mode-hook 'company-coq-mode t))
+  (use-package coq
+    :defer t
+    :config
+    (setq coq-compile-before-require t))
 #+end_src
 * json
 #+begin_src emacs-lisp :tangle yes
