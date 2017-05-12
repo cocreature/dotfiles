@@ -340,7 +340,7 @@
     :ensure t
     :commands (intero-mode intero-mode-blacklist)
     :config
-    (setq intero-blacklist '("/home/moritz/code/haskell/bytestring"))
+    (setq intero-blacklist '("/home/moritz/code/haskell/bytestring" "/home/moritz/code/haskell/cabal"))
     :init
     (progn
       (add-hook 'haskell-mode-hook 'intero-mode-blacklist)))
