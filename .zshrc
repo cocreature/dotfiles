@@ -106,12 +106,13 @@ zstyle ':filter-select' rotate-list yes
 
 export PATH=$HOME/bin:$PATH
 export PATH=$HOME/code/arcanist/bin:$PATH
-export PATH=$HOME/.gem/ruby/2.2.0/bin:$PATH
+export PATH=$HOME/.gem/ruby/2.4.0/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.node/bin:$PATH
 export PATH=$HOME/.cask/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.config/yarn/global/node_modules/.bin:$PATH
+export PATH=$HOME/.yarn/bin:$PATH
 
 autoload -U bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script "$(which stack)")"
