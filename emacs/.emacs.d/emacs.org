@@ -555,6 +555,10 @@
       (setq magit-completing-read-function 'ivy-completing-read))
     :init
     (add-hook 'magit-mode-hook 'magit-load-config-extensions))
+  (use-package magithub
+    :after magit
+    :ensure t
+    :config (magithub-feature-autoinject t))
   (use-package git-commit
     :defer t
     :config
