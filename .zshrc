@@ -126,7 +126,6 @@ export Z3=$(which z3)
 
 export GOPATH=~/go
 export PATH=$PATH:~/go/bin
-export PATH=$PATH:~/code/rtags/build/bin
 
 # added by travis gem
 [ -f /home/moritz/.travis/travis.sh ] && source /home/moritz/.travis/travis.sh
