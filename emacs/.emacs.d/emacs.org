@@ -1170,12 +1170,29 @@
 #+end_src
 * js
 #+begin_src emacs-lisp :tangle yes
+  (defun lunaryorn-use-js-executables-from-node-modules ()
+    "Set executables of JS checkers from local node modules."
+    (-when-let* ((file-name (buffer-file-name))
+                 (root (locate-dominating-file file-name "node_modules"))
+                 (module-directory (expand-file-name "node_modules" root)))
+      (pcase-dolist (`(,checker . ,module) '((javascript-jshint . "jshint")
+                                             (javascript-eslint . "eslint")
+                                             (javascript-jscs   . "jscs")))
+        (let ((package-directory (expand-file-name module module-directory))
+              (executable-var (flycheck-checker-executable-variable checker)))
+          (when (file-directory-p package-directory)
+            (set (make-local-variable executable-var)
+                 (expand-file-name (concat "bin/" module ".js")
+                                   package-directory)))))))
   (use-package js2-mode
     :ensure t
     :mode ("\\.js\\'" . js2-mode)
     :config
     (progn
-      (setq js2-basic-offset 2)))
+      (setq js2-basic-offset 2)
+      (setq js2-mode-show-parse-errors nil)
+      (flycheck-add-mode 'javascript-eslint 'rjsx-mode))
+    :init (add-hook 'js2-mode-hook 'lunaryorn-use-js-executables-from-node-modules))
   (use-package rjsx-mode
     :mode ("\\(components\\|containers\\).*\\.js\\'" . rjsx-mode)
     :ensure t)
