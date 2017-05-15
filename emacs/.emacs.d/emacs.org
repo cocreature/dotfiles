@@ -924,12 +924,10 @@
     :ensure t
     :commands (clang-format-buffer))
   (use-package rtags
-    :load-path "~/code/rtags/src"
     :bind (:map c-mode-base-map ("C-c r t" . rtags-symbol-type))
     :after (cc-mode)
     :config
     (progn
-      (setq rtags-path "~/code/rtags/build/bin")
       (rtags-enable-standard-keybindings)
       (setq rtags-autostart-diagnostics nil)
       (setq rtags-completions-enabled t)
