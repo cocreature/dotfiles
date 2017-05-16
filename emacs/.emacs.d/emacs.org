@@ -166,8 +166,6 @@
   (use-package powerline
     :ensure t
     :defer t)
-  (use-package doom-modeline
-    :load-path "~/code/emacs/doom-modeline")
 #+end_src
 * org
 #+begin_src emacs-lisp :tangle yes
