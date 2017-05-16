@@ -159,7 +159,7 @@
     :ensure t
     :config
     (progn
-      (setq doom-enable-brighter-comments t)
+      (setq doom-one-brighter-comments t)
       (load-theme 'doom-one t)
       (add-hook 'find-file-hook 'doom-buffer-mode)
       (add-hook 'minibuffer-setup-hook 'doom-buffer-mode)))
