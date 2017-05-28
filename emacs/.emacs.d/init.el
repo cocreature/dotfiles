@@ -28,3 +28,4 @@
               (buffer-file-name))
              "h"))
            (c++-mode))))))
+(put 'company-coq-fold 'disabled nil)
