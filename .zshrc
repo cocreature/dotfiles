@@ -1,7 +1,4 @@
-# ~/.zshrc
-stty sane
 setopt extended_glob
-setopt interactivecomments
 
 # history
 HISTFILE=$HOME/.zhistory       # enable history saving on shell exit
@@ -19,16 +16,8 @@ zstyle ':completion:*' menu select
 
 setopt completealiases
 alias ls='ls --color=auto'
-alias nopaste='nopaste -p -n cocreature'
 alias sprunge="curl -F 'sprunge=<-' http://sprunge.us"
-alias ec='emacsclient'
-alias mus='mosh -p 62308 us'
-alias nsm='non-session-manager -- --session-root ~/noise/nsm'
 alias devmon='devmon --no-gui'
-alias si="stack exec ghci"
-alias s="stack"
-alias ghci="stack ghci"
-alias f='find -iname'
 alias fixsound="amixer -c 0 cset 'numid=10' 1"
 alias pdfgrep="pdfgrep --cache"
 
@@ -37,8 +26,6 @@ export MAILDIR=~/mail
 export BROWSER=firefox
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
 export _JAVA_AWT_WM_NONREPARENTING=1
-export FM_SVNPATH=$HOME/freiesmagazin/freiesMagazin
-export BUP_DIR=/media/backup/bup
 export SSH_AUTH_SOCK=~/.gnupg/S.gpg-agent.ssh.proxied
 export MOZ_USE_XINPUT2=1
 
@@ -104,47 +91,10 @@ zstyle ':filter-select:highlight' matched fg=green
 zstyle ':filter-select' extended-search yes
 zstyle ':filter-select' rotate-list yes
 
-export PATH=$HOME/bin:$PATH
-export PATH=$HOME/code/arcanist/bin:$PATH
-export PATH=$HOME/.gem/ruby/2.4.0/bin:$PATH
-export PATH=$HOME/.local/bin:$PATH
-export PATH=$HOME/.node/bin:$PATH
-export PATH=$HOME/.cask/bin:$PATH
-export PATH=$HOME/.cargo/bin:$PATH
-export PATH=$HOME/.config/yarn/global/node_modules/.bin:$PATH
-export PATH=$HOME/.yarn/bin:$PATH
-
 autoload -U bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script "$(which stack)")"
 
 # OPAM configuration
 . /home/moritz/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-export SCALA_HOME=/usr/share/scala
-export ELDARICA_HOME=~/code/eldarica
-export Z3=$(which z3)
-
 export GOPATH=~/go
-export PATH=$PATH:~/go/bin
-
-# added by travis gem
-[ -f /home/moritz/.travis/travis.sh ] && source /home/moritz/.travis/travis.sh
-
-export CDP_SOUND_EXT=wav
-systemctl --user import-environment
-
-fpath=(~/code/llreve/reve $fpath)
-
-compdef _gnu_generic reve
-compdef _gnu_generic reve-analyzer
-
-fancy-ctrl-z () {
-  if [[ $#BUFFER -eq 0 ]]; then
-    bg
-    zle redisplay
-  else
-    zle push-input
-  fi
-}
-zle -N fancy-ctrl-z
-bindkey '^Z' fancy-ctrl-z
