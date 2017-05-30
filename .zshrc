@@ -1,33 +1,25 @@
-setopt extended_glob
+setopt EXTENDED_GLOB
+setopt AUTO_CD
 
-# history
-HISTFILE=$HOME/.zhistory       # enable history saving on shell exit
-setopt APPEND_HISTORY          # append rather than overwrite history file.
-HISTSIZE=1000000                 # lines of history to maintain memory
-SAVEHIST=1000000                 # lines of history to maintain in history file.
-setopt HIST_EXPIRE_DUPS_FIRST  # allow dups, but expire old ones when I hit HISTSIZE
-setopt EXTENDED_HISTORY        # save timestamp and runtime information
+HISTSIZE=1000000
+SAVEHIST=1000000
+HISTFILE=$HOME/.zhistory
+setopt INC_APPEND_HISTORY
+setopt EXTENDED_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
 
-setopt autocd
 autoload -U compinit
 compinit
-zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' # case insensitive
 zstyle ':completion:*' menu select
-
 setopt completealiases
+
 alias ls='ls --color=auto'
 alias sprunge="curl -F 'sprunge=<-' http://sprunge.us"
 alias devmon='devmon --no-gui'
 alias fixsound="amixer -c 0 cset 'numid=10' 1"
 alias pdfgrep="pdfgrep --cache"
-
-export EDITOR=emacsclient
-export MAILDIR=~/mail
-export BROWSER=firefox
-export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
-export _JAVA_AWT_WM_NONREPARENTING=1
-export SSH_AUTH_SOCK=~/.gnupg/S.gpg-agent.ssh.proxied
-export MOZ_USE_XINPUT2=1
 
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
@@ -81,7 +73,6 @@ if ! zplug check --verbose; then
     fi
 fi
 zplug load --verbose
-export PURE_GIT_PULL=0
 
 setopt prompt_subst
 # bind P and N for EMACS mode
@@ -96,5 +87,3 @@ eval "$(stack --bash-completion-script "$(which stack)")"
 
 # OPAM configuration
 . /home/moritz/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
-
-export GOPATH=~/go
