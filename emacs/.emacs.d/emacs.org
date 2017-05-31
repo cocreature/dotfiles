@@ -294,7 +294,19 @@
   (pending-delete-mode t)
   (use-package expand-region
     :ensure t
-    :commands (er/expand-region er/mark-defun))
+    :commands (er/expand-region
+               er/mark-inside-pairs
+               er/mark-inside-quotes
+               er/mark-outside-pairs
+               er/mark-outside-quotes
+               er/mark-defun
+               er/mark-comment
+               er/mark-text-sentence
+               er/mark-text-paragraph
+               er/mark-word
+               er/mark-url
+               er/mark-email
+               er/mark-symbol))
   (global-set-key (kbd "C-x C-b") 'ibuffer)
   (global-set-key (kbd "C-x C-r") 'revert-buffer)
 
