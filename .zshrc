@@ -75,12 +75,8 @@ fi
 zplug load --verbose
 
 setopt prompt_subst
-# bind P and N for EMACS mode
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
-zstyle ':filter-select:highlight' matched fg=green
-zstyle ':filter-select' extended-search yes
-zstyle ':filter-select' rotate-list yes
 
 autoload -U bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script "$(which stack)")"
