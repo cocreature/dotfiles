@@ -7,3 +7,4 @@ path=(~/bin
       ~/.cargo/bin
       ~/code/go/bin
       $path)
+systemctl --user import-environment PATH
