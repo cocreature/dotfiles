@@ -1,5 +1,6 @@
 setopt EXTENDED_GLOB
 setopt AUTO_CD
+unsetopt FLOW_CONTROL
 
 HISTSIZE=1000000
 SAVEHIST=1000000
@@ -59,27 +60,23 @@ BASE16_SHELL="$HOME/.config/base16-shell/base16-$BASE16_SCHEME.dark.sh"
 # fix tramp in emacs
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ '
 
-source ~/.zplug/init.zsh
-zplug "mafredri/zsh-async"
-zplug "sindresorhus/pure"
-zplug "zsh-users/zsh-syntax-highlighting"
-zplug "zsh-users/zsh-history-substring-search"
-zplug "rupa/z", use:"z.sh"
-
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-zplug load --verbose
-
 setopt prompt_subst
-bindkey -M emacs '^P' history-substring-search-up
-bindkey -M emacs '^N' history-substring-search-down
 
 autoload -U bashcompinit && bashcompinit
 eval "$(stack --bash-completion-script "$(which stack)")"
 
 # OPAM configuration
 . /home/moritz/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+source '/home/moritz/.zplugin/bin/zplugin.zsh'
+autoload -Uz _zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
+
+zplugin load "mafredri/zsh-async"
+zplugin load "sindresorhus/pure"
+zplugin load "zsh-users/zsh-syntax-highlighting"
+zplugin load "zsh-users/zsh-history-substring-search"
+zplugin snippet "https://raw.githubusercontent.com/rupa/z/master/z.sh"
+
+bindkey -M emacs '^P' history-substring-search-up
+bindkey -M emacs '^N' history-substring-search-down
