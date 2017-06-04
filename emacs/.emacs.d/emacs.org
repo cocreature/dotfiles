@@ -348,12 +348,13 @@
     (add-hook 'haskell-mode-hook 'structured-haskell-mode))
   (use-package intero
     :ensure t
-    :commands (intero-mode intero-mode-blacklist)
+    :pin melpa
+    :commands (intero-global-mode intero-mode intero-mode-maybe)
     :config
     (setq intero-blacklist '("/home/moritz/code/haskell/bytestring" "/home/moritz/code/haskell/cabal"))
     :init
     (progn
-      (add-hook 'haskell-mode-hook 'intero-mode-blacklist)))
+      (intero-global-mode 1)))
   (use-package hindent
     :load-path "~/code/haskell/hindent/elisp"
     :commands (hindent-reformat-decl hindent-mode)
