@@ -875,7 +875,8 @@
   (use-package proof-site
     :load-path ("~/code/emacs/PG/generic")
     :mode ("\\.v\\'" . coq-mode)
-    :init (setq proof-splash-enable nil))
+    :init (setq proof-splash-enable nil)
+    :config (setq proof-three-window-mode-policy 'hybrid))
   (use-package company-coq
     :load-path ("~/code/emacs/company-coq/")
     :commands (company-coq-mode)
