@@ -1211,3 +1211,9 @@
     :bind (:map js2-mode-map ("M-q" . prettier))
     :config (setq prettier-target-mode "js2-mode"))
 #+end_src
+* webpaste
+#+begin_src emacs-lisp :tangle yes
+  (use-package webpaste
+    :ensure t
+    :commands (webpaste-paste-buffer webpaste-paste-region))
+#+end_src
