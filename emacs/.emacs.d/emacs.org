@@ -351,7 +351,7 @@
     :pin melpa
     :commands (intero-global-mode intero-mode intero-mode-maybe)
     :config
-    (setq intero-blacklist '("/home/moritz/code/haskell/bytestring" "/home/moritz/code/haskell/cabal"))
+    (setq intero-blacklist '("/home/moritz/code/haskell/bytestring" "/home/moritz/code/haskell/cabal" "/home/moritz/code/haskell/ghc"))
     :init
     (progn
       (intero-global-mode 1)))
