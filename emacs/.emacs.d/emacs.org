@@ -206,6 +206,12 @@
               ("~/org/gtd/someday.org" :level . 1)
               ("~/org/gtd/tickler.org" :maxlevel . 2)))
       (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+      (setq org-agenda-custom-commands
+            '(("@" "Contexts"
+               ((tags-todo "@email"
+                           ((org-agenda-overriding-header "Emails")))
+                (tags-todo "@phone"
+                           ((org-agenda-overriding-header "Phone")))))))
       (setq org-clock-persist t)
       (org-clock-persistence-insinuate)))
   (use-package org-inlinetask
