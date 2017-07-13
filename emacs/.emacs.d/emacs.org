@@ -182,44 +182,32 @@
     :init (add-hook 'org-mode-hook (lambda () (set-input-method "TeX")))
     :config
     (progn
+      ;; The GTD part of this config is heavily inspired by
+      ;; https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
       (setq org-directory "~/org")
-      (setq org-agenda-files '("~/org"))
-      (setq org-mobile-directory "~/org/mobile")
-      (setq org-default-notes-file (concat org-directory "/notes.org"))
-      (setq org-latex-listings t)
-      (setq org-agenda-sorting-strategy
-            '((agenda habit-down time-up priority-down category-keep)
-              (todo category-up priority-down)
-              (tags priority-down category-keep)
-              (search category-keep)))
-      (setq org-confirm-babel-evaluate nil)
-      (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
-      (setq org-log-done t)
-      (setq org-clock-persist t)
-      (setq org-file-apps
-            '((auto-mode . emacs)
-              ("\\.mm\\'" . system)
-              ("\\.x?html?\\'" . "firefox %s")
-              ("\\.pdf::\\([0-9]+\\)\\'" . "zathura \"%s\" -P %1")
-              ("\\.pdf\\'" . "zathura \"%s\"")))
-      (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 4))))
-      (setq org-agenda-span 'month)
-      (setq org-agenda-custom-commands
-            '(("h" agenda "120 days"
-               ((org-agenda-show-all-dates nil)
-                (org-agenda-span 120))
-               )))
-      (setq org-capture-templates
-            '(("t" "Task" entry (file+headline "" "Tasks")
-               "* TODO %?\n  %U\n  %a")))
-      (setq org-refile-allow-creating-parent-nodes 'confirm)
+      (setq org-agenda-files
+            (mapcar (lambda (path) (concat org-directory path))
+                    '("/org.org"
+                      "/gtd/gtd.org"
+                      "/gtd/inbox.org"
+                      "/gtd/tickler.org")))
+      (setq org-log-done 'time)
       (setq org-src-fontify-natively t)
       (setq org-use-speed-commands t)
-      (setq org-clock-mode-line-total 'current)
-      (org-clock-persistence-insinuate)
-      (setq org-use-speed-commands t)
-      (use-package org-habit)
-      (org-load-modules-maybe t)))
+      (setq org-capture-templates
+            '(("t" "Todo [inbox]" entry
+               (file+headline "~/org/gtd/inbox.org" "Tasks")
+               "* TODO %i%?")
+              ("T" "Tickler" entry
+               (file+headline "~/org/gtd/tickler.org" "Tickler")
+               "* %i%?%^t \n %U")))
+      (setq org-refile-targets
+            '(("~/org/gtd/gtd.org" :maxlevel . 3)
+              ("~/org/gtd/someday.org" :level . 1)
+              ("~/org/gtd/tickler.org" :maxlevel . 2)))
+      (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+      (setq org-clock-persist t)
+      (org-clock-persistence-insinuate)))
   (use-package org-inlinetask
     :bind (:map org-mode-map
                 ("C-c C-x t" . org-inlinetask-insert-task))
@@ -351,7 +339,7 @@
     :pin melpa
     :commands (intero-global-mode intero-mode intero-mode-maybe)
     :config
-    (setq intero-blacklist '("/home/moritz/code/haskell/bytestring" "/home/moritz/code/haskell/cabal" "/home/moritz/code/haskell/ghc"))
+    (setq intero-blacklist '("/home/moritz/code/haskell/bytestring" "/home/moritz/code/haskell/cabal" "/home/moritz/code/haskell/ghc" "/home/moritz/code/haskell/llvm-hs"))
     :init
     (progn
       (intero-global-mode 1)))
@@ -882,9 +870,7 @@
     :commands (company-coq-mode)
     :init (add-hook 'coq-mode-hook 'company-coq-mode t))
   (use-package coq
-    :defer t
-    :config
-    (setq coq-compile-before-require t))
+    :defer t)
 #+end_src
 * json
 #+begin_src emacs-lisp :tangle yes
