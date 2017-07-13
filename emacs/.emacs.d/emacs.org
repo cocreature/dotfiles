@@ -862,7 +862,9 @@
     :ensure t
     :mode "\\.ledger\\'"
     :config
-    (setq ledger-reconcile-default-commodity "€"))
+    (progn
+      (setq ledger-default-date-format "%Y-%m-%d")
+      (setq ledger-reconcile-default-commodity "€")))
 #+end_src
 * proofgeneral
 #+begin_src emacs-lisp :tangle yes
