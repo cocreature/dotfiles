@@ -1081,10 +1081,10 @@
                ((= arg 1)
                 (enable-theme 'leuven))
                ((= arg -1)
-                (disable-theme 'leuven)
-                (smart-mode-line-enable))))
+                (disable-theme 'leuven))))
     (add-to-list 'writeroom-global-effects 'my-writeroom-theme)
-    (add-to-list 'writeroom-global-effects 'visual-line-mode))
+    (add-to-list 'writeroom-global-effects 'visual-line-mode)
+    :init (load-theme 'leuven nil t))
 #+end_src
 * bison
 #+BEGIN_SRC emacs-lisp :tangle yes
