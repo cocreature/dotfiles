@@ -1076,14 +1076,20 @@
   (use-package writeroom-mode
     :ensure t
     :commands writeroom-mode
-    :config (defun my-writeroom-theme (arg)
-              (cond
-               ((= arg 1)
-                (enable-theme 'leuven))
-               ((= arg -1)
-                (disable-theme 'leuven))))
-    (add-to-list 'writeroom-global-effects 'my-writeroom-theme)
-    (add-to-list 'writeroom-global-effects 'visual-line-mode)
+    :config
+    (progn
+      (defun my-writeroom-theme (arg)
+        (cond
+         ((= arg 1)
+          (enable-theme 'leuven)
+          (disable-theme 'doom-one)
+          (text-scale-increase 1))
+         ((= arg -1)
+          (disable-theme 'leuven)
+          (enable-theme 'doom-one)
+          (text-scale-increase 0))))
+      (add-to-list 'writeroom-global-effects 'my-writeroom-theme)
+      (add-to-list 'writeroom-global-effects 'visual-line-mode))
     :init (load-theme 'leuven nil t))
 #+end_src
 * bison
