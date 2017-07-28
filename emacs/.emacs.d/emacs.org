@@ -1229,3 +1229,8 @@
     :ensure t
     :commands (webpaste-paste-buffer webpaste-paste-region))
 #+end_src
+* nix
+#+begin_src emacs-lisp :tangle yes
+  (use-package nix-mode
+    :ensure t)
+#+end_src
