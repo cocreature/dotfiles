@@ -343,12 +343,24 @@
   (use-package intero
     :ensure t
     :pin melpa
+    :disabled t
     :commands (intero-global-mode intero-mode intero-mode-maybe)
     :config
-    (setq intero-blacklist '("/home/moritz/code/haskell/bytestring" "/home/moritz/code/haskell/cabal" "/home/moritz/code/haskell/ghc" "/home/moritz/code/haskell/llvm-hs"))
+    (setq intero-blacklist
+          '("/home/moritz/code/haskell/bytestring"
+            "/home/moritz/code/haskell/cabal"
+            "/home/moritz/code/haskell/ghc"
+            "/home/moritz/code/haskell/llvm-hs"
+            "/home/moritz/code/haskell/miso"
+            "/home/moritz/code/haskell/ghcjs"))
     :init
     (progn
       (intero-global-mode 1)))
+  (use-package dante
+    :ensure t
+    :commands 'dante-mode
+    :init
+    (add-hook 'haskell-mode-hook 'dante-mode))
   (use-package hindent
     :load-path "~/code/haskell/hindent/elisp"
     :commands (hindent-reformat-decl hindent-mode)
