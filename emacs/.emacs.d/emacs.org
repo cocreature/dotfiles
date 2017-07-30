@@ -343,7 +343,6 @@
   (use-package intero
     :ensure t
     :pin melpa
-    :disabled t
     :commands (intero-global-mode intero-mode intero-mode-maybe)
     :config
     (setq intero-blacklist
@@ -358,6 +357,7 @@
       (intero-global-mode 1)))
   (use-package dante
     :ensure t
+    :disabled t
     :commands 'dante-mode
     :init
     (add-hook 'haskell-mode-hook 'dante-mode))
