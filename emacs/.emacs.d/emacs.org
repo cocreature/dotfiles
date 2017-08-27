@@ -524,7 +524,8 @@
     (progn
       (global-flycheck-mode)
       (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-gcc flycheck-rtags))
-      (setq flycheck-emacs-lisp-load-path 'inherit))
+      (setq flycheck-emacs-lisp-load-path 'inherit)
+      (setq flycheck-verilog-verilator-executable "invoke_verilator.sh"))
     :init
     (add-hook 'coq-mode-hook (lambda () (flycheck-mode -1))))
   (use-package flycheck-package
