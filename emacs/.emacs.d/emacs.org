@@ -335,12 +335,6 @@
 #+end_src
 * haskell
 #+begin_src emacs-lisp :tangle yes
-  (use-package shm
-    :load-path "~/code/haskell/structured-haskell-mode/elisp/"
-    :commands (structured-haskell-mode)
-    :disabled t
-    :init
-    (add-hook 'haskell-mode-hook 'structured-haskell-mode))
   (use-package intero
     :ensure t
     :pin melpa
