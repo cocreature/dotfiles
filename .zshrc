@@ -21,6 +21,10 @@ alias sprunge="curl -F 'sprunge=<-' http://sprunge.us"
 alias devmon='devmon --no-gui'
 alias fixsound="amixer -c 0 cset 'numid=10' 1"
 alias pdfgrep="pdfgrep --cache"
+function serve-ghcjs {
+    dir=$(dirname $(cabal-plan list-bin | grep "exe:$1" | awk '{print $2}'));
+    warp -d "${dir}/$1.jsexe";
+}
 
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
