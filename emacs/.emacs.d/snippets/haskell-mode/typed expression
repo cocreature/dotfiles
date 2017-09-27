@@ -1,0 +1,4 @@
+# key: ty
+# name: typed expression
+# --
+(${1:e} :: ${2:Text})

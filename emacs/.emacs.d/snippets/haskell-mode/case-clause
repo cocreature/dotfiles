@@ -1,0 +1,5 @@
+# key: ca
+# name: case-clause
+# expand-env: ((yas-indent-line 'fixed))
+# --
+$1 -> $2
