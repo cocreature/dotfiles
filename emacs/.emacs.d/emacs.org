@@ -1230,3 +1230,9 @@
   (use-package nix-mode
     :ensure t)
 #+end_src
+* verilog
+#+begin_src emacs-lisp :tangle yes
+  (use-package verilog-mode
+    :config
+    (setq verilog-auto-newline nil))
+#+end_src
