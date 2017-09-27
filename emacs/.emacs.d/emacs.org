@@ -545,11 +545,10 @@
   (use-package yasnippet
     :diminish yas-minor-mode
     :ensure t
-    :defer 2
     :config
-    (progn
-      (setq yas-snippet-dirs '("~/code/emacs/snippets/yasnippet-snippets"))
-      (yas-global-mode t)))
+    (yas-global-mode t)
+    :init
+    (setq yas-alias-to-yas/prefix-p nil))
 #+end_src
 * symlinks
 #+begin_src emacs-lisp :tangle yes
