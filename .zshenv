@@ -7,3 +7,4 @@ export MAILDIR=~/mail
 export MOZ_USE_XINPUT2=1
 export PURE_GIT_PULL=0
 export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh
+source ~/.nix-profile/etc/profile.d/nix.sh
