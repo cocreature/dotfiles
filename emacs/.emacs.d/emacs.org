@@ -832,6 +832,7 @@
         '((holiday-fixed 12 25 "1. Weihnachtstag")
           (holiday-fixed 12 26 "2. Weihnachtstag")
           (holiday-fixed 1 6 "Heilige 3 Könige")
+          (holiday-fixed 10 31 "Reformationstag")
           (holiday-fixed 11 1 "Allerheiligen")
           ;; Date of Easter calculation taken from holidays.el.
           (let* ((century (1+ (/ displayed-year 100)))
