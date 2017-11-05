@@ -179,7 +179,6 @@
            ("C-c C-w" . org-refile)
            ("C-c j" . org-clock-goto)
            ("C-c C-x C-o" . org-clock-out))
-    :init (add-hook 'org-mode-hook (lambda () (set-input-method "TeX")))
     :config
     (progn
       ;; The GTD part of this config is heavily inspired by
@@ -213,7 +212,8 @@
                 (tags-todo "@phone"
                            ((org-agenda-overriding-header "Phone")))))))
       (setq org-clock-persist t)
-      (org-clock-persistence-insinuate)))
+      (org-clock-persistence-insinuate)
+      (setq org-time-clocksum-format '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))))
   (use-package org-inlinetask
     :bind (:map org-mode-map
                 ("C-c C-x t" . org-inlinetask-insert-task))
