@@ -347,7 +347,8 @@
             "/home/moritz/code/haskell/ghc"
             "/home/moritz/code/haskell/llvm-hs"
             "/home/moritz/code/haskell/miso"
-            "/home/moritz/code/haskell/ghcjs"))
+            "/home/moritz/code/haskell/ghcjs"
+            "/home/moritz/code/haskell/diagrams-miso"))
     :init
     (progn
       (intero-global-mode 1)))
