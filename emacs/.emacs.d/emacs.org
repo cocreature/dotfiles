@@ -314,7 +314,8 @@
     :ensure avy
     :bind (("C-ß" . avy-goto-char)
            ("C-ö" . avy-goto-word-1)
-           ("C-ä" . avy-goto-char-2))
+           ("C-ä" . avy-goto-char-2)
+           ("C-ü" . avy-goto-line))
     :config (setq avy-case-fold-search nil))
 #+end_src
 * auctex
