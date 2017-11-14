@@ -1244,3 +1244,9 @@
     :config
     (setq verilog-auto-newline nil))
 #+end_src
+* why3
+#+begin_src emacs-lisp :tangle yes
+  (use-package why3
+    :load-path "/home/moritz/code/why3-0.88.1/share/emacs/site-lisp/"
+    :mode ("\\.mlw\\'" . why3-mode))
+#+end_src
