@@ -28,6 +28,9 @@
 #+end_src
 * swiper/ivy
 #+begin_src emacs-lisp :tangle yes
+  (use-package ivy
+    :ensure t
+    :pin melpa)
   (use-package swiper
     :ensure t
     :pin melpa
