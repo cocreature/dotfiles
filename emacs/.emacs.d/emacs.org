@@ -127,26 +127,9 @@
 
 * projectile
 #+begin_src emacs-lisp :tangle yes
-  (use-package projectile
+  (use-package counsel-projectile
     :ensure t
-    :commands (projectile-switch-project-by-name projectile-find-file)
-    :init
-    (projectile-global-mode t)
-    (setq projectile-completion-system 'ivy)
-    :config
-    (defun counsel-switch-project ()
-      (interactive)
-      (ivy-read "Switch to project: "
-                projectile-known-projects
-                :sort t
-                :require-match t
-                :preselect (when (projectile-project-p) (abbreviate-file-name (projectile-project-root)))
-                :action '(1
-                          ("o" projectile-switch-project-by-name "goto")
-                          ("g" magit-status "magit")
-                          ("s" (lambda (a) (setq default-directory a) (counsel-git-grep)) "git grep"))
-                :caller 'counsel-switch-project))
-    (bind-key* "C-c p p" 'counsel-switch-project))
+    :config (counsel-projectile-mode))
 #+end_src
 * gui
 #+begin_src emacs-lisp :tangle yes
