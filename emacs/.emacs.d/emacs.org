@@ -166,8 +166,9 @@
     (progn
       (setq doom-one-brighter-comments t)
       (load-theme 'doom-one t)
-      (add-hook 'find-file-hook 'doom-buffer-mode)
-      (add-hook 'minibuffer-setup-hook 'doom-buffer-mode)))
+      ;; (add-hook 'find-file-hook 'doom-buffer-mode)
+                                          ;
+      ))
   (use-package powerline
     :ensure t
     :defer t)
