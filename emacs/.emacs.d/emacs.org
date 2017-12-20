@@ -526,7 +526,6 @@
   (use-package flycheck
     :ensure t
     :defer 2
-    :diminish flycheck-mode
     :commands (flycheck-mode)
     :config
     (progn
