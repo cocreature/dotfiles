@@ -29,11 +29,9 @@
 * swiper/ivy
 #+begin_src emacs-lisp :tangle yes
   (use-package ivy
-    :ensure t
-    :pin melpa)
+    :ensure t)
   (use-package swiper
     :ensure t
-    :pin melpa
     :diminish ivy-mode
     :bind (("C-s" . swiper)
            ("C-r" . swiper)
@@ -46,7 +44,6 @@
     (setq ivy-use-virtual-buffers t))
   (use-package counsel
     :ensure t
-    :pin melpa
     :bind (("M-x" . counsel-M-x)
            ("C-x C-f" . counsel-find-file)
            ("C-h f" . counsel-describe-function)
