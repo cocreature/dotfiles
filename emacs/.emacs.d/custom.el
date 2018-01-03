@@ -13,7 +13,7 @@
    [default default default italic underline success warning error])
  '(package-selected-packages
    (quote
-    (counsel-projectile projectile-counsel swiper counsel ivy-hydra ivy go-mode rjsx-mode js2-mode doom-themes dired-subtree nix-mode dante webpaste magithub all-the-icons ggtags cmake-project cdlatex magit-svn yaml-mode ws-butler writeroom-mode which-key web-mode web volume use-package undo-tree unbound tuareg toml-mode systemd sml-mode smartparens rust-mode rainbow-delimiters racket-mode projectile powerline pkgbuild-mode pdf-tools org-bullets nginx-mode multiple-cursors mmm-mode markdown-mode magit lua-mode llvm-mode libmpdee ledger-mode keyfreq json-mode jonprl-mode intero idris-mode hydra gnuplot git-gutter-fringe flycheck-package f expand-region ensime elisp-slime-nav dockerfile-mode dash-functional company-coq cmake-mode clang-format bison-mode auctex ace-window)))
+    (go-mode rjsx-mode js2-mode doom-themes dired-subtree nix-mode dante webpaste all-the-icons ggtags cmake-project cdlatex magit-svn yaml-mode ws-butler writeroom-mode which-key web-mode web volume use-package undo-tree unbound tuareg toml-mode systemd sml-mode smartparens rust-mode rainbow-delimiters racket-mode projectile powerline pkgbuild-mode pdf-tools org-bullets nginx-mode multiple-cursors mmm-mode markdown-mode magit lua-mode llvm-mode libmpdee ledger-mode keyfreq json-mode jonprl-mode intero idris-mode hydra gnuplot git-gutter-fringe flycheck-package f expand-region ensime elisp-slime-nav dockerfile-mode dash-functional company-coq cmake-mode clang-format bison-mode auctex ace-window)))
  '(safe-local-variable-values
    (quote
     ((intero-targets "irbuilder:lib" "irbuilder:test:irbuilder")

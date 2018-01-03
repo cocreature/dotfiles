@@ -127,9 +127,17 @@
 
 * projectile
 #+begin_src emacs-lisp :tangle yes
+  (use-package projectile
+    :ensure t
+    :commands (projectile-global-mode))
   (use-package counsel-projectile
     :ensure t
-    :config (counsel-projectile-mode))
+    :load-path "~/code/emacs/counsel-projectile"
+    :commands (counsel-projectile-mode)
+    :init
+    (progn
+      (projectile-global-mode t)
+      (counsel-projectile-mode)))
 #+end_src
 * gui
 #+begin_src emacs-lisp :tangle yes
