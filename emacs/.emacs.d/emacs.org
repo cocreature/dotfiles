@@ -1,25 +1,22 @@
 * packages
 #+begin_src emacs-lisp :tangle yes
   (package-initialize nil)
-  (add-to-list 'package-archives
-               '("melpa-stable" . "http://stable.melpa.org/packages/"))
+  (unless (package-installed-p 'font-lock+)
+    (package-install-file "/home/moritz/.emacs.d/misc/font-lock+.el"))
   (add-to-list 'package-archives
                '("org" . "http://orgmode.org/elpa/"))
   (add-to-list 'package-archives
                '("melpa" . "http://melpa.org/packages/") t)
-  (setq package-archive-priorities '(("org" . 4)
-                                     ("melpa-stable" . 3)
+  (setq package-archive-priorities '(("org" . 3)
                                      ("melpa" . 2)
                                      ("gnu" . 1)))
-  (add-to-list 'package-pinned-packages
-               '(use-package . "melpa-stable"))
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package))
   (setq use-package-verbose t)
   (eval-when-compile
     (require 'use-package))
-  (require 'diminish)
+  (use-package diminish :ensure t)
 #+end_src
 * secrets
 #+begin_src emacs-lisp :tangle yes
@@ -132,7 +129,6 @@
     :commands (projectile-global-mode))
   (use-package counsel-projectile
     :ensure t
-    :load-path "~/code/emacs/counsel-projectile"
     :commands (counsel-projectile-mode)
     :init
     (progn
@@ -811,12 +807,6 @@
     :mode "\\.md\\'"
     :ensure t)
 #+end_src
-* unbound
-#+begin_src emacs-lisp :tangle yes
-  (use-package unbound
-    :commands describe-unbound-keys
-    :ensure t)
-#+end_src
 * holidays
 #+begin_src emacs-lisp :tangle yes
   (setq holiday-general-holidays
@@ -958,12 +948,6 @@
   (use-package sml-mode
     :ensure t
     :mode ("\\.fun\\'" "\\.sig\\'" "\\.sml\\'"))
-#+end_src
-* llvm
-#+begin_src emacs-lisp :tangle yes
-  (use-package llvm-mode
-    :mode "\\.ll\\'"
-    :ensure t)
 #+end_src
 * jonprl
 #+begin_src emacs-lisp :tangle yes
