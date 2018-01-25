@@ -1,8 +1,6 @@
 * packages
 #+begin_src emacs-lisp :tangle yes
   (package-initialize nil)
-  (unless (package-installed-p 'font-lock+)
-    (package-install-file "/home/moritz/.emacs.d/misc/font-lock+.el"))
   (add-to-list 'package-archives
                '("org" . "http://orgmode.org/elpa/"))
   (add-to-list 'package-archives
