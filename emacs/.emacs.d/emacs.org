@@ -324,59 +324,46 @@
 #+end_src
 * haskell
 #+begin_src emacs-lisp :tangle yes
-  (use-package intero
-    :ensure t
-    :pin melpa
-    :commands (intero-global-mode intero-mode intero-mode-maybe)
-    :config
-    (setq intero-blacklist
-          '("/home/moritz/code/haskell/bytestring"
-            "/home/moritz/code/haskell/cabal"
-            "/home/moritz/code/haskell/ghc"
-            "/home/moritz/code/haskell/llvm-hs"
-            "/home/moritz/code/haskell/miso"
-            "/home/moritz/code/haskell/ghcjs"
-            "/home/moritz/code/haskell/diagrams-miso"))
-    :init
-    (progn
-      (intero-global-mode 1)))
-  (use-package dante
-    :ensure t
-    :disabled t
-    :commands 'dante-mode
-    :init
-    (add-hook 'haskell-mode-hook 'dante-mode))
+  ;; (use-package intero
+  ;;   :ensure t
+  ;;   :disabled t
+  ;;   :commands (intero-global-mode intero-mode intero-mode-maybe)
+  ;;   :config
+  ;;   (setq intero-blacklist
+  ;;         '("/home/moritz/code/haskell/bytestring"
+  ;;           "/home/moritz/code/haskell/cabal"
+  ;;           "/home/moritz/code/haskell/ghc"
+  ;;           "/home/moritz/code/haskell/llvm-hs"
+  ;;           "/home/moritz/code/haskell/miso"
+  ;;           "/home/moritz/code/haskell/ghcjs"
+  ;;           "/home/moritz/code/haskell/diagrams-miso"))
+  ;;   :init
+  ;;   (progn
+  ;;     (intero-global-mode 1)))
   (use-package hindent
-    :load-path "~/code/haskell/hindent/elisp"
+    :ensure t
     :commands (hindent-reformat-decl hindent-mode)
-    :init
-    (add-hook 'haskell-mode-hook 'hindent-mode))
+    :hook (haskell-mode . hindent-mode))
   (use-package haskell-mode
     :ensure t
     :mode (("\\.c?hs\\'" . haskell-mode)
            ("\\.cabal\\'" . haskell-cabal-mode))
+    :bind (:map haskell-mode-map
+                ("C-c i" . hindent-reformat-decl))
     :config
-    (progn
-      (use-package haskell)
-      (use-package haskell-doc)
-      (use-package haskell-decl-scan)
-      (setq haskell-process-log t)
-      (setq haskell-process-type 'stack-ghci)
-      (define-key haskell-mode-map (kbd "C-c i") 'hindent-reformat-decl)))
-  (defun haskell-stack-pvp (pkgname)
-    (interactive "sPackage name: ")
-    (let* ((pkgver (with-temp-buffer
-                     (call-process "stack" nil t nil "list-dependencies")
-                     (goto-char (point-min))
-                     (search-forward-regexp (concat pkgname " \\(\\([[:digit:]]+\.\\)+[[:digit:]]+\\)"))
-                     (match-string 1))))
-      (insert (haskell-pvpify pkgver))))
-  (defun haskell-pvpify (pkgver)
-    (let* ((splitted (split-string pkgver "\\."))
-           (ver0 (nth 0 splitted))
-           (ver1 (string-to-number (nth 1 splitted))))
-      (message (format ">= %s.%d && < %s.%d" ver0 ver1 ver0 (+ ver1 1)))))
-  (setq flycheck-hlint-ignore-rules '("Eta reduce" "Use String"))
+    (setq haskell-process-log t)
+    :hook (haskell-mode . haskell-indentation-mode))
+  (use-package lsp-mode
+    :ensure t)
+  (use-package lsp-flycheck
+    :after (lsp-mode))
+  (use-package lsp-ui
+    :ensure t
+    :hook (lsp-mode . lsp-ui-mode))
+  (use-package lsp-haskell
+    :ensure t
+    :hook (haskell-mode . lsp-haskell-enable)
+    :config (setq lsp-haskell-process-path-hie "hie-8.2"))
 #+end_src
 * mu4e
 #+begin_src emacs-lisp :tangle yes
@@ -757,13 +744,6 @@
      ("m" er/mark-email)
      ("s" er/mark-symbol)))
 #+end_src
-* github
-#+begin_src emacs-lisp :tangle yes
-  (use-package github
-    :disabled t
-    :commands github-issues-mode
-    :load-path "~/code/emacs/github")
-#+end_src
 * guide-key
 #+begin_src emacs-lisp :tangle yes
   (use-package which-key
@@ -916,6 +896,10 @@
     :config
     (progn
       (setq c-basic-offset 4)))
+  (use-package cc-styles
+    :config
+    (progn
+      (c-set-offset 'inextern-lang 0)))
   (use-package clang-format
     :ensure t
     :commands (clang-format-buffer))
