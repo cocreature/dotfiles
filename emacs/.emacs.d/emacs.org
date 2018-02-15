@@ -359,7 +359,11 @@
     :after (lsp-mode))
   (use-package lsp-ui
     :ensure t
-    :hook (lsp-mode . lsp-ui-mode))
+    :hook (lsp-mode . lsp-ui-mode)
+    :config
+    (progn
+      (setq lsp-ui-flycheck-enable nil)
+      (setq lsp-ui-sideline-enable nil)))
   (use-package lsp-haskell
     :ensure t
     :hook (haskell-mode . lsp-haskell-enable)
