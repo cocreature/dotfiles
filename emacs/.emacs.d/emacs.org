@@ -355,15 +355,9 @@
     :hook (haskell-mode . haskell-indentation-mode))
   (use-package lsp-mode
     :ensure t)
-  (use-package lsp-flycheck
-    :after (lsp-mode))
   (use-package lsp-ui
     :ensure t
-    :hook (lsp-mode . lsp-ui-mode)
-    :config
-    (progn
-      (setq lsp-ui-flycheck-enable nil)
-      (setq lsp-ui-sideline-enable nil)))
+    :hook (lsp-mode . lsp-ui-mode))
   (use-package lsp-haskell
     :ensure t
     :hook (haskell-mode . lsp-haskell-enable)
