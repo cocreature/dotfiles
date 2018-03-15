@@ -11,8 +11,9 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (magit-svn all-the-icons counsel-projectile dired-subtree company ws-butler undo-tree ivy-hydra counsel swiper ivy use-package)))
+    (csharp-mode magit-svn all-the-icons counsel-projectile dired-subtree company ws-butler undo-tree ivy-hydra counsel swiper ivy use-package)))
  '(safe-local-variable-values
    (quote
-    ((TeX-source-correlate-method-active . synctex)
+    ((ispell-dictionary . "en_GB")
+     (TeX-source-correlate-method-active . synctex)
      (TeX-command-extra-options . "-shell-escape")))))
