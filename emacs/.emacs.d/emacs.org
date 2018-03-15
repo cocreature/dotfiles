@@ -100,8 +100,7 @@
     :defer 2
     :bind ("C-<tab>" . company-complete)
     :config
-    (global-company-mode t)
-    (push 'company-rtags company-backends))
+    (global-company-mode t))
 #+end_src
 * dired
 #+begin_src emacs-lisp :tangle yes
