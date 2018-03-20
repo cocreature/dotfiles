@@ -1201,3 +1201,18 @@
     :load-path "/home/moritz/code/why3-0.88.1/share/emacs/site-lisp/"
     :mode ("\\.mlw\\'" . why3-mode))
 #+end_src
+* spell checking
+#+begin_src emacs-lisp :tangle yes
+  (use-package ispell
+    :config
+    (progn
+      (setq ispell-program-name (executable-find "hunspell"))
+      (setq ispell-dictionary "en_US")
+      (setq ispell-tex-skip-alists
+            (list
+             (append
+              (car ispell-tex-skip-alists)
+              '(("\\\\autocite"   ispell-tex-arg-end)
+                ("\\\\autocites"  ispell-tex-arg-end)))
+             (cadr ispell-tex-skip-alists)))))
+#+end_src
