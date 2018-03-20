@@ -352,15 +352,15 @@
     :config
     (setq haskell-process-log t)
     :hook (haskell-mode . haskell-indentation-mode))
-  (use-package lsp-mode
-    :ensure t)
-  (use-package lsp-ui
-    :ensure t
-    :hook (lsp-mode . lsp-ui-mode))
-  (use-package lsp-haskell
-    :ensure t
-    :hook (haskell-mode . lsp-haskell-enable)
-    :config (setq lsp-haskell-process-path-hie "hie-8.2"))
+  ;; (use-package lsp-mode
+  ;;   :ensure t)
+  ;; (use-package lsp-ui
+  ;;   :ensure t
+  ;;   :hook (lsp-mode . lsp-ui-mode))
+  ;; (use-package lsp-haskell
+  ;;   :ensure t
+  ;;   :hook (haskell-mode . lsp-haskell-enable)
+  ;;   :config (setq lsp-haskell-process-path-hie "hie-8.2"))
 #+end_src
 * mu4e
 #+begin_src emacs-lisp :tangle yes
