@@ -1215,4 +1215,9 @@
               '(("\\\\autocite"   ispell-tex-arg-end)
                 ("\\\\autocites"  ispell-tex-arg-end)))
              (cadr ispell-tex-skip-alists)))))
+  (use-package flyspell-correct-ivy
+    :ensure t
+    :after flyspell
+    :bind (:map flyspell-mode-map
+                ("C-;" . flyspell-correct-previous-word-generic)))
 #+end_src
