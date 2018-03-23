@@ -1220,4 +1220,10 @@
     :after flyspell
     :bind (:map flyspell-mode-map
                 ("C-;" . flyspell-correct-previous-word-generic)))
+  (use-package langtool
+    :ensure t
+    :config
+    (progn
+      (setq langtool-bin "/usr/bin/languagetool")
+      (setq langtool-default-language "en-US")))
 #+end_src
