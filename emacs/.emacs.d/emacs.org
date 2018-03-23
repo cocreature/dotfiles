@@ -1229,3 +1229,8 @@
       (setq langtool-bin "/usr/bin/languagetool")
       (setq langtool-default-language "en-US")))
 #+end_src
+* gist
+#+begin_src emacs-lisp :tangle yes
+  (use-package gist
+    :ensure t)
+#+end_src
