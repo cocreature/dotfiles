@@ -522,6 +522,8 @@
     (yas-global-mode t)
     :init
     (setq yas-alias-to-yas/prefix-p nil))
+  (use-package yasnippet-snippets
+    :ensure t)
 #+end_src
 * symlinks
 #+begin_src emacs-lisp :tangle yes
