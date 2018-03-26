@@ -1239,3 +1239,8 @@
 #+begin_src emacs-lisp :tangle yes
   (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
 #+end_src
+* academic-phrases
+#+begin_src emacs-lisp :tangle yes
+  (use-package academic-phrases
+    :ensure t)
+#+end_src
