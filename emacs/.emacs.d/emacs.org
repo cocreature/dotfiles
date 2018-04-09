@@ -58,6 +58,9 @@
                      '(("j" find-file-other-window "other"))))
   (use-package ivy-hydra
     :ensure t)
+  (use-package ivy-xref
+    :ensure t
+    :init (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
 #+end_src
 
 * misc
@@ -1242,5 +1245,10 @@
 * academic-phrases
 #+begin_src emacs-lisp :tangle yes
   (use-package academic-phrases
+    :ensure t)
+#+end_src
+* glsl
+#+begin_src emacs-lisp :tangle yes
+  (use-package glsl-mode
     :ensure t)
 #+end_src
