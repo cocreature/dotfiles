@@ -152,10 +152,7 @@
     :config
     (progn
       (setq doom-one-brighter-comments t)
-      (load-theme 'doom-one t)
-      ;; (add-hook 'find-file-hook 'doom-buffer-mode)
-                                          ;
-      ))
+      (load-theme 'doom-one t)))
   (use-package powerline
     :ensure t
     :defer t)
@@ -841,7 +838,10 @@
     (progn
       (setq ledger-default-date-format "%Y-%m-%d")
       (setq ledger-use-iso-dates t)
-      (setq ledger-reconcile-default-commodity "€")))
+      (setq ledger-reconcile-default-commodity "€")
+      (let ((height (face-attribute 'default :height)))
+        (set-face-attribute 'ledger-font-payee-cleared-face nil :height height)
+        (set-face-attribute 'ledger-font-payee-uncleared-face nil :height height))))
 #+end_src
 * proofgeneral
 #+begin_src emacs-lisp :tangle yes
