@@ -1,5 +1,4 @@
 typeset -U path
-source ~/.nix-profile/etc/profile.d/nix.sh
 path=(~/bin
       ~/.local/bin
       ~/.cabal/bin
