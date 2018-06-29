@@ -16,11 +16,6 @@
     (require 'use-package))
   (use-package diminish :ensure t)
 #+end_src
-* secrets
-#+begin_src emacs-lisp :tangle yes
-  (add-to-list 'load-path "~/.emacs.d/notsynced")
-  (require 'secret)
-#+end_src
 * swiper/ivy
 #+begin_src emacs-lisp :tangle yes
   (use-package ivy
@@ -970,9 +965,6 @@
     :mode ("\\.pdf\\'" . pdf-view-mode)
     :ensure t
     :init (add-hook 'pdf-view-mode-hook 'pdf-view-fit-page-to-window))
-  (use-package org-pdfview
-    :load-path "~code/emacs/org-pdfview"
-    :after pdf-tools)
 #+end_src
 * lean
 #+begin_src emacs-lisp :tangle yes
