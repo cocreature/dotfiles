@@ -23,8 +23,7 @@
   (use-package swiper
     :ensure t
     :diminish ivy-mode
-    :bind (("C-s" . swiper)
-           ("C-r" . swiper)
+    :bind (("C-r" . swiper)
            ("C-c C-r" . ivy-resume)
            ("C-c h m" . woman)
            ("C-x b" . ivy-switch-buffer)
@@ -35,7 +34,8 @@
   (use-package counsel
     :ensure t
     :commands (counsel-mode)
-    :bind (("M-x" . counsel-M-x)
+    :bind (("C-s" . counsel-grep-or-swiper)
+           ("M-x" . counsel-M-x)
            ("C-x C-f" . counsel-find-file)
            ("C-h f" . counsel-describe-function)
            ("C-h v" . counsel-describe-variable)
@@ -123,14 +123,18 @@
 #+begin_src emacs-lisp :tangle yes
   (use-package projectile
     :ensure t
-    :commands (projectile-global-mode)
-    :config (setq projectile-completion-system 'ivy))
+    :commands (projectile-mode)
+    :config
+    (progn
+      (setq projectile-completion-system 'ivy)
+      (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+      (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)))
   (use-package counsel-projectile
     :ensure t
     :commands (counsel-projectile-mode)
     :init
     (progn
-      (projectile-global-mode t)
+      (projectile-mode +1)
       (counsel-projectile-mode)))
 #+end_src
 * gui
@@ -903,15 +907,6 @@
   (use-package clang-format
     :ensure t
     :commands (clang-format-buffer))
-  (use-package rtags
-    :bind (:map c-mode-base-map ("C-c r t" . rtags-symbol-type))
-    :after (cc-mode)
-    :config
-    (progn
-      (rtags-enable-standard-keybindings)
-      (setq rtags-autostart-diagnostics nil)
-      (setq rtags-completions-enabled t)
-      (require 'flycheck-rtags)))
 #+end_src
 * rust
 #+begin_src emacs-lisp :tangle yes
@@ -1187,7 +1182,8 @@
 * nix
 #+begin_src emacs-lisp :tangle yes
   (use-package nix-mode
-    :ensure t)
+    :ensure t
+    :mode "\\.nix\\'")
 #+end_src
 * verilog
 #+begin_src emacs-lisp :tangle yes
