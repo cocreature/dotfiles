@@ -325,22 +325,6 @@
 #+end_src
 * haskell
 #+begin_src emacs-lisp :tangle yes
-  ;; (use-package intero
-  ;;   :ensure t
-  ;;   :disabled t
-  ;;   :commands (intero-global-mode intero-mode intero-mode-maybe)
-  ;;   :config
-  ;;   (setq intero-blacklist
-  ;;         '("/home/moritz/code/haskell/bytestring"
-  ;;           "/home/moritz/code/haskell/cabal"
-  ;;           "/home/moritz/code/haskell/ghc"
-  ;;           "/home/moritz/code/haskell/llvm-hs"
-  ;;           "/home/moritz/code/haskell/miso"
-  ;;           "/home/moritz/code/haskell/ghcjs"
-  ;;           "/home/moritz/code/haskell/diagrams-miso"))
-  ;;   :init
-  ;;   (progn
-  ;;     (intero-global-mode 1)))
   (use-package hindent
     :ensure t
     :commands (hindent-reformat-decl hindent-mode)
@@ -350,19 +334,25 @@
     :mode (("\\.c?hs\\'" . haskell-mode)
            ("\\.cabal\\'" . haskell-cabal-mode))
     :bind (:map haskell-mode-map
-                ("C-c i" . hindent-reformat-decl))
+                ("C-c i" . hindent-reformat-decl)
+                ("C-c C-`" . haskell-interactive-bring)
+                ("C-c C-l" . haskell-process-load-file)
+                ("C-c C-k" . haskell-interactive-mode-clear))
     :config
     (setq haskell-process-log t)
     :hook (haskell-mode . haskell-indentation-mode))
-  ;; (use-package lsp-mode
-  ;;   :ensure t)
-  ;; (use-package lsp-ui
+  ;; (use-package dante
   ;;   :ensure t
-  ;;   :hook (lsp-mode . lsp-ui-mode))
-  ;; (use-package lsp-haskell
-  ;;   :ensure t
-  ;;   :hook (haskell-mode . lsp-haskell-enable)
-  ;;   :config (setq lsp-haskell-process-path-hie "hie-8.2"))
+  ;;   :after haskell-mode
+  ;;   :commands 'dante-mode
+  ;;   :init
+  ;;   (add-hook 'haskell-mode-hook 'dante-mode)
+  ;;   (setq dante-repl-command-line-methods-alist
+  ;;         `((nix   . ,(lambda (root) (dante-repl-by-file root '("shell.nix" "default.nix")
+  ;;                                                        '("nix-shell" "--run" (concat "cabal new-repl " (or dante-target "") " --builddir=dist/dante")))))
+  ;;           (new-build . ,(lambda (root) (when (or (directory-files root nil ".+\\.cabal$") (file-exists-p "cabal.project"))
+  ;;                                          '("cabal" "new-repl" dante-target "--builddir=dist/dante"))))
+  ;;           (bare  . ,(lambda (_) '("cabal" "repl" dante-target "--builddir=dist/dante"))))))
 #+end_src
 * mu4e
 #+begin_src emacs-lisp :tangle yes
@@ -1242,3 +1232,8 @@
   (use-package glsl-mode
     :ensure t)
 #+end_src
+* Agda
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package agda2
+    :mode ("\\.agda\\'" . agda2-mode))
+#+END_SRC
