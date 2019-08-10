@@ -827,6 +827,7 @@
     (progn
       (setq ledger-default-date-format "%Y-%m-%d")
       (setq ledger-use-iso-dates t)
+      (setq  ledger-report-use-strict t)
       (setq ledger-reconcile-default-commodity "€")
       (let ((height (face-attribute 'default :height)))
         (set-face-attribute 'ledger-font-payee-cleared-face nil :height height)
