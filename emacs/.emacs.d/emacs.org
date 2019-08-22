@@ -77,6 +77,7 @@
   (defalias 'yes-or-no-p 'y-or-n-p)
   (global-unset-key (kbd "C-z"))
   (put 'upcase-region 'disabled nil)
+  (setq require-final-newline t)
   (use-package ws-butler
     :ensure t
     :diminish ws-butler-mode
