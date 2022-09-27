@@ -330,18 +330,6 @@
     :config
     (setq haskell-process-log t)
     :hook (haskell-mode . haskell-indentation-mode))
-  ;; (use-package dante
-  ;;   :ensure t
-  ;;   :after haskell-mode
-  ;;   :commands 'dante-mode
-  ;;   :init
-  ;;   (add-hook 'haskell-mode-hook 'dante-mode)
-  ;;   (setq dante-repl-command-line-methods-alist
-  ;;         `((nix   . ,(lambda (root) (dante-repl-by-file root '("shell.nix" "default.nix")
-  ;;                                                        '("nix-shell" "--run" (concat "cabal new-repl " (or dante-target "") " --builddir=dist/dante")))))
-  ;;           (new-build . ,(lambda (root) (when (or (directory-files root nil ".+\\.cabal$") (file-exists-p "cabal.project"))
-  ;;                                          '("cabal" "new-repl" dante-target "--builddir=dist/dante"))))
-  ;;           (bare  . ,(lambda (_) '("cabal" "repl" dante-target "--builddir=dist/dante"))))))
 #+end_src
 * mu4e
 #+begin_src emacs-lisp :tangle yes
@@ -526,13 +514,6 @@
     :ensure t
     :disabled
     :config (magithub-feature-autoinject t))
-#+end_src
-* git-gutter-fringe
-#+begin_src emacs-lisp :tangle yes
-  (use-package git-gutter-fringe
-    :ensure t
-    :diminish git-gutter-mode
-    :config (global-git-gutter-mode))
 #+end_src
 * pkgbuild
 #+begin_src emacs-lisp :tangle yes
@@ -965,9 +946,6 @@
 #+end_src
 * scala
 #+begin_src emacs-lisp :tangle yes
-  (use-package ensime
-    :ensure t
-    :commands (ensime-scala-mode-hook))
   (use-package scala-mode
     :ensure t
     :mode ("\\.scala\\'" . scala-mode)
