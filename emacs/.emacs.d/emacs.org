@@ -16,6 +16,13 @@
     (require 'use-package))
   (use-package diminish :ensure t)
 #+end_src
+* editorconfig
+#+begin_src emacs-lisp :tangle yes
+  (use-package editorconfig
+    :ensure t
+    :config
+    (editorconfig-mode 1))
+#+end_src
 * swiper/ivy
 #+begin_src emacs-lisp :tangle yes
   (use-package ivy
